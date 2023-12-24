@@ -1,0 +1,8 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<ItemGroup>
+		<ProjectReference Include="..\ShipperStation.Domain\ShipperStation.Domain.csproj" />
+		<ProjectReference Include="..\ShipperStation.Shared\ShipperStation.Shared.csproj" />
+	</ItemGroup>
+
+</Project>

@@ -1,0 +1,7 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<ItemGroup>
+		<ProjectReference Include="..\ShipperStation.Application\ShipperStation.Application.csproj" />
+	</ItemGroup>
+
+</Project>
