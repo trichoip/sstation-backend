@@ -11,7 +11,7 @@ namespace ShipperStation.Infrastructure.Persistence.SeedData;
 public class ApplicationDbContextInitialiser
 {
     private readonly UserManager<User> _userManager;
-    private readonly RoleManager<IdentityRole<int>> _roleManager;
+    private readonly RoleManager<IdentityRole<Guid>> _roleManager;
     private readonly ILogger<ApplicationDbContextInitialiser> _logger;
     private readonly ApplicationDbContext _context;
 
@@ -19,7 +19,7 @@ public class ApplicationDbContextInitialiser
        ILogger<ApplicationDbContextInitialiser> logger,
        ApplicationDbContext context,
        UserManager<User> userManager,
-       RoleManager<IdentityRole<int>> roleManager)
+       RoleManager<IdentityRole<Guid>> roleManager)
     {
         _logger = logger;
         _context = context;
@@ -69,7 +69,7 @@ public class ApplicationDbContextInitialiser
     {
         //AccountSeeding.DefaultAccounts
 
-        var adminRole = new IdentityRole<int>(Roles.Admin);
+        var adminRole = new IdentityRole<Guid>(Roles.Admin);
         await _roleManager.CreateAsync(adminRole);
         var admin = new User
         {
@@ -81,7 +81,7 @@ public class ApplicationDbContextInitialiser
         await _userManager.CreateAsync(admin, "admin");
         await _userManager.AddToRolesAsync(admin, new[] { Roles.Admin });
 
-        var userRole = new IdentityRole<int>(Roles.User);
+        var userRole = new IdentityRole<Guid>(Roles.User);
         await _roleManager.CreateAsync(userRole);
         var user = new User
         {

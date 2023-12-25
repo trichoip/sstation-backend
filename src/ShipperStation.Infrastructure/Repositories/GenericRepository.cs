@@ -1,8 +1,8 @@
 ﻿using Mapster;
 using Microsoft.EntityFrameworkCore;
-using ShipperStation.Application.Helpers;
 using ShipperStation.Application.Interfaces.Repositories;
 using ShipperStation.Infrastructure.Persistence.Data;
+using ShipperStation.Shared.Helpers;
 using System.Linq.Expressions;
 
 namespace ShipperStation.Infrastructure.Repositories;
@@ -70,6 +70,32 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class
     {
         dbSet.Update(entity);
         return Task.CompletedTask;
+    }
+
+    public async Task<IList<T>> FindAsync(
+        bool IsTracking = false,
+        Expression<Func<T, bool>>? expression = null,
+        Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null,
+        CancellationToken cancellationToken = default)
+    {
+        IQueryable<T> query = dbSet;
+
+        if (!IsTracking)
+        {
+            query = query.AsNoTracking();
+        }
+
+        if (expression != null)
+        {
+            query = query.Where(expression);
+        }
+
+        if (orderBy != null)
+        {
+            query = orderBy(query);
+        }
+
+        return await query.ToListAsync(cancellationToken);
     }
 
     public async Task<bool> ExistsByAsync(

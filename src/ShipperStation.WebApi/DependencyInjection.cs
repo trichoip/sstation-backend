@@ -1,6 +1,4 @@
-﻿using AspNetCore.Api.Constants;
-using AspNetCore.Api.Middleware;
-using MessagePack;
+﻿using MessagePack;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
@@ -10,12 +8,14 @@ using Microsoft.AspNetCore.Mvc.ModelBinding.Metadata;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using ShipperStation.Application.Common.Constants;
 using ShipperStation.Application.Common.Exceptions;
 using ShipperStation.Domain.Constants;
 using ShipperStation.Infrastructure;
+using ShipperStation.Infrastructure.Hubs;
 using ShipperStation.Infrastructure.Settings;
-using ShipperStation.Infrastructure.SignalR.Notifications;
 using ShipperStation.WebApi.Extensions;
+using ShipperStation.WebApi.Middleware;
 using ShipperStation.WebApi.Transformers;
 using Swashbuckle.AspNetCore.Filters;
 using System.Net.Mime;
@@ -121,6 +121,7 @@ public static class DependencyInjection
         services.Configure<MomoSettings>(configuration.GetSection(MomoSettings.Section));
         services.Configure<JwtSettings>(configuration.GetSection(JwtSettings.Section));
         services.Configure<FcmSettings>(configuration.GetSection(FcmSettings.Section));
+        services.Configure<MailSettings>(configuration.GetSection(MailSettings.Section));
     }
 
     private static void AddSignalRServices(this IServiceCollection services)

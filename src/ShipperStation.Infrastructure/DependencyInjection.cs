@@ -5,10 +5,10 @@ using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using ShipperStation.Application.Helpers;
 using ShipperStation.Application.Interfaces.Repositories;
 using ShipperStation.Application.Interfaces.Services;
 using ShipperStation.Application.Interfaces.Services.Notifications;
+using ShipperStation.Application.Interfaces.Services.Notifications.Common;
 using ShipperStation.Application.Interfaces.Services.Payments;
 using ShipperStation.Domain.Entities;
 using ShipperStation.Infrastructure.Persistence.Data;
@@ -17,11 +17,9 @@ using ShipperStation.Infrastructure.Persistence.SeedData;
 using ShipperStation.Infrastructure.Repositories;
 using ShipperStation.Infrastructure.Services;
 using ShipperStation.Infrastructure.Services.Notifications;
-using ShipperStation.Infrastructure.Services.Notifications.Mobile.Firebase;
-using ShipperStation.Infrastructure.Services.Notifications.Sms.ZaloZns;
-using ShipperStation.Infrastructure.Services.Notifications.Website.SignalR;
-using ShipperStation.Infrastructure.Services.Payments.Momo;
-using ShipperStation.Infrastructure.Services.Payments.VnPay;
+using ShipperStation.Infrastructure.Services.Notifications.Common;
+using ShipperStation.Infrastructure.Services.Payments;
+using ShipperStation.Shared.Helpers;
 
 namespace ShipperStation.Infrastructure;
 
@@ -41,10 +39,7 @@ public static class DependencyInjection
     private static void AddServices(this IServiceCollection services)
     {
         services
-            .AddScoped<TokenHelper<User>>()
             .AddScoped<ICurrentUserService, CurrentUserService>()
-            .AddScoped<ICurrentAccountService, CurrentAccountService>()
-            .AddScoped<ICurrentPrincipalService, CurrentPrincipalService>()
             .AddScoped<IAuthService, AuthService>()
             .AddScoped<IStorageService, StorageService>()
             .AddScoped<IJwtService, JwtService>()
@@ -53,9 +48,12 @@ public static class DependencyInjection
             .AddScoped<INotifier, Notifier>()
             .AddScoped<INotificationAdapter, NotificationAdapter>()
             .AddScoped<INotificationProvider, NotificationProvider>()
-            .AddScoped<INotificationService, WebNotificationService>()
-            .AddScoped<INotificationService, ZnsNotificationService>()
-            .AddScoped<INotificationService, FirebaseNotificationService>()
+            .AddScoped<ISignalRNotificationService, SignalRNotificationService>()
+            .AddScoped<IZaloNotificationService, ZnsNotificationService>()
+            .AddScoped<IFirebaseNotificationService, FirebaseNotificationService>()
+            .AddScoped<ISmsNotificationService, SmsNotificationService>()
+            .AddScoped<ICallerNotificationService, CallerNotificationService>()
+            .AddScoped<ZaloAuthService>()
             .AddTransient<IEmailSender, EmailSender>();
     }
 
@@ -74,7 +72,11 @@ public static class DependencyInjection
         string defaultConnection = configuration.GetConnectionString("DefaultConnection")!;
         services.AddDbContext<ApplicationDbContext>((sp, options) =>
            options.UseMySql(defaultConnection, ServerVersion.AutoDetect(defaultConnection),
-               builder => builder.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery))
+               builder =>
+               {
+                   builder.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery);
+                   builder.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.FullName);
+               })
                   .AddInterceptors(sp.GetServices<ISaveChangesInterceptor>())
                   .EnableSensitiveDataLogging()
                   //.UseLazyLoadingProxies()
@@ -86,7 +88,7 @@ public static class DependencyInjection
     private static void AddDefaultIdentity(this IServiceCollection services)
     {
 
-        services.AddIdentity<User, IdentityRole<int>>(options =>
+        services.AddIdentity<User, IdentityRole<Guid>>(options =>
         {
             options.Password.RequireDigit = false;
             options.Password.RequireLowercase = false;

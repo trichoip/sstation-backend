@@ -1,8 +1,10 @@
-﻿namespace ShipperStation.Application.Common.Exceptions;
+﻿using ShipperStation.Application.Common.Resources;
+
+namespace ShipperStation.Application.Common.Exceptions;
 
 public class ForbiddenAccessException : Exception
 {
-    public ForbiddenAccessException() : base("You do not have access to this system") { }
+    public ForbiddenAccessException() : base(Resource.Forbidden) { }
 
     public ForbiddenAccessException(string message) : base(message) { }
 }

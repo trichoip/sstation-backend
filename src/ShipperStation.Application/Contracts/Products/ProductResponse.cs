@@ -1,4 +1,4 @@
-﻿namespace AspNetCore.Pattern.CQRS.MediatorPattern.MediatR.Contracts.Products;
+﻿namespace ShipperStation.Application.Contracts.Products;
 
 public sealed record ProductResponse
 {

@@ -1,5 +1,11 @@
-﻿namespace ShipperStation.Application.Interfaces.Services;
+﻿using System.Security.Claims;
+
+namespace ShipperStation.Application.Interfaces.Services;
 public interface ICurrentUserService
 {
-    string? Id { get; }
+    public string? CurrentUserId { get; }
+
+    public ClaimsPrincipal? CurrentUserPrincipal { get; }
+
+    //Task<User?> FindCurrentUserAsync();
 }

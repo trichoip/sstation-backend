@@ -1,29 +1,33 @@
-﻿using ShipperStation.Application.Interfaces.Services;
+﻿using Microsoft.Extensions.Options;
+using ShipperStation.Application.Interfaces.Services;
+using ShipperStation.Infrastructure.Settings;
 using System.Net;
 using System.Net.Mail;
 
 namespace ShipperStation.Infrastructure.Services
 {
-    public class EmailSender : IEmailSender
+    public class EmailSender(IOptions<MailSettings> mailSettings) : IEmailSender
     {
+        private readonly MailSettings _mailSettings = mailSettings.Value;
+
         public async Task SendEmailAsync(string email, string subject, string htmlMessage)
         {
             SmtpClient client = new SmtpClient
             {
-                Port = 587,
-                Host = "smtp.gmail.com",
-                EnableSsl = true,
+                Port = _mailSettings.Port,
+                Host = _mailSettings.Host,
+                EnableSsl = _mailSettings.EnableSsl,
                 DeliveryMethod = SmtpDeliveryMethod.Network,
-                UseDefaultCredentials = false,
-                Credentials = new NetworkCredential("", "")
+                UseDefaultCredentials = _mailSettings.UseDefaultCredentials,
+                Credentials = new NetworkCredential(_mailSettings.Username, _mailSettings.Password)
             };
 
             var mailMessage = new MailMessage
             {
-                From = new MailAddress(""),
+                From = new MailAddress(_mailSettings.From),
                 Subject = subject,
                 Body = htmlMessage,
-                IsBodyHtml = true,
+                IsBodyHtml = _mailSettings.IsBodyHtml,
             };
 
             mailMessage.To.Add(email);

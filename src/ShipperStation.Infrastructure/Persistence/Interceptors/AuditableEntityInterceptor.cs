@@ -8,16 +8,8 @@ using ShipperStation.Domain.Enums;
 
 namespace ShipperStation.Infrastructure.Persistence.Interceptors;
 
-public class AuditableEntityInterceptor : SaveChangesInterceptor
+public class AuditableEntityInterceptor(ICurrentUserService currentUserService) : SaveChangesInterceptor
 {
-    private readonly ICurrentUserService _currentUserService;
-
-    public AuditableEntityInterceptor(
-        ICurrentUserService currentUserService)
-    {
-        _currentUserService = currentUserService;
-    }
-
     public override async ValueTask<InterceptionResult<int>> SavingChangesAsync(
         DbContextEventData eventData,
         InterceptionResult<int> result,
@@ -39,9 +31,9 @@ public class AuditableEntityInterceptor : SaveChangesInterceptor
             {
                 var audit = auditEntry.ToAudit();
 
-                audit.CreatedBy = _currentUserService.Id;
-                audit.ModifiedBy = _currentUserService.Id;
-                audit.UserId = _currentUserService.Id;
+                audit.CreatedBy = currentUserService.CurrentUserId;
+                audit.ModifiedBy = currentUserService.CurrentUserId;
+                audit.UserId = currentUserService.CurrentUserId;
                 await context.AddAsync(audit);
             }
         }
@@ -50,20 +42,20 @@ public class AuditableEntityInterceptor : SaveChangesInterceptor
         {
             if (entry.State == EntityState.Added)
             {
-                entry.Entity.CreatedBy = _currentUserService.Id;
+                entry.Entity.CreatedBy = currentUserService.CurrentUserId;
                 entry.Entity.CreatedAt = DateTimeOffset.UtcNow;
             }
 
             if (entry.State == EntityState.Added || entry.State == EntityState.Modified || entry.HasChangedOwnedEntities())
             {
-                entry.Entity.ModifiedBy = _currentUserService.Id;
+                entry.Entity.ModifiedBy = currentUserService.CurrentUserId;
                 entry.Entity.ModifiedAt = DateTimeOffset.UtcNow;
             }
 
             if (entry.State == EntityState.Deleted)
             {
                 entry.State = EntityState.Modified;
-                entry.Entity.DeletedBy = _currentUserService.Id;
+                entry.Entity.DeletedBy = currentUserService.CurrentUserId;
                 entry.Entity.DeletedAt = DateTimeOffset.UtcNow;
             }
         }

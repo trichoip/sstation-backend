@@ -1,4 +1,4 @@
-﻿using ShipperStation.Application.Constants;
+﻿using ShipperStation.Application.Common.Constants;
 
 namespace ShipperStation.Application.DTOs.Auth
 {

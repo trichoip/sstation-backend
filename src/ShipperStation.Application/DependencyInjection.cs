@@ -1,10 +1,10 @@
-﻿using AspNetCore.Pattern.CQRS.MediatorPattern.MediatR.Behaviors;
-using FluentValidation;
+﻿using FluentValidation;
 using FluentValidation.AspNetCore;
 using MediatR;
 using MicroElements.Swashbuckle.FluentValidation.AspNetCore;
 using Microsoft.Extensions.DependencyInjection;
-using ShipperStation.Application.Helpers;
+using ShipperStation.Application.Behaviours;
+using ShipperStation.Shared.Helpers;
 using System.Reflection;
 
 namespace ShipperStation.Application;

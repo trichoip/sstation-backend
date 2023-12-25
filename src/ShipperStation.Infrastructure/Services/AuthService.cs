@@ -1,14 +1,14 @@
 ﻿
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.WebUtilities;
+using ShipperStation.Application.Common.Constants;
 using ShipperStation.Application.Common.Exceptions;
-using ShipperStation.Application.Constants;
 using ShipperStation.Application.DTOs.Auth;
-using ShipperStation.Application.Helpers;
 using ShipperStation.Application.Interfaces.Repositories;
 using ShipperStation.Application.Interfaces.Services;
 using ShipperStation.Domain.Constants;
 using ShipperStation.Domain.Entities;
+using ShipperStation.Shared.Helpers;
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 
@@ -16,20 +16,20 @@ namespace ShipperStation.Infrastructure.Services;
 public class AuthService : IAuthService
 {
     private readonly UserManager<User> _userManager;
-    private readonly RoleManager<IdentityRole<int>> _roleManager;
+    private readonly RoleManager<IdentityRole<Guid>> _roleManager;
     private readonly IUnitOfWork _unitOfWork;
-    private readonly TokenHelper<User> _tokenHelper;
+    private readonly IJwtService _jwtService;
 
     public AuthService(
         UserManager<User> userManager,
-        RoleManager<IdentityRole<int>> roleManager,
+        RoleManager<IdentityRole<Guid>> roleManager,
         IUnitOfWork unitOfWork,
-        TokenHelper<User> tokenHelper)
+        IJwtService jwtService)
     {
         _userManager = userManager;
         _roleManager = roleManager;
         _unitOfWork = unitOfWork;
-        _tokenHelper = tokenHelper;
+        _jwtService = jwtService;
     }
 
     public async Task<AccessTokenResponse> SignInExternalAsync(ExternalAuthRequest externalAuthRequest)
@@ -55,7 +55,7 @@ public class AuthService : IAuthService
             await _unitOfWork.Repository<User>().CreateAsync(user);
             await _unitOfWork.CommitAsync();
         }
-        return await _tokenHelper.CreateTokenAsync(user);
+        return await _jwtService.GenerateTokenAsync(user);
     }
 
     public async Task<AccessTokenResponse> SignInAsync(LoginRequest loginRequest)
@@ -69,17 +69,17 @@ public class AuthService : IAuthService
         {
             throw new UnauthorizedAccessException("Login failed.");
         }
-        return await _tokenHelper.CreateTokenAsync(user: user);
+        return await _jwtService.GenerateTokenAsync(user);
     }
 
     public async Task<AccessTokenResponse> RefreshTokenAsync(RefreshRequest refreshRequest)
     {
-        var user = await _tokenHelper.ValidateRefreshTokenAsync(refreshRequest.RefreshToken);
+        var user = await _jwtService.ValidateRefreshTokenAsync(refreshRequest.RefreshToken);
         if (user == null)
         {
             throw new UnauthorizedAccessException("Refresh token is not valid.");
         }
-        return await _tokenHelper.CreateTokenAsync(user: user);
+        return await _jwtService.GenerateTokenAsync(user);
     }
 
     public async Task<(string userId, string code)> RegisterAsync(RegisterRequest registerRequest)
@@ -98,7 +98,7 @@ public class AuthService : IAuthService
 
         if (!await _roleManager.RoleExistsAsync(Roles.User))
         {
-            result = await _roleManager.CreateAsync(new IdentityRole<int> { Name = Roles.User });
+            result = await _roleManager.CreateAsync(new IdentityRole<Guid> { Name = Roles.User });
             if (!result.Succeeded)
             {
                 throw new ValidationBadRequestException(result.Errors);

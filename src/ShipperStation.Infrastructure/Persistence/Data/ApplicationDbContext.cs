@@ -6,8 +6,14 @@ using System.Reflection;
 
 namespace ShipperStation.Infrastructure.Persistence.Data
 {
-    public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
-        : IdentityDbContext<User, IdentityRole<Guid>, Guid>(options)
+    public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) :
+        IdentityDbContext<
+         User, IdentityRole<Guid>, Guid,
+         IdentityUserClaim<Guid>,
+         UserRole,
+         IdentityUserLogin<Guid>,
+         IdentityRoleClaim<Guid>,
+         UserToken>(options)
     {
         private const string Prefix = "AspNet";
 
@@ -19,7 +25,6 @@ namespace ShipperStation.Infrastructure.Persistence.Data
         public DbSet<Transaction> Transactions { get; set; }
         public DbSet<Package> Packages { get; set; }
         public DbSet<PackageImage> PackageImages { get; set; }
-        public DbSet<Token> Tokens { get; set; }
         public DbSet<Order> Orders { get; set; }
         public DbSet<OrderHistory> OrderHistories { get; set; }
         public DbSet<Payment> Payments { get; set; }

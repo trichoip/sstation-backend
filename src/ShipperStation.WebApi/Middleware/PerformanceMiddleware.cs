@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics;
 
-namespace AspNetCore.Api.Middleware;
+namespace ShipperStation.WebApi.Middleware;
 
 public class PerformanceMiddleware
 {
