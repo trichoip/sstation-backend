@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using ShipperStation.Application.Common.Exceptions;
+using ShipperStation.Application.Common.Resources;
 
 namespace ShipperStation.WebApi.Extensions;
 
@@ -16,7 +17,7 @@ public static class JwtBearerOptionsExtensions
 
             OnChallenge = context =>
             {
-                throw new UnauthorizedAccessException("You are not authorized to access this resource");
+                throw new UnauthorizedAccessException(Resource.Unauthorized);
             },
 
             OnMessageReceived = context =>

@@ -1,13 +1,17 @@
-﻿namespace ShipperStation.Application.Common.Exceptions
+﻿using ShipperStation.Application.Common.Resources;
+using ShipperStation.Shared.Helpers;
+
+namespace ShipperStation.Application.Common.Exceptions
 {
     public class NotFoundException : Exception
     {
-        public NotFoundException() : base("Entity was not found.") { }
+        public NotFoundException() : base(Resource.NotFound) { }
 
         public NotFoundException(string message) : base(message) { }
 
         public NotFoundException(string message, Exception innerException) : base(message, innerException) { }
 
-        public NotFoundException(string name, object key) : base($"Entity {name} ({key}) was not found.") { }
+        public NotFoundException(string name, object key)
+            : base(Resource.EntityNotFound.FormatWith(name, key)) { }
     }
 }

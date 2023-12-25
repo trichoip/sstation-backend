@@ -1,7 +1,7 @@
 ﻿using MediatR;
 using Microsoft.Extensions.Logging;
 
-namespace AspNetCore.Pattern.CQRS.MediatorPattern.MediatR.Behaviors;
+namespace ShipperStation.Application.Behaviours;
 
 public class LoggingBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse> where TRequest : IRequest<TResponse>
 {

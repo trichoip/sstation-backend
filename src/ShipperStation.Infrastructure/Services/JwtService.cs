@@ -1,5 +1,11 @@
-using Microsoft.Extensions.Configuration;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.DataProtection;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using ShipperStation.Application.Common.Exceptions;
+using ShipperStation.Application.DTOs.Auth;
 using ShipperStation.Application.Interfaces.Services;
 using ShipperStation.Domain.Entities;
 using ShipperStation.Infrastructure.Settings;
@@ -13,47 +19,67 @@ public class JwtService : IJwtService
 {
 
     private readonly JwtSettings _jwtSettings;
+    private readonly SignInManager<User> _signInManager;
+    private readonly IDataProtectionProvider _dataProtectionProvider;
+    private readonly IDataProtector protector;
+    private readonly TicketDataFormat ticketDataFormat;
 
-    public JwtService(IConfiguration configuration, JwtSettings jwtSettings)
+    public JwtService(
+        SignInManager<User> signInManager,
+        IDataProtectionProvider dataProtectionProvider,
+        IOptions<JwtSettings> jwtSettings)
     {
-        _jwtSettings = jwtSettings;
+        _jwtSettings = jwtSettings.Value;
+        _signInManager = signInManager;
+        _dataProtectionProvider = dataProtectionProvider;
+
+        protector = _dataProtectionProvider.CreateProtector(_jwtSettings.SerectRefreshKey);
+        ticketDataFormat = new TicketDataFormat(protector);
     }
 
-    private string GenerateJwtToken(User account, int expireInMinutes)
+    public async Task<AccessTokenResponse> GenerateTokenAsync(User user)
     {
-        var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSettings.Key));
-        var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
-
-        var claims = new[]
-        {
-            new Claim(ClaimTypes.NameIdentifier, account.Id.ToString()),
-            new Claim(ClaimTypes.Name, account.FullName ?? string.Empty),
-            new Claim(ClaimTypes.Role, account.Email)
-        };
+        var claimsPrincipal = await _signInManager.CreateUserPrincipalAsync(user);
+        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSettings.SerectKey));
+        var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512);
 
         var token = new JwtSecurityToken(
-            _jwtSettings.Issuer,
-            _jwtSettings.Audience,
-            claims,
-            expires: DateTime.UtcNow.AddMinutes(expireInMinutes),
-            signingCredentials: credentials
-        );
+            claims: claimsPrincipal.Claims,
+            expires: DateTime.UtcNow.AddMinutes(_jwtSettings.TokenExpire),
+            signingCredentials: creds);
 
-        return new JwtSecurityTokenHandler().WriteToken(token);
+        var jwt = new JwtSecurityTokenHandler().WriteToken(token);
+
+        var response = new AccessTokenResponse
+        {
+            AccessToken = jwt,
+            ExpiresIn = (long)TimeSpan.FromMinutes(_jwtSettings.TokenExpire).TotalSeconds,
+            RefreshToken = ticketDataFormat.Protect(CreateRefreshTicket(claimsPrincipal, DateTimeOffset.UtcNow)),
+        };
+        return response;
     }
 
-    public string GenerateJwtToken(User account)
+    public async Task<User> ValidateRefreshTokenAsync(string refreshToken)
     {
-        return GenerateJwtToken(account, _jwtSettings.TokenExpire);
+        if (string.IsNullOrEmpty(refreshToken)) throw new BadRequestException("RefreshToken must be provided");
+
+        var ticket = ticketDataFormat.Unprotect(refreshToken);
+
+        if (ticket?.Properties?.ExpiresUtc is not { } expiresUtc ||
+            DateTimeOffset.UtcNow >= expiresUtc ||
+            await _signInManager.ValidateSecurityStampAsync(ticket.Principal) is not User user)
+        {
+            throw new UnauthorizedAccessException("Refresh token is not valid!");
+        }
+        return user;
     }
 
-    public string GenerateJwtRefreshToken(User account)
+    private AuthenticationTicket CreateRefreshTicket(ClaimsPrincipal user, DateTimeOffset utcNow)
     {
-        return GenerateJwtToken(account, _jwtSettings.RefreshTokenExpire);
-    }
-
-    public string RevokeJwtRefreshToken(User account)
-    {
-        throw new NotImplementedException();
+        var refreshProperties = new AuthenticationProperties
+        {
+            ExpiresUtc = utcNow.AddMinutes(_jwtSettings.RefreshTokenExpire)
+        };
+        return new AuthenticationTicket(user, refreshProperties, JwtBearerDefaults.AuthenticationScheme);
     }
 }

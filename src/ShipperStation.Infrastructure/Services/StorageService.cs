@@ -4,10 +4,9 @@ using Amazon.S3.Model;
 using Amazon.S3.Transfer;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
-using ShipperStation.Application.Enums;
+using ShipperStation.Application.Common.Resources;
 using ShipperStation.Application.Interfaces.Services;
 using ShipperStation.Infrastructure.Settings;
-using ShipperStation.Shared.Extensions;
 using System.Net;
 
 namespace ShipperStation.Infrastructure.Services;
@@ -37,7 +36,7 @@ public class StorageService : IStorageService
         using var response = await _s3Client.GetObjectAsync(getObjectRequest);
         if (response.HttpStatusCode != HttpStatusCode.OK)
         {
-            throw new ApplicationException(ResponseCode.FileErrorNotFound.GetDescription());
+            throw new ApplicationException(Resource.FileNotFound);
         }
 
         using var ms = new MemoryStream();
@@ -57,7 +56,7 @@ public class StorageService : IStorageService
         using var response = await _s3Client.GetObjectAsync(getObjectRequest);
         if (response.HttpStatusCode != HttpStatusCode.OK)
         {
-            throw new ApplicationException(ResponseCode.FileErrorNotFound.GetDescription());
+            throw new ApplicationException(Resource.FileNotFound);
         }
 
         return response.Headers.ContentType;
@@ -101,7 +100,7 @@ public class StorageService : IStorageService
         var response = await _s3Client.DeleteObjectAsync(deleteFileRequest);
         if (response.HttpStatusCode != HttpStatusCode.OK)
         {
-            throw new ApplicationException(ResponseCode.FileErrorDeleteFailed.GetDescription());
+            throw new ApplicationException(Resource.FileUploadFailed);
         }
 
         return true;
