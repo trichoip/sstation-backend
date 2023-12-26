@@ -1,5 +1,4 @@
-﻿using MessagePack;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApplicationModels;
@@ -13,7 +12,6 @@ using ShipperStation.Application.Common.Exceptions;
 using ShipperStation.Domain.Constants;
 using ShipperStation.Infrastructure;
 using ShipperStation.Infrastructure.Hubs;
-using ShipperStation.Infrastructure.Settings;
 using ShipperStation.WebApi.Extensions;
 using ShipperStation.WebApi.Middleware;
 using ShipperStation.WebApi.Transformers;
@@ -36,7 +34,6 @@ public static class DependencyInjection
         services.AddSwaggerServices();
         services.AddAuthenticationServices(configuration);
         services.AddUrlHelperServices();
-        services.AddConfigureSettingServices(configuration);
         services.AddAuthorizationServices();
         services.AddSignalRServices();
 
@@ -62,8 +59,6 @@ public static class DependencyInjection
         {
             options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
         });
-
-        services.Configure<ApiBehaviorOptions>(options => options.SuppressModelStateInvalidFilter = true);
     }
 
     private static void AddSwaggerServices(this IServiceCollection services)
@@ -113,37 +108,9 @@ public static class DependencyInjection
               options.AddPolicy(Policies.CanPurge, policy => policy.RequireRole(Roles.Admin)));
     }
 
-    private static void AddConfigureSettingServices(this IServiceCollection services, IConfiguration configuration)
-    {
-        services.Configure<AwsS3Settings>(configuration.GetSection(AwsS3Settings.Section));
-        services.Configure<ZaloZnsSettings>(configuration.GetSection(ZaloZnsSettings.Section));
-        services.Configure<VnPaySettings>(configuration.GetSection(VnPaySettings.Section));
-        services.Configure<MomoSettings>(configuration.GetSection(MomoSettings.Section));
-        services.Configure<JwtSettings>(configuration.GetSection(JwtSettings.Section));
-        services.Configure<FcmSettings>(configuration.GetSection(FcmSettings.Section));
-        services.Configure<MailSettings>(configuration.GetSection(MailSettings.Section));
-    }
-
     private static void AddSignalRServices(this IServiceCollection services)
     {
-        services.AddSignalR(hubOptions =>
-        {
-            hubOptions.EnableDetailedErrors = true;
-            if (hubOptions?.SupportedProtocols is not null)
-            {
-                foreach (var protocol in hubOptions.SupportedProtocols)
-                    Console.WriteLine($"SignalR supports {protocol} protocol.");
-            }
-        })
-        .AddMessagePackProtocol(options =>
-        {
-            options.SerializerOptions = MessagePackSerializerOptions.Standard
-                .WithSecurity(MessagePackSecurity.UntrustedData)
-                .WithCompression(MessagePackCompression.Lz4Block)
-                .WithAllowAssemblyVersionMismatch(true)
-                .WithOldSpec()
-                .WithOmitAssemblyVersion(true);
-        });
+        services.AddSignalR(options => options.EnableDetailedErrors = true);
     }
 
     public static async Task UseWebApplication(this WebApplication app)

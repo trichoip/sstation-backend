@@ -1,4 +1,4 @@
-﻿using ShipperStation.Shared.Helpers;
+﻿using ShipperStation.Shared.Pages;
 using System.Linq.Expressions;
 
 namespace ShipperStation.Application.Interfaces.Repositories
@@ -18,9 +18,9 @@ namespace ShipperStation.Application.Interfaces.Repositories
             CancellationToken cancellationToken = default);
 
         Task<IList<T>> FindAsync(
-            bool IsTracking = false,
             Expression<Func<T, bool>>? expression = null,
             Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null,
+            bool isAsNoTracking = true,
             CancellationToken cancellationToken = default);
 
         Task<TDTO?> FindByAsync<TDTO>(

@@ -3,7 +3,7 @@
     public interface IUnitOfWork : IDisposable
     {
         IGenericRepository<T> Repository<T>() where T : class;
-        Task CommitAsync();
+        Task CommitAsync(CancellationToken cancellationToken = default);
         Task RollbackAsync();
     }
 }

@@ -4,17 +4,17 @@ namespace ShipperStation.Application.Interfaces.Services;
 
 public interface IStorageService
 {
-    Task<byte[]> DownloadFileAsync(string fileName);
+    Task<byte[]> DownloadFileAsync(string fileName, CancellationToken cancellationToken = default);
 
-    Task<string> GetContentType(string fileName);
+    Task<string> GetContentTypeAsync(string fileName, CancellationToken cancellationToken = default);
 
-    Task<string> UploadFileAsync(IFormFile file);
+    Task<string> UploadFileAsync(IFormFile file, CancellationToken cancellationToken = default);
 
-    Task<bool> DeleteFileAsync(string fileName, string versionId = "");
+    Task<bool> DeleteFileAsync(string fileName, string versionId = "", CancellationToken cancellationToken = default);
 
-    Task<bool> IsFileExists(string fileName, string versionId = "");
+    Task<bool> IsFileExistsAsync(string fileName, string versionId = "", CancellationToken cancellationToken = default);
 
-    Task<string> GetPresignedUrlAsync(string fileName);
+    Task<string> GetPresignedUrlAsync(string fileName, CancellationToken cancellationToken = default);
 
     string GetObjectUrl(string fileName);
 }

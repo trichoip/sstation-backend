@@ -5,6 +5,6 @@ namespace ShipperStation.Application.Interfaces.Services.Payments;
 
 public interface IVnPayPaymentService
 {
-    public Task<Payment> CreatePayment(VnPayPayment payment);
+    public Task<Payment> CreatePaymentAsync(VnPayPayment payment);
 
 }

@@ -1,11 +1,12 @@
 ﻿using ShipperStation.Domain.Common;
+using ShipperStation.Domain.Entities.Identities;
 
 namespace ShipperStation.Domain.Entities;
-public class Station : BaseEntity<int>
+public class Station : BaseAuditableEntity<int>
 {
     public string Name { get; set; } = default!;
     public string Description { get; set; } = default!;
-    public string ContactPhone { get; set; } = default!;
+    public string? ContactPhone { get; set; }
     public string Address { get; set; } = default!;
     public string? Latitude { get; set; }
     public string? Longitude { get; set; }

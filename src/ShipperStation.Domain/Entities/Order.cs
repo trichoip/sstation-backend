@@ -1,4 +1,5 @@
 ﻿using ShipperStation.Domain.Common;
+using ShipperStation.Domain.Entities.Identities;
 using ShipperStation.Domain.Enums;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -7,9 +8,6 @@ public class Order : BaseAuditableEntity<int>
 {
     public string? Name { get; set; }
     public string? Description { get; set; }
-
-    [Column(TypeName = "nvarchar(24)")]
-    public OrderType Type { get; set; }
 
     [Column(TypeName = "nvarchar(24)")]
     public OrderStatus? Status { get; set; }

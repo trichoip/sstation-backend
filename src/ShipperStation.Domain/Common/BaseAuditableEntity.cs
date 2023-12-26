@@ -1,4 +1,5 @@
-﻿using ShipperStation.Domain.Common.Interfaces;
+﻿using EntityFrameworkCore.Projectables;
+using ShipperStation.Domain.Common.Interfaces;
 
 namespace ShipperStation.Domain.Common;
 public class BaseAuditableEntity<TKey> : BaseEntity<TKey>, IEntity<TKey>, IAuditableEntity where TKey : IEquatable<TKey>
@@ -9,4 +10,7 @@ public class BaseAuditableEntity<TKey> : BaseEntity<TKey>, IEntity<TKey>, IAudit
     public DateTimeOffset? ModifiedAt { get; set; }
     public string? DeletedBy { get; set; }
     public DateTimeOffset? DeletedAt { get; set; }
+
+    [Projectable]
+    public bool IsDeleted => DeletedAt != null;
 }

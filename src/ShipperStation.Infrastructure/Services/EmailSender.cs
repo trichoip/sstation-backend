@@ -10,7 +10,7 @@ namespace ShipperStation.Infrastructure.Services
     {
         private readonly MailSettings _mailSettings = mailSettings.Value;
 
-        public async Task SendEmailAsync(string email, string subject, string htmlMessage)
+        public async Task SendEmailAsync(string email, string subject, string htmlMessage, CancellationToken cancellationToken = default)
         {
             SmtpClient client = new SmtpClient
             {
@@ -32,7 +32,7 @@ namespace ShipperStation.Infrastructure.Services
 
             mailMessage.To.Add(email);
 
-            await client.SendMailAsync(mailMessage);
+            await client.SendMailAsync(mailMessage, cancellationToken);
         }
     }
 }

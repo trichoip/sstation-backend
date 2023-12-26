@@ -1,7 +1,7 @@
 ﻿using ShipperStation.Domain.Common;
 
 namespace ShipperStation.Domain.Entities;
-public class PackageImage : BaseEntity<int>
+public class PackageImage : BaseAuditableEntity<int>
 {
     public string ImageUrl { get; set; } = default!;
 

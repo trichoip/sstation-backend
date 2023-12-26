@@ -1,5 +1,5 @@
-using ShipperStation.Application.DTOs.Auth;
-using ShipperStation.Domain.Entities;
+using ShipperStation.Application.Contracts.Auth;
+using ShipperStation.Domain.Entities.Identities;
 
 namespace ShipperStation.Application.Interfaces.Services;
 

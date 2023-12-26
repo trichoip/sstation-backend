@@ -28,7 +28,7 @@ namespace ShipperStation.Infrastructure.Repositories
             return (IGenericRepository<T>)_repositories[type];
         }
 
-        public async Task CommitAsync()
+        public async Task CommitAsync(CancellationToken cancellationToken = default)
         {
             await _context.SaveChangesAsync();
         }

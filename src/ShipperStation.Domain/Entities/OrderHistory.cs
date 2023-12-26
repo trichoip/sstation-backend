@@ -11,9 +11,6 @@ public class OrderHistory : BaseAuditableEntity<int>
     [Column(TypeName = "nvarchar(24)")]
     public OrderStatus? Status { get; set; }
 
-    [Column(TypeName = "nvarchar(24)")]
-    public OrderStatus PreviousStatus { get; set; }
-
     public int OrderId { get; set; }
     public virtual Order Order { get; set; } = default!;
 }

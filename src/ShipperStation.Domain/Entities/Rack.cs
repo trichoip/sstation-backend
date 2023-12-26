@@ -1,7 +1,7 @@
 ﻿using ShipperStation.Domain.Common;
 
 namespace ShipperStation.Domain.Entities;
-public class Rack : BaseEntity<int>
+public class Rack : BaseAuditableEntity<int>
 {
     public string? Name { get; set; }
     public string? Description { get; set; }

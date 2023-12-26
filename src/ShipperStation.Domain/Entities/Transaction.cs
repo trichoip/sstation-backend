@@ -1,4 +1,5 @@
 ﻿using ShipperStation.Domain.Common;
+using ShipperStation.Domain.Entities.Identities;
 using ShipperStation.Domain.Enums;
 using System.ComponentModel.DataAnnotations.Schema;
 

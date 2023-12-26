@@ -3,12 +3,12 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.WebUtilities;
 using ShipperStation.Application.Common.Constants;
 using ShipperStation.Application.Common.Exceptions;
-using ShipperStation.Application.DTOs.Auth;
+using ShipperStation.Application.Contracts.Auth;
 using ShipperStation.Application.Interfaces.Repositories;
 using ShipperStation.Application.Interfaces.Services;
 using ShipperStation.Domain.Constants;
-using ShipperStation.Domain.Entities;
-using ShipperStation.Shared.Helpers;
+using ShipperStation.Domain.Entities.Identities;
+using ShipperStation.Shared.Extensions;
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 
@@ -16,13 +16,13 @@ namespace ShipperStation.Infrastructure.Services;
 public class AuthService : IAuthService
 {
     private readonly UserManager<User> _userManager;
-    private readonly RoleManager<IdentityRole<Guid>> _roleManager;
+    private readonly RoleManager<Role> _roleManager;
     private readonly IUnitOfWork _unitOfWork;
     private readonly IJwtService _jwtService;
 
     public AuthService(
         UserManager<User> userManager,
-        RoleManager<IdentityRole<Guid>> roleManager,
+        RoleManager<Role> roleManager,
         IUnitOfWork unitOfWork,
         IJwtService jwtService)
     {
@@ -32,7 +32,7 @@ public class AuthService : IAuthService
         _jwtService = jwtService;
     }
 
-    public async Task<AccessTokenResponse> SignInExternalAsync(ExternalAuthRequest externalAuthRequest)
+    public async Task<AccessTokenResponse> SignInExternalAsync(ExternalAuthRequest externalAuthRequest, CancellationToken cancellationToken = default)
     {
         var jwtSecurityToken = new JwtSecurityTokenHandler().ReadJwtToken(externalAuthRequest.IdToken);
         var subject = jwtSecurityToken.Subject.OrElseThrow(() => new UnauthorizedAccessException("Subject in payload is null"));
@@ -42,7 +42,7 @@ public class AuthService : IAuthService
         var name = claims.FirstOrDefault(x => x.Type == JwtRegisteredClaimNames.Name)?.Value;
         var picture = claims.FirstOrDefault(x => x.Type == "picture")?.Value;
 
-        if (await _unitOfWork.Repository<User>().FindByAsync(x => x.UserName == subject) is not { } user)
+        if (await _unitOfWork.Repository<User>().FindByAsync(x => x.UserName == subject, cancellationToken: cancellationToken) is not { } user)
         {
             user = new User()
             {
@@ -52,13 +52,13 @@ public class AuthService : IAuthService
 
             };
 
-            await _unitOfWork.Repository<User>().CreateAsync(user);
-            await _unitOfWork.CommitAsync();
+            await _unitOfWork.Repository<User>().CreateAsync(user, cancellationToken);
+            await _unitOfWork.CommitAsync(cancellationToken);
         }
         return await _jwtService.GenerateTokenAsync(user);
     }
 
-    public async Task<AccessTokenResponse> SignInAsync(LoginRequest loginRequest)
+    public async Task<AccessTokenResponse> SignInAsync(LoginRequest loginRequest, CancellationToken cancellationToken = default)
     {
         var user = await _userManager.FindByNameAsync(loginRequest.Username);
         if (user == null)
@@ -72,7 +72,7 @@ public class AuthService : IAuthService
         return await _jwtService.GenerateTokenAsync(user);
     }
 
-    public async Task<AccessTokenResponse> RefreshTokenAsync(RefreshRequest refreshRequest)
+    public async Task<AccessTokenResponse> RefreshTokenAsync(RefreshRequest refreshRequest, CancellationToken cancellationToken = default)
     {
         var user = await _jwtService.ValidateRefreshTokenAsync(refreshRequest.RefreshToken);
         if (user == null)
@@ -82,7 +82,7 @@ public class AuthService : IAuthService
         return await _jwtService.GenerateTokenAsync(user);
     }
 
-    public async Task<(string userId, string code)> RegisterAsync(RegisterRequest registerRequest)
+    public async Task<(string userId, string code)> RegisterAsync(RegisterRequest registerRequest, CancellationToken cancellationToken = default)
     {
         var user = new User
         {
@@ -98,7 +98,7 @@ public class AuthService : IAuthService
 
         if (!await _roleManager.RoleExistsAsync(Roles.User))
         {
-            result = await _roleManager.CreateAsync(new IdentityRole<Guid> { Name = Roles.User });
+            result = await _roleManager.CreateAsync(new Role { Name = Roles.User });
             if (!result.Succeeded)
             {
                 throw new ValidationBadRequestException(result.Errors);
@@ -117,7 +117,7 @@ public class AuthService : IAuthService
         return (userId, code);
     }
 
-    public async Task<bool> ConfirmEmailAsync(string userId, string code)
+    public async Task<bool> ConfirmEmailAsync(string userId, string code, CancellationToken cancellationToken = default)
     {
         if (await _userManager.FindByIdAsync(userId) is not { } user) return false;
         //throw new UnauthorizedAccessException("Unauthorized");
@@ -134,7 +134,7 @@ public class AuthService : IAuthService
         return result.Succeeded;
     }
 
-    public async Task<string> ForgotPasswordAsync(ForgotPasswordRequest forgotPasswordRequest)
+    public async Task<string> ForgotPasswordAsync(ForgotPasswordRequest forgotPasswordRequest, CancellationToken cancellationToken = default)
     {
         if (await _userManager.FindByEmailAsync(forgotPasswordRequest.Email) is not { } user ||
             !await _userManager.IsEmailConfirmedAsync(user))
@@ -145,7 +145,7 @@ public class AuthService : IAuthService
         return code;
     }
 
-    public async Task ResetPasswordAsync(ResetPasswordRequest resetPasswordRequest)
+    public async Task ResetPasswordAsync(ResetPasswordRequest resetPasswordRequest, CancellationToken cancellationToken = default)
     {
         if (await _userManager.FindByEmailAsync(resetPasswordRequest.Email) is not { } user ||
             !await _userManager.IsEmailConfirmedAsync(user))
@@ -172,7 +172,7 @@ public class AuthService : IAuthService
 
     }
 
-    public async Task<(string userId, string code)> ResendEmailConfirmationAsync(ResendEmailRequest resendEmailRequest)
+    public async Task<(string userId, string code)> ResendEmailConfirmationAsync(ResendEmailRequest resendEmailRequest, CancellationToken cancellationToken = default)
     {
         if (await _userManager.FindByEmailAsync(resendEmailRequest.Email) is not { } user)
             throw new UnauthorizedAccessException("email not found");

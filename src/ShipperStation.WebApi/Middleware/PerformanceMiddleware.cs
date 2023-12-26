@@ -30,7 +30,7 @@ public class PerformanceMiddleware
             var requestName = context.Request.Path;
             var userId = context.User?.Identity?.Name;
 
-            _logger.LogWarning($"CleanArchitecture Long Running Request: {requestName} ({elapsedMilliseconds} milliseconds) {userId}");
+            _logger.LogWarning($"ShipperStation Long Running Request: {requestName} ({elapsedMilliseconds} milliseconds) {userId}");
         }
     }
 }

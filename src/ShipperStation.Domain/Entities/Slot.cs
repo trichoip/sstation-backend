@@ -3,7 +3,7 @@ using ShipperStation.Domain.Enums;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ShipperStation.Domain.Entities;
-public class Slot : BaseEntity<int>
+public class Slot : BaseAuditableEntity<int>
 {
     public string? Name { get; set; }
     public string? Description { get; set; }
