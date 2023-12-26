@@ -1,7 +1,7 @@
 ﻿using ShipperStation.Domain.Common;
 
 namespace ShipperStation.Domain.Entities;
-public class Zone : BaseEntity<int>
+public class Zone : BaseAuditableEntity<int>
 {
     public string? Name { get; set; }
     public string? Description { get; set; }

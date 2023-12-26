@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using ShipperStation.Application.Interfaces.Repositories;
 using ShipperStation.Infrastructure.Persistence.Data;
-using ShipperStation.Shared.Helpers;
+using ShipperStation.Shared.Pages;
 using System.Linq.Expressions;
 
 namespace ShipperStation.Infrastructure.Repositories;
@@ -73,14 +73,14 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class
     }
 
     public async Task<IList<T>> FindAsync(
-        bool IsTracking = false,
         Expression<Func<T, bool>>? expression = null,
         Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null,
+        bool isAsNoTracking = true,
         CancellationToken cancellationToken = default)
     {
         IQueryable<T> query = dbSet;
 
-        if (!IsTracking)
+        if (isAsNoTracking)
         {
             query = query.AsNoTracking();
         }

@@ -1,5 +1,5 @@
 ﻿using ShipperStation.Application.Common.Resources;
-using ShipperStation.Shared.Helpers;
+using ShipperStation.Shared.Extensions;
 
 namespace ShipperStation.Application.Common.Exceptions
 {

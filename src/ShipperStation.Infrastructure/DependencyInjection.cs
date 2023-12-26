@@ -8,17 +8,16 @@ using Microsoft.Extensions.Hosting;
 using ShipperStation.Application.Interfaces.Repositories;
 using ShipperStation.Application.Interfaces.Services;
 using ShipperStation.Application.Interfaces.Services.Notifications;
-using ShipperStation.Application.Interfaces.Services.Notifications.Common;
 using ShipperStation.Application.Interfaces.Services.Payments;
-using ShipperStation.Domain.Entities;
+using ShipperStation.Domain.Entities.Identities;
 using ShipperStation.Infrastructure.Persistence.Data;
 using ShipperStation.Infrastructure.Persistence.Interceptors;
 using ShipperStation.Infrastructure.Persistence.SeedData;
 using ShipperStation.Infrastructure.Repositories;
 using ShipperStation.Infrastructure.Services;
 using ShipperStation.Infrastructure.Services.Notifications;
-using ShipperStation.Infrastructure.Services.Notifications.Common;
 using ShipperStation.Infrastructure.Services.Payments;
+using ShipperStation.Infrastructure.Settings;
 using ShipperStation.Shared.Helpers;
 
 namespace ShipperStation.Infrastructure;
@@ -33,6 +32,7 @@ public static class DependencyInjection
         services.AddRepositories();
         services.AddInitialiseDatabase();
         services.AddDefaultIdentity();
+        services.AddConfigureSettingServices(configuration);
 
     }
 
@@ -46,15 +46,12 @@ public static class DependencyInjection
             .AddScoped<IMomoPaymentService, MomoPaymentService>()
             .AddScoped<IVnPayPaymentService, VnPayPaymentService>()
             .AddScoped<INotifier, Notifier>()
-            .AddScoped<INotificationAdapter, NotificationAdapter>()
             .AddScoped<INotificationProvider, NotificationProvider>()
             .AddScoped<ISignalRNotificationService, SignalRNotificationService>()
-            .AddScoped<IZaloNotificationService, ZnsNotificationService>()
             .AddScoped<IFirebaseNotificationService, FirebaseNotificationService>()
             .AddScoped<ISmsNotificationService, SmsNotificationService>()
-            .AddScoped<ICallerNotificationService, CallerNotificationService>()
-            .AddScoped<ZaloAuthService>()
-            .AddTransient<IEmailSender, EmailSender>();
+            .AddTransient<IEmailSender, EmailSender>()
+            .AddTransient<ISmsSender, SmsSender>();
     }
 
     private static void AddRepositories(this IServiceCollection services)
@@ -88,7 +85,7 @@ public static class DependencyInjection
     private static void AddDefaultIdentity(this IServiceCollection services)
     {
 
-        services.AddIdentity<User, IdentityRole<Guid>>(options =>
+        services.AddIdentity<User, Role>(options =>
         {
             options.Password.RequireDigit = false;
             options.Password.RequireLowercase = false;
@@ -96,13 +93,21 @@ public static class DependencyInjection
             options.Password.RequireUppercase = false;
             options.Password.RequiredLength = 1;
             options.Password.RequiredUniqueChars = 0;
-
-            options.User.RequireUniqueEmail = true;
-            //options.Stores.ProtectPersonalData = true;
+            //options.User.RequireUniqueEmail = true;
 
         }).AddEntityFrameworkStores<ApplicationDbContext>()
-          //.AddPersonalDataProtection<LookupProtector, KeyRing>()
           .AddDefaultTokenProviders();
+    }
+
+    private static void AddConfigureSettingServices(this IServiceCollection services, IConfiguration configuration)
+    {
+        services.Configure<AwsS3Settings>(configuration.GetSection(AwsS3Settings.Section));
+        services.Configure<VnPaySettings>(configuration.GetSection(VnPaySettings.Section));
+        services.Configure<MomoSettings>(configuration.GetSection(MomoSettings.Section));
+        services.Configure<JwtSettings>(configuration.GetSection(JwtSettings.Section));
+        services.Configure<FcmSettings>(configuration.GetSection(FcmSettings.Section));
+        services.Configure<MailSettings>(configuration.GetSection(MailSettings.Section));
+        services.Configure<SmsGatewaySettings>(configuration.GetSection(SmsGatewaySettings.Section));
     }
 
     private static void AddInitialiseDatabase(this IServiceCollection services)

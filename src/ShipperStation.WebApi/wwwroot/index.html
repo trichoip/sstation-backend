@@ -1,0 +1,43 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <script src="https://code.jquery.com/jquery-3.7.1.js"
+            integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4="
+            crossorigin="anonymous"></script>
+</head>
+<body>
+    <div>
+        <p>SignalR Messages:</p>
+        <pre id="signalr-message-panel"></pre>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/8.0.0/signalr.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/8.0.0/signalr.min.js"></script>
+    <script>
+        const options = {
+            accessTokenFactory: getToken,
+        };
+
+        const connection = new signalR.HubConnectionBuilder()
+            .withUrl("https://localhost:7248/notification-hub")
+            .configureLogging(signalR.LogLevel.Debug)
+            .withAutomaticReconnect([0, 2000, 10000, 30000])
+            .build();
+
+        connection.on("ReceiveNotification", (message) => {
+            console.log(message);
+            $('#signalr-message-panel').prepend($('<div />').text(message.id));
+        });
+
+        // Start Connection
+        connection.start();
+
+        function getToken() {
+            return "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IjA4ZGMwNWQ5LWFkNTUtNDY0Zi04NjE1LTI2NWQyNThlY2RiNyIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL25hbWUiOiJ0ZXMyMjIydCIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL2VtYWlsYWRkcmVzcyI6InRlczIyMjJ0QGFhZCIsIkFzcE5ldC5JZGVudGl0eS5TZWN1cml0eVN0YW1wIjoiWVdLSzJWVUNKNjNDNlZPT1FOUlpRU1BFNlJSU1FJWkciLCJleHAiOjE3MDM2NTk0OTl9.W3zyfxM0oCjtwfsXhS1uM8sydfWPINWZVN9KqTK3_vjmiQMI1RqYSP5i62lbCdOoZfZEzRX4l85_nRevpAiR7g";
+        }
+
+    </script>
+</body>
+</html>

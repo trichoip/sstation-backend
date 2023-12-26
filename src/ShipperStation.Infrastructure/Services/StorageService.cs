@@ -25,7 +25,7 @@ public class StorageService : IStorageService
             RegionEndpoint.GetBySystemName(_settings.Region));
     }
 
-    public async Task<byte[]> DownloadFileAsync(string fileName)
+    public async Task<byte[]> DownloadFileAsync(string fileName, CancellationToken cancellationToken = default)
     {
         var getObjectRequest = new GetObjectRequest
         {
@@ -33,19 +33,19 @@ public class StorageService : IStorageService
             Key = fileName
         };
 
-        using var response = await _s3Client.GetObjectAsync(getObjectRequest);
+        using var response = await _s3Client.GetObjectAsync(getObjectRequest, cancellationToken);
         if (response.HttpStatusCode != HttpStatusCode.OK)
         {
             throw new ApplicationException(Resource.FileNotFound);
         }
 
         using var ms = new MemoryStream();
-        await response.ResponseStream.CopyToAsync(ms);
+        await response.ResponseStream.CopyToAsync(ms, cancellationToken);
         return ms.ToArray();
 
     }
 
-    public async Task<string> GetContentType(string fileName)
+    public async Task<string> GetContentTypeAsync(string fileName, CancellationToken cancellationToken = default)
     {
         var getObjectRequest = new GetObjectRequest
         {
@@ -53,7 +53,7 @@ public class StorageService : IStorageService
             Key = fileName
         };
 
-        using var response = await _s3Client.GetObjectAsync(getObjectRequest);
+        using var response = await _s3Client.GetObjectAsync(getObjectRequest, cancellationToken);
         if (response.HttpStatusCode != HttpStatusCode.OK)
         {
             throw new ApplicationException(Resource.FileNotFound);
@@ -62,10 +62,10 @@ public class StorageService : IStorageService
         return response.Headers.ContentType;
     }
 
-    public async Task<string> UploadFileAsync(IFormFile file)
+    public async Task<string> UploadFileAsync(IFormFile file, CancellationToken cancellationToken = default)
     {
         using var ms = new MemoryStream();
-        await file.CopyToAsync(ms);
+        await file.CopyToAsync(ms, cancellationToken);
 
         var fileName = $"{DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()}-{file.FileName}";
         var uploadFileRequest = new TransferUtilityUploadRequest
@@ -78,12 +78,12 @@ public class StorageService : IStorageService
 
         var fileTransferUtility = new TransferUtility(_s3Client);
 
-        await fileTransferUtility.UploadAsync(uploadFileRequest);
+        await fileTransferUtility.UploadAsync(uploadFileRequest, cancellationToken);
 
         return fileName;
     }
 
-    public async Task<bool> DeleteFileAsync(string fileName, string versionId = "")
+    public async Task<bool> DeleteFileAsync(string fileName, string versionId = "", CancellationToken cancellationToken = default)
     {
         var deleteFileRequest = new DeleteObjectRequest()
         {
@@ -97,7 +97,7 @@ public class StorageService : IStorageService
             deleteFileRequest.VersionId = versionId;
         }
 
-        var response = await _s3Client.DeleteObjectAsync(deleteFileRequest);
+        var response = await _s3Client.DeleteObjectAsync(deleteFileRequest, cancellationToken);
         if (response.HttpStatusCode != HttpStatusCode.OK)
         {
             throw new ApplicationException(Resource.FileUploadFailed);
@@ -106,7 +106,7 @@ public class StorageService : IStorageService
         return true;
     }
 
-    public async Task<bool> IsFileExists(string fileName, string versionId = "")
+    public async Task<bool> IsFileExistsAsync(string fileName, string versionId = "", CancellationToken cancellationToken = default)
     {
         try
         {
@@ -117,7 +117,7 @@ public class StorageService : IStorageService
                 VersionId = !string.IsNullOrWhiteSpace(versionId) ? versionId : null
             };
 
-            var response = await _s3Client.GetObjectMetadataAsync(getMetaObjectRequest);
+            var response = await _s3Client.GetObjectMetadataAsync(getMetaObjectRequest, cancellationToken);
             return response.HttpStatusCode == HttpStatusCode.OK;
         }
         catch (Exception ex)
@@ -135,7 +135,7 @@ public class StorageService : IStorageService
         }
     }
 
-    public Task<string> GetPresignedUrlAsync(string fileName)
+    public Task<string> GetPresignedUrlAsync(string fileName, CancellationToken cancellationToken = default)
     {
         var urlRequest = new GetPreSignedUrlRequest()
         {

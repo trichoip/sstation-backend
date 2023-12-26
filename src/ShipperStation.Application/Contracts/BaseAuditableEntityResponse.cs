@@ -1,24 +1,12 @@
 namespace ShipperStation.Application.Contracts;
 
-public class BaseAuditableEntityResponse
+public record BaseAuditableEntityResponse<TKey> where TKey : IEquatable<TKey>
 {
-    public DateTimeOffset CreatedAt { get; set; }
-
-    public long? CreatedBy { get; set; }
-
-    public string? CreatedByUsername { get; set; }
-
-    public DateTimeOffset UpdatedAt { get; set; }
-
-    public long? UpdatedBy { get; set; }
-
-    public string? UpdatedByUsername { get; set; }
-
+    public TKey Id { get; set; } = default!;
+    public string? CreatedBy { get; set; }
+    public DateTimeOffset? CreatedAt { get; set; }
+    public string? ModifiedBy { get; set; }
+    public DateTimeOffset? ModifiedAt { get; set; }
+    public string? DeletedBy { get; set; }
     public DateTimeOffset? DeletedAt { get; set; }
-
-    public long? DeletedBy { get; set; }
-
-    public string? DeletedByUsername { get; set; }
-
-    public bool Deleted => DeletedAt != null;
 }

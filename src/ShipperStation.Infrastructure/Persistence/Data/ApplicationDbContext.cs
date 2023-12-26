@@ -1,19 +1,12 @@
-﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using ShipperStation.Domain.Entities;
+using ShipperStation.Domain.Entities.Identities;
 using System.Reflection;
 
 namespace ShipperStation.Infrastructure.Persistence.Data
 {
-    public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) :
-        IdentityDbContext<
-         User, IdentityRole<Guid>, Guid,
-         IdentityUserClaim<Guid>,
-         UserRole,
-         IdentityUserLogin<Guid>,
-         IdentityRoleClaim<Guid>,
-         UserToken>(options)
+    public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : IdentityDbContext<User, Role, Guid, UserClaim, UserRole, UserLogin, RoleClaim, UserToken>(options)
     {
         private const string Prefix = "AspNet";
 
@@ -32,7 +25,6 @@ namespace ShipperStation.Infrastructure.Persistence.Data
         public DbSet<Slot> Slots { get; set; }
         public DbSet<Shelf> Shelves { get; set; }
         public DbSet<Notification> Notifications { get; set; }
-        public DbSet<Audit> Audits { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

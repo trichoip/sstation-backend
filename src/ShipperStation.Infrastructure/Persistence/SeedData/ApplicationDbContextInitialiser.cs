@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using ShipperStation.Domain.Constants;
-using ShipperStation.Domain.Entities;
+using ShipperStation.Domain.Entities.Identities;
 using ShipperStation.Domain.Enums;
 using ShipperStation.Infrastructure.Persistence.Data;
 
@@ -11,7 +11,7 @@ namespace ShipperStation.Infrastructure.Persistence.SeedData;
 public class ApplicationDbContextInitialiser
 {
     private readonly UserManager<User> _userManager;
-    private readonly RoleManager<IdentityRole<Guid>> _roleManager;
+    private readonly RoleManager<Role> _roleManager;
     private readonly ILogger<ApplicationDbContextInitialiser> _logger;
     private readonly ApplicationDbContext _context;
 
@@ -19,7 +19,7 @@ public class ApplicationDbContextInitialiser
        ILogger<ApplicationDbContextInitialiser> logger,
        ApplicationDbContext context,
        UserManager<User> userManager,
-       RoleManager<IdentityRole<Guid>> roleManager)
+       RoleManager<Role> roleManager)
     {
         _logger = logger;
         _context = context;
@@ -69,7 +69,7 @@ public class ApplicationDbContextInitialiser
     {
         //AccountSeeding.DefaultAccounts
 
-        var adminRole = new IdentityRole<Guid>(Roles.Admin);
+        var adminRole = new Role(Roles.Admin);
         await _roleManager.CreateAsync(adminRole);
         var admin = new User
         {
@@ -81,7 +81,7 @@ public class ApplicationDbContextInitialiser
         await _userManager.CreateAsync(admin, "admin");
         await _userManager.AddToRolesAsync(admin, new[] { Roles.Admin });
 
-        var userRole = new IdentityRole<Guid>(Roles.User);
+        var userRole = new Role(Roles.User);
         await _roleManager.CreateAsync(userRole);
         var user = new User
         {

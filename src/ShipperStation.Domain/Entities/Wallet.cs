@@ -1,4 +1,5 @@
 ﻿using ShipperStation.Domain.Common;
+using ShipperStation.Domain.Entities.Identities;
 
 namespace ShipperStation.Domain.Entities;
 public class Wallet : BaseAuditableEntity<int>

@@ -1,7 +1,7 @@
 ﻿using ShipperStation.Domain.Common;
 
 namespace ShipperStation.Domain.Entities;
-public class DataImage : BaseEntity<Guid>
+public class DataImage : BaseAuditableEntity<Guid>
 {
     public byte[] Data { get; set; } = default!;
     public string? ContentType { get; set; }

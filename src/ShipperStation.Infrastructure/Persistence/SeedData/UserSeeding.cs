@@ -1,4 +1,4 @@
-using ShipperStation.Domain.Entities;
+using ShipperStation.Domain.Entities.Identities;
 using ShipperStation.Domain.Enums;
 
 namespace ShipperStation.Infrastructure.Persistence.SeedData;

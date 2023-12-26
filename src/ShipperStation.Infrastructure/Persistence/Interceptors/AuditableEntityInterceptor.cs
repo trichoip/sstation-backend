@@ -3,40 +3,23 @@ using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using ShipperStation.Application.Interfaces.Services;
 using ShipperStation.Domain.Common.Interfaces;
-using ShipperStation.Domain.Entities;
-using ShipperStation.Domain.Enums;
 
 namespace ShipperStation.Infrastructure.Persistence.Interceptors;
 
 public class AuditableEntityInterceptor(ICurrentUserService currentUserService) : SaveChangesInterceptor
 {
-    public override async ValueTask<InterceptionResult<int>> SavingChangesAsync(
+    public override ValueTask<InterceptionResult<int>> SavingChangesAsync(
         DbContextEventData eventData,
         InterceptionResult<int> result,
         CancellationToken cancellationToken = default)
     {
-        await UpdateEntities(eventData.Context);
-        return await base.SavingChangesAsync(eventData, result, cancellationToken);
+        UpdateEntities(eventData.Context);
+        return base.SavingChangesAsync(eventData, result, cancellationToken);
     }
 
-    public async Task UpdateEntities(DbContext? context)
+    public void UpdateEntities(DbContext? context)
     {
         if (context == null) return;
-
-        foreach (var entry in context.ChangeTracker.Entries())
-        {
-            // Save audit log table
-            var auditEntry = GetAuditEntry(entry);
-            if (auditEntry != null)
-            {
-                var audit = auditEntry.ToAudit();
-
-                audit.CreatedBy = currentUserService.CurrentUserId;
-                audit.ModifiedBy = currentUserService.CurrentUserId;
-                audit.UserId = currentUserService.CurrentUserId;
-                await context.AddAsync(audit);
-            }
-        }
 
         foreach (var entry in context.ChangeTracker.Entries<IAuditableEntity>())
         {
@@ -52,60 +35,13 @@ public class AuditableEntityInterceptor(ICurrentUserService currentUserService) 
                 entry.Entity.ModifiedAt = DateTimeOffset.UtcNow;
             }
 
-            if (entry.State == EntityState.Deleted)
-            {
-                entry.State = EntityState.Modified;
-                entry.Entity.DeletedBy = currentUserService.CurrentUserId;
-                entry.Entity.DeletedAt = DateTimeOffset.UtcNow;
-            }
+            //if (entry.State == EntityState.Deleted)
+            //{
+            //    entry.State = EntityState.Modified;
+            //    entry.Entity.DeletedBy = currentUserService.CurrentUserId;
+            //    entry.Entity.DeletedAt = DateTimeOffset.UtcNow;
+            //}
         }
-    }
-
-    private AuditEntry? GetAuditEntry(EntityEntry entry)
-    {
-        if (entry.Entity is Audit ||
-            entry.State == EntityState.Detached ||
-            entry.State == EntityState.Unchanged)
-        {
-            return null;
-        }
-
-        var auditEntry = new AuditEntry(entry);
-        auditEntry.TableName = entry.Entity.GetType().Name;
-
-        foreach (var property in entry.Properties)
-        {
-            var propertyName = property.Metadata.Name;
-            if (property.Metadata.IsPrimaryKey())
-            {
-                auditEntry.KeyValues[propertyName] = property.CurrentValue ?? string.Empty;
-                continue;
-            }
-            switch (entry.State)
-            {
-                case EntityState.Added:
-                    auditEntry.AuditType = AuditType.Create;
-                    auditEntry.NewValues[propertyName] = property.CurrentValue ?? string.Empty;
-                    break;
-
-                case EntityState.Deleted:
-                    auditEntry.AuditType = AuditType.Delete;
-                    auditEntry.OldValues[propertyName] = property.OriginalValue ?? string.Empty;
-                    break;
-
-                case EntityState.Modified:
-                    if (property.IsModified)
-                    {
-                        auditEntry.ChangedColumns.Add(propertyName);
-                        auditEntry.AuditType = AuditType.Update;
-                        auditEntry.OldValues[propertyName] = property.OriginalValue ?? string.Empty;
-                        auditEntry.NewValues[propertyName] = property.CurrentValue ?? string.Empty;
-                    }
-                    break;
-            }
-        }
-
-        return auditEntry;
     }
 }
 

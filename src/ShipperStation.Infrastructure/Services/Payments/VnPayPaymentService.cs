@@ -5,7 +5,7 @@ using ShipperStation.Application.Interfaces.Services.Payments;
 using ShipperStation.Domain.Entities;
 using ShipperStation.Domain.Enums;
 using ShipperStation.Infrastructure.Settings;
-using ShipperStation.Shared.Helpers;
+using ShipperStation.Shared.Extensions;
 
 namespace ShipperStation.Infrastructure.Services.Payments;
 
@@ -31,7 +31,7 @@ public class VnPayPaymentService : IVnPayPaymentService
         _contextAccessor = contextAccessor;
     }
 
-    public async Task<Payment> CreatePayment(VnPayPayment payment)
+    public async Task<Payment> CreatePaymentAsync(VnPayPayment payment)
     {
         HttpContext? context = _contextAccessor.HttpContext;
         if (context == null)
@@ -42,17 +42,20 @@ public class VnPayPaymentService : IVnPayPaymentService
         var pay = new VnPayLibrary();
         var urlCallBack = $"{_vnPaySettings.CallbackUrl}/{payment.PaymentReferenceId}";
 
+        pay.AddRequestData("vnp_ReturnUrl", urlCallBack);
         pay.AddRequestData("vnp_Version", _vnPaySettings.Version);
         pay.AddRequestData("vnp_Command", PayCommand);
         pay.AddRequestData("vnp_TmnCode", _vnPaySettings.TmnCode);
+        pay.AddRequestData("vnp_CurrCode", CurrCode);
+
         pay.AddRequestData("vnp_Amount", ((int)payment.Amount * 100).ToString());
         pay.AddRequestData("vnp_CreateDate", payment.Time.ToString("yyyyMMddHHmmss"));
-        pay.AddRequestData("vnp_CurrCode", CurrCode);
+
         pay.AddRequestData("vnp_IpAddr", UtilitiesExtensions.GetIpAddress());
         pay.AddRequestData("vnp_Locale", Locale);
         pay.AddRequestData("vnp_OrderInfo", payment.Info ?? DefaultPaymentInfo);
         pay.AddRequestData("vnp_OrderType", payment.OrderType.ToString());
-        pay.AddRequestData("vnp_ReturnUrl", urlCallBack);
+
         pay.AddRequestData("vnp_TxnRef", payment.PaymentReferenceId);
         pay.AddRequestData("vnp_BankCode", string.Empty);
 
