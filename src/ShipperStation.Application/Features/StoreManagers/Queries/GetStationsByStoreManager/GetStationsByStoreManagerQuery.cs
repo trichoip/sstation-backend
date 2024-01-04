@@ -31,7 +31,7 @@ public sealed record GetStationsByStoreManagerQuery : PaginationRequest<Station>
             Expression = Expression.And(queryExpression);
         }
 
-        Expression = Expression.And(sta => sta.StationUsers.Any(_ => _.UserId == StoreManagerId));
+        Expression = Expression.And(sta => sta.UserStations.Any(_ => _.UserId == StoreManagerId));
 
         return Expression;
     }
