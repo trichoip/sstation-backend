@@ -3,6 +3,5 @@
 namespace ShipperStation.Domain.Entities.Identities;
 public class UserRole : IdentityUserRole<Guid>
 {
-    public int StationId { get; set; }
-    public virtual Station Station { get; set; } = default!;
+    public virtual Role Role { get; set; } = default!;
 }

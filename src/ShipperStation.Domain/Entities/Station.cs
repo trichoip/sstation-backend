@@ -1,5 +1,4 @@
 ﻿using ShipperStation.Domain.Common;
-using ShipperStation.Domain.Entities.Identities;
 
 namespace ShipperStation.Domain.Entities;
 public class Station : BaseAuditableEntity<int>
@@ -11,7 +10,7 @@ public class Station : BaseAuditableEntity<int>
     public string? Latitude { get; set; }
     public string? Longitude { get; set; }
 
-    public virtual ICollection<UserRole> UserRoles { get; set; } = new HashSet<UserRole>();
+    public virtual ICollection<UserStation> UserStations { get; set; } = new HashSet<UserStation>();
     public virtual ICollection<StationImage> StationImages { get; set; } = new HashSet<StationImage>();
     public virtual ICollection<Zone> Zones { get; set; } = new HashSet<Zone>();
 

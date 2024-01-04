@@ -10,5 +10,5 @@ public class ConflictException : Exception
 
     public ConflictException(string message, Exception innerException) : base(message, innerException) { }
 
-    public ConflictException(string name, object key) : base(Resource.EntityConflict.FormatWith(name, key)) { }
+    public ConflictException(string name, object key) : base(Resource.EntityConflict.Format(name, key)) { }
 }

@@ -18,7 +18,6 @@ using ShipperStation.Infrastructure.Services;
 using ShipperStation.Infrastructure.Services.Notifications;
 using ShipperStation.Infrastructure.Services.Payments;
 using ShipperStation.Infrastructure.Settings;
-using ShipperStation.Shared.Helpers;
 
 namespace ShipperStation.Infrastructure;
 
@@ -40,7 +39,6 @@ public static class DependencyInjection
     {
         services
             .AddScoped<ICurrentUserService, CurrentUserService>()
-            .AddScoped<IAuthService, AuthService>()
             .AddScoped<IStorageService, StorageService>()
             .AddScoped<IJwtService, JwtService>()
             .AddScoped<IMomoPaymentService, MomoPaymentService>()
@@ -108,6 +106,7 @@ public static class DependencyInjection
         services.Configure<FcmSettings>(configuration.GetSection(FcmSettings.Section));
         services.Configure<MailSettings>(configuration.GetSection(MailSettings.Section));
         services.Configure<SmsGatewaySettings>(configuration.GetSection(SmsGatewaySettings.Section));
+        services.Configure<SpeedSmsSettings>(configuration.GetSection(SpeedSmsSettings.Section));
     }
 
     private static void AddInitialiseDatabase(this IServiceCollection services)
@@ -131,6 +130,7 @@ public static class DependencyInjection
         if (app.Environment.IsProduction())
         {
             await initialiser.MigrateAsync();
+            //await initialiser.SeedAsync();
         }
     }
 }

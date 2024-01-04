@@ -19,54 +19,6 @@ namespace ShipperStation.Infrastructure.Migrations
                 .HasAnnotation("ProductVersion", "8.0.0")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
-            modelBuilder.Entity("ShipperStation.Domain.Entities.DataImage", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("char(36)");
-
-                    b.Property<string>("ContentType")
-                        .HasColumnType("longtext");
-
-                    b.Property<DateTimeOffset?>("CreatedAt")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("longtext");
-
-                    b.Property<byte[]>("Data")
-                        .IsRequired()
-                        .HasColumnType("longblob");
-
-                    b.Property<DateTimeOffset?>("DeletedAt")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("DeletedBy")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("Extension")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("FileName")
-                        .HasColumnType("longtext");
-
-                    b.Property<DateTimeOffset?>("ModifiedAt")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("ModifiedBy")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("ReferenceName")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("TableName")
-                        .HasColumnType("longtext");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("DataImages");
-                });
-
             modelBuilder.Entity("ShipperStation.Domain.Entities.Identities.Role", b =>
                 {
                     b.Property<Guid>("Id")
@@ -262,14 +214,9 @@ namespace ShipperStation.Infrastructure.Migrations
                     b.Property<Guid>("RoleId")
                         .HasColumnType("char(36)");
 
-                    b.Property<int>("StationId")
-                        .HasColumnType("int");
-
                     b.HasKey("UserId", "RoleId");
 
                     b.HasIndex("RoleId");
-
-                    b.HasIndex("StationId");
 
                     b.ToTable("UserRoles", (string)null);
                 });
@@ -284,21 +231,6 @@ namespace ShipperStation.Infrastructure.Migrations
 
                     b.Property<string>("Name")
                         .HasColumnType("varchar(255)");
-
-                    b.Property<string>("DeviceType")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(24)");
-
-                    b.Property<DateTimeOffset?>("ExpiredAt")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(24)");
-
-                    b.Property<string>("Type")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(24)");
 
                     b.Property<string>("Value")
                         .HasColumnType("longtext");
@@ -328,10 +260,6 @@ namespace ShipperStation.Infrastructure.Migrations
 
                     b.Property<string>("DeletedBy")
                         .HasColumnType("longtext");
-
-                    b.Property<string>("EntityType")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(24)");
 
                     b.Property<bool>("IsRead")
                         .HasColumnType("tinyint(1)");
@@ -366,7 +294,7 @@ namespace ShipperStation.Infrastructure.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Notifications");
+                    b.ToTable("Notifications", (string)null);
                 });
 
             modelBuilder.Entity("ShipperStation.Domain.Entities.Order", b =>
@@ -405,10 +333,6 @@ namespace ShipperStation.Infrastructure.Migrations
                     b.Property<string>("Status")
                         .HasColumnType("nvarchar(24)");
 
-                    b.Property<string>("Type")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(24)");
-
                     b.Property<Guid>("UserId")
                         .HasColumnType("char(36)");
 
@@ -419,7 +343,7 @@ namespace ShipperStation.Infrastructure.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Orders");
+                    b.ToTable("Orders", (string)null);
                 });
 
             modelBuilder.Entity("ShipperStation.Domain.Entities.OrderHistory", b =>
@@ -455,10 +379,6 @@ namespace ShipperStation.Infrastructure.Migrations
                     b.Property<int>("OrderId")
                         .HasColumnType("int");
 
-                    b.Property<string>("PreviousStatus")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(24)");
-
                     b.Property<string>("Status")
                         .HasColumnType("nvarchar(24)");
 
@@ -466,7 +386,7 @@ namespace ShipperStation.Infrastructure.Migrations
 
                     b.HasIndex("OrderId");
 
-                    b.ToTable("OrderHistories");
+                    b.ToTable("OrderHistories", (string)null);
                 });
 
             modelBuilder.Entity("ShipperStation.Domain.Entities.Package", b =>
@@ -556,7 +476,7 @@ namespace ShipperStation.Infrastructure.Migrations
 
                     b.HasIndex("SlotId");
 
-                    b.ToTable("Packages");
+                    b.ToTable("Packages", (string)null);
                 });
 
             modelBuilder.Entity("ShipperStation.Domain.Entities.PackageImage", b =>
@@ -594,7 +514,7 @@ namespace ShipperStation.Infrastructure.Migrations
 
                     b.HasIndex("PackageId");
 
-                    b.ToTable("PackageImages");
+                    b.ToTable("PackageImages", (string)null);
                 });
 
             modelBuilder.Entity("ShipperStation.Domain.Entities.Payment", b =>
@@ -660,7 +580,7 @@ namespace ShipperStation.Infrastructure.Migrations
 
                     b.HasIndex("OrderId");
 
-                    b.ToTable("Payments");
+                    b.ToTable("Payments", (string)null);
                 });
 
             modelBuilder.Entity("ShipperStation.Domain.Entities.Rack", b =>
@@ -703,7 +623,7 @@ namespace ShipperStation.Infrastructure.Migrations
 
                     b.HasIndex("ZoneId");
 
-                    b.ToTable("Racks");
+                    b.ToTable("Racks", (string)null);
                 });
 
             modelBuilder.Entity("ShipperStation.Domain.Entities.Shelf", b =>
@@ -746,7 +666,7 @@ namespace ShipperStation.Infrastructure.Migrations
 
                     b.HasIndex("RackId");
 
-                    b.ToTable("Shelves");
+                    b.ToTable("Shelves", (string)null);
                 });
 
             modelBuilder.Entity("ShipperStation.Domain.Entities.Slot", b =>
@@ -805,7 +725,7 @@ namespace ShipperStation.Infrastructure.Migrations
 
                     b.HasIndex("ShelfId");
 
-                    b.ToTable("Slots");
+                    b.ToTable("Slots", (string)null);
                 });
 
             modelBuilder.Entity("ShipperStation.Domain.Entities.Station", b =>
@@ -855,7 +775,7 @@ namespace ShipperStation.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Stations");
+                    b.ToTable("Stations", (string)null);
                 });
 
             modelBuilder.Entity("ShipperStation.Domain.Entities.StationImage", b =>
@@ -893,7 +813,64 @@ namespace ShipperStation.Infrastructure.Migrations
 
                     b.HasIndex("StationId");
 
-                    b.ToTable("StationImages");
+                    b.ToTable("StationImages", (string)null);
+                });
+
+            modelBuilder.Entity("ShipperStation.Domain.Entities.StationUser", b =>
+                {
+                    b.Property<int>("StationId")
+                        .HasColumnType("int");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("char(36)");
+
+                    b.HasKey("StationId", "UserId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("UserStations", (string)null);
+                });
+
+            modelBuilder.Entity("ShipperStation.Domain.Entities.Token", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<DateTimeOffset?>("CreatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("longtext");
+
+                    b.Property<DateTimeOffset?>("DeletedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("DeletedBy")
+                        .HasColumnType("longtext");
+
+                    b.Property<DateTimeOffset?>("ModifiedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("ModifiedBy")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(24)");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<string>("Value")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Tokens", (string)null);
                 });
 
             modelBuilder.Entity("ShipperStation.Domain.Entities.Transaction", b =>
@@ -941,7 +918,7 @@ namespace ShipperStation.Infrastructure.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Transactions");
+                    b.ToTable("Transactions", (string)null);
                 });
 
             modelBuilder.Entity("ShipperStation.Domain.Entities.Wallet", b =>
@@ -982,7 +959,7 @@ namespace ShipperStation.Infrastructure.Migrations
                     b.HasIndex("UserId")
                         .IsUnique();
 
-                    b.ToTable("Wallets");
+                    b.ToTable("Wallets", (string)null);
                 });
 
             modelBuilder.Entity("ShipperStation.Domain.Entities.Zone", b =>
@@ -1022,7 +999,7 @@ namespace ShipperStation.Infrastructure.Migrations
 
                     b.HasIndex("StationId");
 
-                    b.ToTable("Zones");
+                    b.ToTable("Zones", (string)null);
                 });
 
             modelBuilder.Entity("ShipperStation.Domain.Entities.Identities.RoleClaim", b =>
@@ -1060,19 +1037,11 @@ namespace ShipperStation.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("ShipperStation.Domain.Entities.Station", "Station")
-                        .WithMany("UserRoles")
-                        .HasForeignKey("StationId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("ShipperStation.Domain.Entities.Identities.User", null)
-                        .WithMany()
+                        .WithMany("UserRoles")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Station");
                 });
 
             modelBuilder.Entity("ShipperStation.Domain.Entities.Identities.UserToken", b =>
@@ -1202,6 +1171,36 @@ namespace ShipperStation.Infrastructure.Migrations
                     b.Navigation("Station");
                 });
 
+            modelBuilder.Entity("ShipperStation.Domain.Entities.StationUser", b =>
+                {
+                    b.HasOne("ShipperStation.Domain.Entities.Station", "Station")
+                        .WithMany("UserStations")
+                        .HasForeignKey("StationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ShipperStation.Domain.Entities.Identities.User", "User")
+                        .WithMany("UserStations")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Station");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("ShipperStation.Domain.Entities.Token", b =>
+                {
+                    b.HasOne("ShipperStation.Domain.Entities.Identities.User", "User")
+                        .WithMany("Tokens")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("ShipperStation.Domain.Entities.Transaction", b =>
                 {
                     b.HasOne("ShipperStation.Domain.Entities.Identities.User", "User")
@@ -1241,7 +1240,13 @@ namespace ShipperStation.Infrastructure.Migrations
 
                     b.Navigation("Orders");
 
+                    b.Navigation("Tokens");
+
                     b.Navigation("Transactions");
+
+                    b.Navigation("UserRoles");
+
+                    b.Navigation("UserStations");
 
                     b.Navigation("Wallet")
                         .IsRequired();
@@ -1281,7 +1286,7 @@ namespace ShipperStation.Infrastructure.Migrations
                 {
                     b.Navigation("StationImages");
 
-                    b.Navigation("UserRoles");
+                    b.Navigation("UserStations");
 
                     b.Navigation("Zones");
                 });

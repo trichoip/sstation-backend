@@ -1,40 +1,31 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using ShipperStation.Application.Interfaces.Repositories;
 using ShipperStation.Domain.Constants;
+using ShipperStation.Domain.Entities;
 using ShipperStation.Domain.Entities.Identities;
 using ShipperStation.Domain.Enums;
 using ShipperStation.Infrastructure.Persistence.Data;
 
 namespace ShipperStation.Infrastructure.Persistence.SeedData;
 
-public class ApplicationDbContextInitialiser
+public class ApplicationDbContextInitialiser(
+   ILogger<ApplicationDbContextInitialiser> logger,
+   ApplicationDbContext context,
+   UserManager<User> userManager,
+   RoleManager<Role> roleManager,
+   IUnitOfWork unitOfWork)
 {
-    private readonly UserManager<User> _userManager;
-    private readonly RoleManager<Role> _roleManager;
-    private readonly ILogger<ApplicationDbContextInitialiser> _logger;
-    private readonly ApplicationDbContext _context;
-
-    public ApplicationDbContextInitialiser(
-       ILogger<ApplicationDbContextInitialiser> logger,
-       ApplicationDbContext context,
-       UserManager<User> userManager,
-       RoleManager<Role> roleManager)
-    {
-        _logger = logger;
-        _context = context;
-        _userManager = userManager;
-        _roleManager = roleManager;
-    }
     public async Task MigrateAsync()
     {
         try
         {
-            await _context.Database.MigrateAsync();
+            await context.Database.MigrateAsync();
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "An error occurred while initialising the database.");
+            logger.LogError(ex, "An error occurred while initialising the database.");
             throw;
         }
     }
@@ -43,11 +34,11 @@ public class ApplicationDbContextInitialiser
     {
         try
         {
-            await _context.Database.EnsureDeletedAsync();
+            await context.Database.EnsureDeletedAsync();
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "An error occurred while initialising the database.");
+            logger.LogError(ex, "An error occurred while initialising the database.");
             throw;
         }
     }
@@ -60,39 +51,75 @@ public class ApplicationDbContextInitialiser
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "An error occurred while seeding the database.");
+            logger.LogError(ex, "An error occurred while seeding the database.");
             throw;
         }
     }
 
     private async Task TrySeedAsync()
     {
-        //AccountSeeding.DefaultAccounts
 
-        var adminRole = new Role(Roles.Admin);
-        await _roleManager.CreateAsync(adminRole);
-        var admin = new User
+        if (!await unitOfWork.Repository<Station>().ExistsByAsync())
         {
-            UserName = "admin",
-            Email = "00000",
-            EmailConfirmed = true,
-            Status = UserStatus.Active
-        };
-        await _userManager.CreateAsync(admin, "admin");
-        await _userManager.AddToRolesAsync(admin, new[] { Roles.Admin });
+            await unitOfWork.Repository<Station>().CreateRangeAsync(StationSeed.Default);
+            await unitOfWork.CommitAsync();
+        }
 
-        var userRole = new Role(Roles.User);
-        await _roleManager.CreateAsync(userRole);
-        var user = new User
+        if (!await unitOfWork.Repository<Role>().ExistsByAsync())
         {
-            UserName = "user",
-            Email = "00000",
-            EmailConfirmed = true,
-            Status = UserStatus.Active,
-            PhoneNumber = "0123456789"
-        };
-        await _userManager.CreateAsync(user, "user");
-        await _userManager.AddToRolesAsync(user, new[] { Roles.User });
+            foreach (var item in RoleSeed.Default)
+            {
+                await roleManager.CreateAsync(item);
+            }
+        }
+
+        if (!await unitOfWork.Repository<User>().ExistsByAsync())
+        {
+            var user = new User
+            {
+                UserName = "admin",
+                Status = UserStatus.Active
+            };
+            await userManager.CreateAsync(user, "admin");
+            await userManager.AddToRolesAsync(user, new[] { Roles.Admin });
+
+            user = new User
+            {
+                UserName = "user",
+                Status = UserStatus.Active
+            };
+            await userManager.CreateAsync(user, "user");
+            await userManager.AddToRolesAsync(user, new[] { Roles.User });
+
+            user = new User
+            {
+                UserName = "store",
+                Status = UserStatus.Active,
+            };
+            await userManager.CreateAsync(user, "store");
+            await userManager.AddToRolesAsync(user, new[] { Roles.StoreManager });
+            var station = await unitOfWork.Repository<Station>().FindByAsync(_ => !_.IsDeleted);
+            user.UserStations.Add(new UserStation
+            {
+                UserId = user.Id,
+                StationId = station.Id,
+            });
+
+            user = new User
+            {
+                UserName = "staff",
+                Status = UserStatus.Active,
+            };
+            await userManager.CreateAsync(user, "staff");
+            await userManager.AddToRolesAsync(user, new[] { Roles.Staff });
+            user.UserStations.Add(new UserStation
+            {
+                UserId = user.Id,
+                StationId = station.Id,
+            });
+
+            await unitOfWork.CommitAsync();
+        }
 
     }
 }

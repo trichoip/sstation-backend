@@ -23,7 +23,12 @@ public class User : IdentityUser<Guid>, IAuditableEntity
     public bool IsDeleted => DeletedAt != null;
 
     public virtual Wallet Wallet { get; set; } = default!;
+
+    public virtual ICollection<UserStation> UserStations { get; set; } = new HashSet<UserStation>();
     public virtual ICollection<Notification> Notifications { get; set; } = new HashSet<Notification>();
     public virtual ICollection<Transaction> Transactions { get; set; } = new HashSet<Transaction>();
     public virtual ICollection<Order> Orders { get; set; } = new HashSet<Order>();
+    public virtual ICollection<Token> Tokens { get; set; } = new HashSet<Token>();
+
+    public virtual ICollection<UserRole> UserRoles { get; set; } = new HashSet<UserRole>();
 }

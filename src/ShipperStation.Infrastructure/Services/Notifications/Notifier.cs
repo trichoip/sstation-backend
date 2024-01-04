@@ -1,5 +1,6 @@
 using Mapster;
 using Microsoft.Extensions.Logging;
+using ShipperStation.Application.Common.Extensions;
 using ShipperStation.Application.Contracts.Notifications;
 using ShipperStation.Application.Interfaces.Repositories;
 using ShipperStation.Application.Interfaces.Services.Notifications;
@@ -27,10 +28,8 @@ public class Notifier : INotifier
         _logger = logger;
         _unitOfWork = unitOfWork;
 
-        _provider.Attach(NotificationType.AccountOtpCreated, new List<INotificationService>()
+        _provider.Attach(NotificationType.VerificationCode, new List<INotificationService>()
         {
-            signalRNotificationService,
-            firebaseNotificationService,
             smsNotificationService
         });
 
@@ -41,6 +40,8 @@ public class Notifier : INotifier
         bool isSaved = true,
         CancellationToken cancellationToken = default)
     {
+        notificationRequset.InitNotification();
+
         if (isSaved)
         {
             var notification = notificationRequset.Adapt<Notification>();
@@ -48,6 +49,7 @@ public class Notifier : INotifier
             await _unitOfWork.CommitAsync(cancellationToken);
             notification.Adapt(notificationRequset);
         }
+
         _logger.LogInformation($"[PUSH NOTIFICATION]: {notificationRequset}");
         await _provider.NotifyAsync(notificationRequset, cancellationToken);
     }

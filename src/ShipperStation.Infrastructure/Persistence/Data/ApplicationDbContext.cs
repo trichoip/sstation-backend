@@ -4,41 +4,57 @@ using ShipperStation.Domain.Entities;
 using ShipperStation.Domain.Entities.Identities;
 using System.Reflection;
 
-namespace ShipperStation.Infrastructure.Persistence.Data
+namespace ShipperStation.Infrastructure.Persistence.Data;
+
+public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : IdentityDbContext<User, Role, Guid, UserClaim, UserRole, UserLogin, RoleClaim, UserToken>(options)
 {
-    public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : IdentityDbContext<User, Role, Guid, UserClaim, UserRole, UserLogin, RoleClaim, UserToken>(options)
+    private const string Prefix = "AspNet";
+
+    public DbSet<Station> Stations { get; set; }
+    public DbSet<StationImage> StationImages { get; set; }
+    public DbSet<Wallet> Wallets { get; set; }
+    public DbSet<Zone> Zones { get; set; }
+    public DbSet<Transaction> Transactions { get; set; }
+    public DbSet<Package> Packages { get; set; }
+    public DbSet<PackageImage> PackageImages { get; set; }
+    public DbSet<Order> Orders { get; set; }
+    public DbSet<OrderHistory> OrderHistories { get; set; }
+    public DbSet<Payment> Payments { get; set; }
+    public DbSet<Rack> Racks { get; set; }
+    public DbSet<Slot> Slots { get; set; }
+    public DbSet<Shelf> Shelves { get; set; }
+    public DbSet<Notification> Notifications { get; set; }
+    public DbSet<UserStation> UserStations { get; set; }
+    public DbSet<Token> Tokens { get; set; }
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        private const string Prefix = "AspNet";
+        base.OnModelCreating(modelBuilder);
+        modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
 
-        public DbSet<Station> Stations { get; set; }
-        public DbSet<StationImage> StationImages { get; set; }
-        public DbSet<Wallet> Wallets { get; set; }
-        public DbSet<DataImage> DataImages { get; set; }
-        public DbSet<Zone> Zones { get; set; }
-        public DbSet<Transaction> Transactions { get; set; }
-        public DbSet<Package> Packages { get; set; }
-        public DbSet<PackageImage> PackageImages { get; set; }
-        public DbSet<Order> Orders { get; set; }
-        public DbSet<OrderHistory> OrderHistories { get; set; }
-        public DbSet<Payment> Payments { get; set; }
-        public DbSet<Rack> Racks { get; set; }
-        public DbSet<Slot> Slots { get; set; }
-        public DbSet<Shelf> Shelves { get; set; }
-        public DbSet<Notification> Notifications { get; set; }
-
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        foreach (var entityType in modelBuilder.Model.GetEntityTypes())
         {
-            base.OnModelCreating(modelBuilder);
-            modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
-
-            foreach (var entityType in modelBuilder.Model.GetEntityTypes())
+            var tableName = entityType.GetTableName();
+            if (tableName != null && tableName.StartsWith(Prefix))
             {
-                var tableName = entityType.GetTableName();
-                if (tableName != null && tableName.StartsWith(Prefix))
-                {
-                    entityType.SetTableName(tableName.Substring(6));
-                }
+                entityType.SetTableName(tableName.Substring(6));
             }
         }
+
+        modelBuilder.Entity<User>(b =>
+        {
+            b.HasMany(e => e.UserRoles)
+                .WithOne()
+                .HasForeignKey(ur => ur.UserId)
+                .IsRequired();
+        });
+
+        modelBuilder.Entity<UserRole>(b =>
+        {
+            b.HasOne(e => e.Role)
+                .WithMany()
+                .HasForeignKey(ur => ur.RoleId)
+                .IsRequired();
+        });
     }
 }

@@ -1,5 +1,4 @@
 using System.Text.Json;
-using System.Text.Json.Serialization;
 
 namespace ShipperStation.Shared.Helpers;
 
@@ -10,11 +9,10 @@ public class JsonSerializerUtils
         return new JsonSerializerOptions()
         {
             PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-            Converters = { new JsonStringEnumConverter(), },
-            ReferenceHandler = ReferenceHandler.IgnoreCycles
+            //Converters = { new JsonStringEnumConverter(), },
+            //ReferenceHandler = ReferenceHandler.IgnoreCycles
         };
     }
-
 
     public static string Serialize<TValue>(TValue value, JsonSerializerOptions? options = null)
     {

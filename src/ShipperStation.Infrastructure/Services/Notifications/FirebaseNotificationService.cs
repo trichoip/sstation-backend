@@ -5,7 +5,6 @@ using ShipperStation.Application.Contracts.Notifications;
 using ShipperStation.Application.Interfaces.Repositories;
 using ShipperStation.Application.Interfaces.Services.Notifications;
 using ShipperStation.Domain.Entities.Identities;
-using ShipperStation.Domain.Enums;
 using ShipperStation.Infrastructure.Settings;
 
 namespace ShipperStation.Infrastructure.Services.Notifications;
@@ -57,7 +56,7 @@ public class FirebaseNotificationService : IFirebaseNotificationService
                         data = new
                         {
                             type = notification.Type.ToString(),
-                            entityType = notification.EntityType.ToString(),
+                            //entityType = notification.EntityType.ToString(),
                             notification.ReferenceId
                         },
                     }
