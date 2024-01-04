@@ -12,6 +12,6 @@ namespace ShipperStation.Application.Common.Exceptions
         public NotFoundException(string message, Exception innerException) : base(message, innerException) { }
 
         public NotFoundException(string name, object key)
-            : base(Resource.EntityNotFound.FormatWith(name, key)) { }
+            : base(Resource.EntityNotFound.Format(name, key)) { }
     }
 }

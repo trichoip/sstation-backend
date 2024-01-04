@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using Hangfire;
+using Hangfire.MemoryStorage;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApplicationModels;
@@ -12,6 +14,7 @@ using ShipperStation.Application.Common.Exceptions;
 using ShipperStation.Domain.Constants;
 using ShipperStation.Infrastructure;
 using ShipperStation.Infrastructure.Hubs;
+using ShipperStation.Shared.Helpers;
 using ShipperStation.WebApi.Extensions;
 using ShipperStation.WebApi.Middleware;
 using ShipperStation.WebApi.Transformers;
@@ -36,6 +39,7 @@ public static class DependencyInjection
         services.AddUrlHelperServices();
         services.AddAuthorizationServices();
         services.AddSignalRServices();
+        services.AddHangfireServices();
 
     }
 
@@ -105,7 +109,14 @@ public static class DependencyInjection
     private static void AddAuthorizationServices(this IServiceCollection services)
     {
         services.AddAuthorization(options =>
-              options.AddPolicy(Policies.CanPurge, policy => policy.RequireRole(Roles.Admin)));
+        {
+            options.AddPolicy(Policies.Admin, policy => policy.RequireRole(Roles.Admin));
+            options.AddPolicy(Policies.Staff, policy => policy.RequireRole(Roles.Staff));
+            options.AddPolicy(Policies.StoreManager, policy => policy.RequireRole(Roles.StoreManager));
+            options.AddPolicy(Policies.User, policy => policy.RequireRole(Roles.User));
+            options.AddPolicy(Policies.StoreManager_And_Staff, policy => policy.RequireRole(Roles.StoreManager).RequireRole(Roles.Staff));
+            options.AddPolicy(Policies.Admin_Or_StoreManager, policy => policy.RequireRole(Roles.Admin, Roles.StoreManager));
+        });
     }
 
     private static void AddSignalRServices(this IServiceCollection services)
@@ -113,14 +124,17 @@ public static class DependencyInjection
         services.AddSignalR(options => options.EnableDetailedErrors = true);
     }
 
+    private static void AddHangfireServices(this IServiceCollection services)
+    {
+        services.AddHangfire(c => c.UseMemoryStorage());
+        services.AddHangfireServer();
+    }
     public static async Task UseWebApplication(this WebApplication app)
     {
 
         app.UseSwagger();
         app.UseSwaggerUI(c =>
         {
-            c.DisplayOperationId();
-            c.EnableFilter();
             c.EnableDeepLinking();
             c.EnablePersistAuthorization();
             c.EnableTryItOutByDefault();
@@ -144,6 +158,8 @@ public static class DependencyInjection
         app.UseAuthentication();
         app.UseAuthorization();
         app.MapControllers();
+
+        app.MapHangfireDashboard(); // /hangfire
 
         app.MapHub<NotificationHub>("/notification-hub");
     }
@@ -174,7 +190,10 @@ public static class DependencyInjection
                              httpContext: context,
                              statusCode: context.Response.StatusCode,
                              detail: exception?.Message);
-                var result = JsonSerializer.Serialize(problemDetails);
+
+                var options = JsonSerializerUtils.GetGlobalJsonSerializerOptions();
+
+                var result = JsonSerializer.Serialize(problemDetails, options);
 
                 if (exception is ValidationBadRequestException badRequestException)
                 {
@@ -185,7 +204,7 @@ public static class DependencyInjection
                               modelStateDictionary: badRequestException.ModelState,
                               statusCode: context.Response.StatusCode,
                               detail: exception?.Message);
-                        result = JsonSerializer.Serialize((ValidationProblemDetails)problemDetails);
+                        result = JsonSerializer.Serialize((ValidationProblemDetails)problemDetails, options);
                     }
                 }
 

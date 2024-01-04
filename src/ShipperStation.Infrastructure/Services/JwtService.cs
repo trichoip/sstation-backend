@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using ShipperStation.Application.Common.Exceptions;
+using ShipperStation.Application.Common.Resources;
 using ShipperStation.Application.Contracts.Auth;
 using ShipperStation.Application.Interfaces.Services;
 using ShipperStation.Domain.Entities.Identities;
@@ -61,15 +61,13 @@ public class JwtService : IJwtService
 
     public async Task<User> ValidateRefreshTokenAsync(string refreshToken)
     {
-        if (string.IsNullOrEmpty(refreshToken)) throw new BadRequestException("RefreshToken must be provided");
-
         var ticket = ticketDataFormat.Unprotect(refreshToken);
 
         if (ticket?.Properties?.ExpiresUtc is not { } expiresUtc ||
             DateTimeOffset.UtcNow >= expiresUtc ||
             await _signInManager.ValidateSecurityStampAsync(ticket.Principal) is not User user)
         {
-            throw new UnauthorizedAccessException("Refresh token is not valid!");
+            throw new UnauthorizedAccessException(Resource.InvalidRefreshToken);
         }
         return user;
     }

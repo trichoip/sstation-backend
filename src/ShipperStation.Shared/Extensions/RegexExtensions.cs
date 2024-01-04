@@ -5,7 +5,9 @@ namespace ShipperStation.Shared.Extensions;
 
 public static class RegexExtensions
 {
-    private const string PhoneRegex = "^(\\+84|84|0)[35789][0-9]{8}$";
+    public const string PhoneRegex = "^(\\+84|84|0)[35789][0-9]{8}$";
+
+    public const string OtpRegex = "^\\d{6}$";
 
     private const string PasswordRegex = "^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$";
 

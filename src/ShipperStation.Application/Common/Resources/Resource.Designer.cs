@@ -79,6 +79,24 @@ namespace ShipperStation.Application.Common.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Device token already registered.
+        /// </summary>
+        public static string DeviceTokenAlreadyRegistered {
+            get {
+                return ResourceManager.GetString("DeviceTokenAlreadyRegistered", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Device token registered successfully.
+        /// </summary>
+        public static string DeviceTokenRegisteredSuccess {
+            get {
+                return ResourceManager.GetString("DeviceTokenRegisteredSuccess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Entity {0} ({1}) already exists!.
         /// </summary>
         public static string EntityConflict {
@@ -142,7 +160,7 @@ namespace ShipperStation.Application.Common.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Invalid refresh token.
+        ///   Looks up a localized string similar to Refresh token is not valid..
         /// </summary>
         public static string InvalidRefreshToken {
             get {
@@ -169,11 +187,119 @@ namespace ShipperStation.Application.Common.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Your verification code is {0}.
+        /// </summary>
+        public static string NotificationContentOtpMessage {
+            get {
+                return ResourceManager.GetString("NotificationContentOtpMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Notification type {0} is not supported.
+        /// </summary>
+        public static string NotificationNotSupported {
+            get {
+                return ResourceManager.GetString("NotificationNotSupported", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Verification Code.
+        /// </summary>
+        public static string NotificationTitleOtpMessages {
+            get {
+                return ResourceManager.GetString("NotificationTitleOtpMessages", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to OTP is invalid.
+        /// </summary>
+        public static string OtpInvalid {
+            get {
+                return ResourceManager.GetString("OtpInvalid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Otp is null.
+        /// </summary>
+        public static string OtpIsNull {
+            get {
+                return ResourceManager.GetString("OtpIsNull", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to OTP is required.
+        /// </summary>
+        public static string OtpRequired {
+            get {
+                return ResourceManager.GetString("OtpRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Send Otp successfully.
+        /// </summary>
+        public static string OtpSendSuccess {
+            get {
+                return ResourceManager.GetString("OtpSendSuccess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Password is required.
+        /// </summary>
+        public static string PasswordRequired {
+            get {
+                return ResourceManager.GetString("PasswordRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Phone Number existed.
         /// </summary>
         public static string PhoneNumberExisted {
             get {
                 return ResourceManager.GetString("PhoneNumberExisted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Phone number is invalid.
+        /// </summary>
+        public static string PhoneNumberInvalid {
+            get {
+                return ResourceManager.GetString("PhoneNumberInvalid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Phone number is required.
+        /// </summary>
+        public static string PhoneNumberRequired {
+            get {
+                return ResourceManager.GetString("PhoneNumberRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to RefreshToken is required.
+        /// </summary>
+        public static string RefreshTokenRequired {
+            get {
+                return ResourceManager.GetString("RefreshTokenRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Staff created successfully.
+        /// </summary>
+        public static string StaffCreatedSuccess {
+            get {
+                return ResourceManager.GetString("StaffCreatedSuccess", resourceCulture);
             }
         }
         
@@ -187,11 +313,29 @@ namespace ShipperStation.Application.Common.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Store manager created successfully.
+        /// </summary>
+        public static string StoreManagerCreatedSuccess {
+            get {
+                return ResourceManager.GetString("StoreManagerCreatedSuccess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Authentication required. Please provide valid credentials..
         /// </summary>
         public static string Unauthorized {
             get {
                 return ResourceManager.GetString("Unauthorized", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to User Is Inactive.
+        /// </summary>
+        public static string UserIsInactive {
+            get {
+                return ResourceManager.GetString("UserIsInactive", resourceCulture);
             }
         }
         
@@ -205,11 +349,29 @@ namespace ShipperStation.Application.Common.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Username is required.
+        /// </summary>
+        public static string UsernameRequired {
+            get {
+                return ResourceManager.GetString("UsernameRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to User not found.
         /// </summary>
         public static string UserNotFound {
             get {
                 return ResourceManager.GetString("UserNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You are not the manager of this station.
+        /// </summary>
+        public static string UserNotInStation {
+            get {
+                return ResourceManager.GetString("UserNotInStation", resourceCulture);
             }
         }
         

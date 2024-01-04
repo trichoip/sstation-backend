@@ -1,32 +1,21 @@
-﻿using ShipperStation.Application.Common.Exceptions;
+﻿using Microsoft.Extensions.Logging;
 using ShipperStation.Application.Contracts.Notifications;
-using ShipperStation.Application.Interfaces.Repositories;
 using ShipperStation.Application.Interfaces.Services;
 using ShipperStation.Application.Interfaces.Services.Notifications;
-using ShipperStation.Domain.Entities.Identities;
 
 namespace ShipperStation.Infrastructure.Services.Notifications;
-public class SmsNotificationService : ISmsNotificationService
+public class SmsNotificationService(
+    ISmsSender smsSender,
+    ILogger<SmsNotificationService> logger) : ISmsNotificationService
 {
-    private readonly ISmsSender _smsSender;
-    private readonly IUnitOfWork _unitOfWork;
-    public SmsNotificationService(
-        ISmsSender smsSender,
-        IUnitOfWork unitOfWork)
-    {
-        _smsSender = smsSender;
-        _unitOfWork = unitOfWork;
-    }
-
     public async Task NotifyAsync(NotificationRequest notification, CancellationToken cancellationToken = default)
     {
-        var user = await _unitOfWork.Repository<User>()
-            .FindByAsync(_ => _.Id == notification.UserId, cancellationToken: cancellationToken);
-        if (user is null || user.PhoneNumber is null)
+        if (string.IsNullOrWhiteSpace(notification.PhoneNumber) || string.IsNullOrWhiteSpace(notification.Data))
         {
-            throw new NotFoundException(nameof(User), notification.UserId);
+            logger.LogError($"[SMS NOTIFICATION] PhoneNumber: '{notification.PhoneNumber}' - Otp '{notification.Data}'");
+            return;
         }
-
-        await _smsSender.SendAsync(user.PhoneNumber, notification.Content, cancellationToken);
+        logger.LogInformation($"[SMS NOTIFICATION] start send phoneNumber {notification.PhoneNumber}");
+        await smsSender.SendAsync(notification.PhoneNumber, notification.Content, cancellationToken);
     }
 }

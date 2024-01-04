@@ -6,18 +6,18 @@ using System.Linq.Expressions;
 
 namespace ShipperStation.Application.Contracts.Pages;
 
-public abstract class PaginationRequest<T> where T : class
+public abstract record PaginationRequest<T> where T : class
 {
     private const string Id = nameof(Id);
-    private int _pageNumber = PaginationConstants.DefaultPageNumber;
+    private int _pageIndex = PaginationConstants.DefaultPageIndex;
     private int _pageSize = PaginationConstants.DefaultPageSize;
 
-    public int PageNumber
+    public int PageIndex
     {
-        get => _pageNumber;
-        set => _pageNumber = value > 0
+        get => _pageIndex;
+        set => _pageIndex = value > 0
             ? value
-            : PaginationConstants.DefaultPageNumber;
+            : PaginationConstants.DefaultPageIndex;
     }
 
     public int PageSize
@@ -40,14 +40,14 @@ public abstract class PaginationRequest<T> where T : class
     {
         if (string.IsNullOrWhiteSpace(SortColumn)) return null;
 
-        return query => query.OrderBy($"{SortColumn} {SortDir.ToString().ToLower()}");
+        return query => query.OrderBy($"{SortColumn} {SortDir}");
     }
 
     public string? GetDynamicOrder()
     {
         if (string.IsNullOrWhiteSpace(SortColumn)) return null;
 
-        return $"{SortColumn} {SortDir.ToString().ToLower()}";
+        return $"{SortColumn} {SortDir}";
     }
 
 }

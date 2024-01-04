@@ -8,7 +8,7 @@ public enum NotificationType
      * COMMON NOTIFICATION TYPES
      */
     [Description("OTP created")]
-    AccountOtpCreated,
+    VerificationCode,
 
     /**
      * SYSTEM NOTIFICATION TYPES
