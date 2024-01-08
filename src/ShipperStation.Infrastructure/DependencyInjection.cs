@@ -130,7 +130,7 @@ public static class DependencyInjection
         if (app.Environment.IsProduction())
         {
             await initialiser.MigrateAsync();
-            //await initialiser.SeedAsync();
+            await initialiser.SeedAsync();
         }
     }
 }
