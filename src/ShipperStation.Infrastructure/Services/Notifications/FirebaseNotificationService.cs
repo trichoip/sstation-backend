@@ -57,7 +57,7 @@ public class FirebaseNotificationService : IFirebaseNotificationService
                         {
                             type = notification.Type.ToString(),
                             //entityType = notification.EntityType.ToString(),
-                            notification.ReferenceId
+                            //notification.ReferenceId
                         },
                     }
                 };

@@ -18,6 +18,9 @@ public class Slot : BaseAuditableEntity<int>
 
     public int ShelfId { get; set; }
     public virtual Shelf Shelf { get; set; } = default!;
+
+    public int SizeId { get; set; }
+    public virtual Size Size { get; set; } = default!;
     public virtual ICollection<Package> Packages { get; set; } = new HashSet<Package>();
 
 }

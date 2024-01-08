@@ -1,18 +1,18 @@
 ﻿using MediatR;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ShipperStation.Application.Contracts;
 using ShipperStation.Application.Contracts.Auth;
 using ShipperStation.Application.Features.Auth.Commands.Login;
 using ShipperStation.Application.Features.Auth.Commands.RefreshToken;
-using ShipperStation.Application.Features.Auth.Commands.RegisterDeviceToken;
 using ShipperStation.Application.Features.Auth.Commands.SendOtp;
 using ShipperStation.Application.Features.Auth.Commands.VerifyOtp;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace ShipperStation.WebApi.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
+[SwaggerTag("Api for auth")]
 public class AuthController(ISender sender) : ControllerBase
 {
 
@@ -40,7 +40,8 @@ public class AuthController(ISender sender) : ControllerBase
     /// </summary>
     /// <param name="request">
     /// ```
-    /// The beginning of the phone number can be 0 or +84 or 84
+    /// The beginning of the phone number can be (0 or +84 or 84)
+    /// 
     /// Regex phone number: ^(\+84|84|0)[35789][0-9]{8}$
     /// ```
     /// </param>
@@ -80,16 +81,4 @@ public class AuthController(ISender sender) : ControllerBase
         return await sender.Send(request, cancellationToken);
     }
 
-    /// <summary>
-    /// Add device token fcm for push notification
-    /// </summary>
-    /// <param name="command"></param>
-    /// <param name="cancellationToken"></param>
-    /// <returns></returns>
-    [Authorize]
-    [HttpPost("device-token")]
-    public async Task<ActionResult<MessageResponse>> RegisterDeviceToken(RegisterDeviceTokenCommand command, CancellationToken cancellationToken)
-    {
-        return await sender.Send(command, cancellationToken);
-    }
 }

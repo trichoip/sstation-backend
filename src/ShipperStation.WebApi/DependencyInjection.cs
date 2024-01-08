@@ -71,6 +71,10 @@ public static class DependencyInjection
         {
             var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
             c.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
+
+            xmlFilename = $"{typeof(Application.AssemblyReference).Assembly.GetName().Name}.xml";
+            c.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
+
             c.AddSecurityDefinition(JwtBearerDefaults.AuthenticationScheme, new()
             {
                 Description = "JWT Authorization header using the Bearer scheme.",
@@ -79,6 +83,7 @@ public static class DependencyInjection
             });
             c.OperationFilter<SecurityRequirementsOperationFilter>(JwtBearerDefaults.AuthenticationScheme);
             c.OperationFilter<AppendAuthorizeToSummaryOperationFilter>();
+            c.EnableAnnotations();
         });
     }
 

@@ -12,6 +12,9 @@ using System.Linq.Expressions;
 namespace ShipperStation.Application.Features.StoreManagers.Queries.GetStaffs;
 public sealed record GetStaffsQuery : PaginationRequest<User>, IRequest<PaginatedResponse<UserResponse>>
 {
+    /// <summary>
+    /// Search field is search for fullName or userName or email or phoneNumber
+    /// </summary>
     public string? Search { get; set; }
 
     [BindNever]
@@ -22,12 +25,11 @@ public sealed record GetStaffsQuery : PaginationRequest<User>, IRequest<Paginate
         if (!string.IsNullOrWhiteSpace(Search))
         {
             Search = Search.Trim();
-            var queryExpression = PredicateBuilder.New<User>();
-            queryExpression.Or(sta => EF.Functions.Like(sta.FullName, $"%{Search}%"));
-            queryExpression.Or(sta => EF.Functions.Like(sta.UserName, $"%{Search}%"));
-            queryExpression.Or(sta => EF.Functions.Like(sta.Email, $"%{Search}%"));
-            queryExpression.Or(sta => EF.Functions.Like(sta.PhoneNumber, $"%{Search}%"));
-            Expression = Expression.And(queryExpression);
+            Expression = Expression
+                .And(u => EF.Functions.Like(u.FullName, $"%{Search}%"))
+                .Or(u => EF.Functions.Like(u.UserName, $"%{Search}%"))
+                .Or(u => EF.Functions.Like(u.Email, $"%{Search}%"))
+                .Or(u => EF.Functions.Like(u.PhoneNumber, $"%{Search}%"));
         }
 
         Expression = Expression.And(u =>

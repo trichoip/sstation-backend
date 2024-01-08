@@ -9,12 +9,13 @@ using ShipperStation.Application.Features.StoreManagers.Commands.CreateStaff;
 using ShipperStation.Application.Features.StoreManagers.Commands.CreateStoreManager;
 using ShipperStation.Application.Features.StoreManagers.Queries.GetStaffs;
 using ShipperStation.Application.Features.StoreManagers.Queries.GetStationsByStoreManager;
-using ShipperStation.Application.Interfaces.Services;
 using ShipperStation.Shared.Pages;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace ShipperStation.WebApi.Controllers;
 [Route("api/[controller]")]
 [ApiController]
+[SwaggerTag("Api for store manage")]
 public class StoreManagersController(ISender sender) : ControllerBase
 {
     /// <summary>
@@ -35,27 +36,15 @@ public class StoreManagersController(ISender sender) : ControllerBase
     /// <summary>
     /// Get the store manager's station list
     /// </summary>
-    /// <remarks>
-    /// ```
-    /// Search for (name | description | contact phone | address)
-    /// ```
-    /// </remarks>
     /// <param name="request"></param>
-    /// <param name="currentUserService"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
     [Authorize(Policy = Policies.StoreManager)]
     [HttpGet("stations")]
     public async Task<ActionResult<PaginatedResponse<StationResponse>>> GetStationsByStoreManager(
         [FromQuery] GetStationsByStoreManagerQuery request,
-        [FromServices] ICurrentUserService currentUserService,
         CancellationToken cancellationToken)
     {
-        request = request with
-        {
-            StoreManagerId = await currentUserService.FindCurrentUserIdAsync()
-        };
-
         return await sender.Send(request, cancellationToken);
     }
 
@@ -84,11 +73,6 @@ public class StoreManagersController(ISender sender) : ControllerBase
     /// <summary>
     /// Get the staff list of the station by the manager
     /// </summary>
-    /// <remarks>
-    /// ```
-    /// Search for (fullName | userName | email | phoneNumber)
-    /// ```
-    /// </remarks>
     /// <param name="id"></param>
     /// <param name="request"></param>
     /// <param name="cancellationToken"></param>

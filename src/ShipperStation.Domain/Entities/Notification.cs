@@ -1,4 +1,5 @@
-﻿using ShipperStation.Domain.Common;
+﻿using EntityFrameworkCore.Projectables;
+using ShipperStation.Domain.Common;
 using ShipperStation.Domain.Entities.Identities;
 using ShipperStation.Domain.Enums;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -16,9 +17,8 @@ public class Notification : BaseAuditableEntity<int>
     [Column(TypeName = "nvarchar(24)")]
     public NotificationLevel Level { get; set; }
 
-    public string? ReferenceId { get; set; }
-
-    public bool IsRead { get; set; }
+    [Projectable]
+    public bool IsRead => ReadAt.HasValue;
     public DateTimeOffset? ReadAt { get; set; }
 
     public Guid UserId { get; set; }

@@ -123,11 +123,23 @@
   <data name="Conflict" xml:space="preserve">
     <value>Entity already exists!</value>
   </data>
+  <data name="DeviceCreatedSuccess" xml:space="preserve">
+    <value>Device created successfully</value>
+  </data>
+  <data name="DeviceDeletedSuccess" xml:space="preserve">
+    <value>Device deleted successfully</value>
+  </data>
   <data name="DeviceTokenAlreadyRegistered" xml:space="preserve">
     <value>Device token already registered</value>
   </data>
+  <data name="DeviceTokenConflict" xml:space="preserve">
+    <value>Device Token is conflict</value>
+  </data>
   <data name="DeviceTokenRegisteredSuccess" xml:space="preserve">
     <value>Device token registered successfully</value>
+  </data>
+  <data name="DeviceUpdatedSuccess" xml:space="preserve">
+    <value>Device updated successfully</value>
   </data>
   <data name="EntityConflict" xml:space="preserve">
     <value>Entity {0} ({1}) already exists!</value>
@@ -162,8 +174,14 @@
   <data name="NotificationContentOtpMessage" xml:space="preserve">
     <value>Your verification code is {0}</value>
   </data>
+  <data name="NotificationDeletedSuccess" xml:space="preserve">
+    <value>Notification deleted successfully</value>
+  </data>
   <data name="NotificationNotSupported" xml:space="preserve">
     <value>Notification type {0} is not supported</value>
+  </data>
+  <data name="NotificationStatusUpdatedSuccess" xml:space="preserve">
+    <value>Notification status updated success</value>
   </data>
   <data name="NotificationTitleOtpMessages" xml:space="preserve">
     <value>Verification Code</value>
@@ -218,6 +236,12 @@
   </data>
   <data name="UserNotFound" xml:space="preserve">
     <value>User not found</value>
+  </data>
+  <data name="UserNotHaveDevice" xml:space="preserve">
+    <value>User ({0}) not have device ({1})</value>
+  </data>
+  <data name="UserNotHaveNotification" xml:space="preserve">
+    <value>User ({0}) not have notification ({1})</value>
   </data>
   <data name="UserNotInStation" xml:space="preserve">
     <value>You are not the manager of this station</value>

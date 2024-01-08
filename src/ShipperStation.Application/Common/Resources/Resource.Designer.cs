@@ -79,6 +79,24 @@ namespace ShipperStation.Application.Common.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Device created successfully.
+        /// </summary>
+        public static string DeviceCreatedSuccess {
+            get {
+                return ResourceManager.GetString("DeviceCreatedSuccess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Device deleted successfully.
+        /// </summary>
+        public static string DeviceDeletedSuccess {
+            get {
+                return ResourceManager.GetString("DeviceDeletedSuccess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Device token already registered.
         /// </summary>
         public static string DeviceTokenAlreadyRegistered {
@@ -88,11 +106,29 @@ namespace ShipperStation.Application.Common.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Device Token is conflict.
+        /// </summary>
+        public static string DeviceTokenConflict {
+            get {
+                return ResourceManager.GetString("DeviceTokenConflict", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Device token registered successfully.
         /// </summary>
         public static string DeviceTokenRegisteredSuccess {
             get {
                 return ResourceManager.GetString("DeviceTokenRegisteredSuccess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Device updated successfully.
+        /// </summary>
+        public static string DeviceUpdatedSuccess {
+            get {
+                return ResourceManager.GetString("DeviceUpdatedSuccess", resourceCulture);
             }
         }
         
@@ -196,11 +232,29 @@ namespace ShipperStation.Application.Common.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Notification deleted successfully.
+        /// </summary>
+        public static string NotificationDeletedSuccess {
+            get {
+                return ResourceManager.GetString("NotificationDeletedSuccess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Notification type {0} is not supported.
         /// </summary>
         public static string NotificationNotSupported {
             get {
                 return ResourceManager.GetString("NotificationNotSupported", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Notification status updated success.
+        /// </summary>
+        public static string NotificationStatusUpdatedSuccess {
+            get {
+                return ResourceManager.GetString("NotificationStatusUpdatedSuccess", resourceCulture);
             }
         }
         
@@ -363,6 +417,24 @@ namespace ShipperStation.Application.Common.Resources {
         public static string UserNotFound {
             get {
                 return ResourceManager.GetString("UserNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to User ({0}) not have device ({1}).
+        /// </summary>
+        public static string UserNotHaveDevice {
+            get {
+                return ResourceManager.GetString("UserNotHaveDevice", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to User ({0}) not have notification ({1}).
+        /// </summary>
+        public static string UserNotHaveNotification {
+            get {
+                return ResourceManager.GetString("UserNotHaveNotification", resourceCulture);
             }
         }
         

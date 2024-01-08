@@ -19,7 +19,7 @@ internal sealed class GetStaffsQueryHandler(
 
     public async Task<PaginatedResponse<UserResponse>> Handle(GetStaffsQuery request, CancellationToken cancellationToken)
     {
-        var storeManagerId = await currentUserService.FindCurrentUserIdAsync();
+        var userId = await currentUserService.FindCurrentUserIdAsync();
 
         if (!await _stationRepository.ExistsByAsync(_ => _.Id == request.StationId))
         {
@@ -28,13 +28,13 @@ internal sealed class GetStaffsQueryHandler(
 
         if (!await _userStationRepository
             .ExistsByAsync(_ =>
-            _.UserId == storeManagerId &&
+            _.UserId == userId &&
             _.StationId == request.StationId))
         {
             throw new BadRequestException(Resource.UserNotInStation);
         }
 
-        var stations = await _userRepository
+        var users = await _userRepository
             .FindAsync<UserResponse>(
                 request.PageIndex,
                 request.PageSize,
@@ -42,6 +42,6 @@ internal sealed class GetStaffsQueryHandler(
                 request.GetOrder(),
                 cancellationToken);
 
-        return stations.ToPaginatedResponse();
+        return await users.ToPaginatedResponseAsync();
     }
 }
