@@ -145,8 +145,8 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class
     }
 
     public async Task<PaginatedList<TDTO>> FindAsync<TDTO>(
-        int pageIndex = 0,
-        int pageSize = 0,
+        int pageIndex,
+        int pageSize,
         Expression<Func<T, bool>>? expression = null,
         Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null,
         CancellationToken cancellationToken = default) where TDTO : class
@@ -167,4 +167,16 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class
             .PaginatedListAsync(pageIndex, pageSize, cancellationToken);
     }
 
+    public async Task<int> CountAsync(
+        Expression<Func<T, bool>>? expression = null,
+        CancellationToken cancellationToken = default)
+    {
+        IQueryable<T> query = dbSet;
+
+        if (expression != null)
+        {
+            query = query.Where(expression);
+        }
+        return await query.CountAsync(cancellationToken);
+    }
 }

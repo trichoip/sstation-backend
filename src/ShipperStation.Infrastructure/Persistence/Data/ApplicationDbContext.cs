@@ -25,7 +25,8 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
     public DbSet<Shelf> Shelves { get; set; }
     public DbSet<Notification> Notifications { get; set; }
     public DbSet<UserStation> UserStations { get; set; }
-    public DbSet<Token> Tokens { get; set; }
+    public DbSet<Device> Devices { get; set; }
+    public DbSet<Size> Sizes { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

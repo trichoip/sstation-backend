@@ -33,11 +33,15 @@ namespace ShipperStation.Application.Interfaces.Repositories
             CancellationToken cancellationToken = default) where TDTO : class;
 
         Task<PaginatedList<TDTO>> FindAsync<TDTO>(
-            int pageIndex = 0,
-            int pageSize = 0,
+            int pageIndex,
+            int pageSize,
             Expression<Func<T, bool>>? expression = null,
             Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null,
             CancellationToken cancellationToken = default) where TDTO : class;
+
+        Task<int> CountAsync(
+            Expression<Func<T, bool>>? expression = null,
+            CancellationToken cancellationToken = default);
 
         Task UpdateAsync(T entity);
         Task CreateAsync(T entity, CancellationToken cancellationToken = default);
