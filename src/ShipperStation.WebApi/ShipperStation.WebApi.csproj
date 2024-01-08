@@ -2,7 +2,6 @@
 
 	<PropertyGroup>
 		<InvariantGlobalization>true</InvariantGlobalization>
-		<UserSecretsId>59e3fd57-e31a-4053-b39b-dc14ddc65d3d</UserSecretsId>
 		<DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
 		<DockerfileContext>..\..</DockerfileContext>
 	</PropertyGroup>
