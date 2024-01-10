@@ -8,7 +8,6 @@ services:
       - 8080:8080
     environment:
        ConnectionStrings__DefaultConnection: server=db;user=root;password=12345;database=ShipperStation
-       ConnectionStrings__Redis: redis:6379
 
   db:
     image: mysql:8.2.0
@@ -21,11 +20,6 @@ services:
     environment:
         MYSQL_ROOT_PASSWORD: 12345
         MYSQL_DATABASE: ShipperStation
-
-  redis:
-    image: redis
-    ports:
-      - 6000:6379
 
 volumes:
   mysql_data:
