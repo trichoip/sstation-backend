@@ -56,9 +56,6 @@ jobs:
           workingDir: /${{ secrets.SERVER_DIR }}
           ignoreSSL: "1"
 
-      - name: Delay for 5 minutes
-        run: sleep 30
-
       - name: 📂 Sync files
         uses: SamKirkland/FTP-Deploy-Action@v4.3.4
         with:
