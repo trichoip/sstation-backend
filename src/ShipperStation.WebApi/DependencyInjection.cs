@@ -1,5 +1,5 @@
 ﻿using Hangfire;
-using Hangfire.Redis.StackExchange;
+using Hangfire.MemoryStorage;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
@@ -18,7 +18,6 @@ using ShipperStation.Shared.Helpers;
 using ShipperStation.WebApi.Extensions;
 using ShipperStation.WebApi.Middleware;
 using ShipperStation.WebApi.Transformers;
-using StackExchange.Redis;
 using Swashbuckle.AspNetCore.Filters;
 using System.Net.Mime;
 using System.Reflection;
@@ -132,7 +131,7 @@ public static class DependencyInjection
 
     private static void AddHangfireServices(this IServiceCollection services, IConfiguration configuration)
     {
-        services.AddHangfire(c => c.UseRedisStorage(ConnectionMultiplexer.Connect(configuration.GetConnectionString("Redis")!)));
+        services.AddHangfire(c => c.UseMemoryStorage());
         services.AddHangfireServer();
     }
     public static async Task UseWebApplication(this WebApplication app)
