@@ -45,14 +45,30 @@ jobs:
         with:
           name: publish
 
-      # - name: 📂 Sync files
-      #   uses: SamKirkland/FTP-Deploy-Action@v4.3.4
-      #   with:
-      #     server: ${{ secrets.FTP_SERVER }}
-      #     username: ${{ secrets.FTP_USERNAME }}
-      #     password: ${{ secrets.FTP_PASSWORD }}
-      #     local-dir: ./
-      #     server-dir: ./root/
+      - name: Delete all file on ftp server
+        uses: StephanThierry/ftp-delete-action@v2.1
+        with:
+          host: ${{ secrets.FTP_SERVER }}
+          user: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          remoteFiles: "*.*"
+          remoteDirectories: "/${{ secrets.SERVER_DIR }}/"
+          workingDir: /${{ secrets.SERVER_DIR }}
+          ignoreSSL: "1"
+
+      - name: Delay for 5 minutes
+        run: sleep 30
+
+      - name: 📂 Sync files
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          local-dir: ./
+          server-dir: ./${{ secrets.SERVER_DIR }}/
+          dangerous-clean-slate: true
+          log-level: verbose
 
   push_backend_to_docker:
     name: Push Backend
