@@ -18,7 +18,7 @@ internal sealed class GetProfileQueryHandler(
     {
         var user = await currentUserService.FindCurrentUserAsync();
 
-        //BackgroundJob.Enqueue(() => publisher.Publish(new InitWalletEvent(), cancellationToken));
+        //_ = publisher.Publish(new InitWalletEvent(), cancellationToken);
 
         if (await _userRepository
             .FindByAsync<UserResponse>(_ => _.Id == user.Id, cancellationToken) is not { } userResponse)

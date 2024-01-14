@@ -124,7 +124,7 @@ public static class DependencyInjection
         {
             //await initialiser.DeletedDatabaseAsync();
             await initialiser.MigrateAsync();
-            //await initialiser.SeedAsync();
+            await initialiser.SeedAsync();
         }
 
         if (app.Environment.IsProduction())
