@@ -7,5 +7,5 @@ public abstract class Policies
     public const string StoreManager = nameof(StoreManager);
     public const string User = nameof(User);
     public const string StoreManager_And_Staff = nameof(StoreManager_And_Staff);
-    public const string Admin_Or_StoreManager = nameof(Admin_Or_StoreManager);
+    public const string Admin_Or_StationManager = nameof(Admin_Or_StationManager);
 }

@@ -2,7 +2,7 @@
 using ShipperStation.Domain.Entities.Identities;
 
 namespace ShipperStation.Domain.Entities;
-public class Device : BaseAuditableEntity<int>
+public class Device : BaseEntity<int>
 {
 
     public string Token { get; set; } = default!;

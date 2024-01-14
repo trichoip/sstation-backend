@@ -97,7 +97,7 @@ public class ApplicationDbContextInitialiser(
                 Status = UserStatus.Active,
             };
             await userManager.CreateAsync(user, "store");
-            await userManager.AddToRolesAsync(user, new[] { Roles.StoreManager });
+            await userManager.AddToRolesAsync(user, new[] { Roles.StationManager });
             var station = await unitOfWork.Repository<Station>().FindByAsync(_ => !_.IsDeleted);
             user.UserStations.Add(new UserStation
             {

@@ -20,7 +20,7 @@ public class Payment : BaseAuditableEntity<Guid>
     public string? Deeplink { get; set; }
     public string? Description { get; set; }
 
-    public int OrderId { get; set; }
-    public virtual Order Order { get; set; } = default!;
+    public int DeliveryId { get; set; }
+    public virtual Delivery Delivery { get; set; } = default!;
 
 }

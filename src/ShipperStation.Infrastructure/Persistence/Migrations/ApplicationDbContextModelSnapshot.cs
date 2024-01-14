@@ -19,7 +19,7 @@ namespace ShipperStation.Infrastructure.Migrations
                 .HasAnnotation("ProductVersion", "8.0.0")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
-            modelBuilder.Entity("ShipperStation.Domain.Entities.Device", b =>
+            modelBuilder.Entity("ShipperStation.Domain.Entities.Delivery", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -37,11 +37,88 @@ namespace ShipperStation.Infrastructure.Migrations
                     b.Property<string>("DeletedBy")
                         .HasColumnType("longtext");
 
+                    b.Property<string>("Description")
+                        .HasColumnType("longtext");
+
                     b.Property<DateTimeOffset?>("ModifiedAt")
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("ModifiedBy")
                         .HasColumnType("longtext");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("longtext");
+
+                    b.Property<Guid>("PackageId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<double>("Price")
+                        .HasColumnType("double");
+
+                    b.Property<string>("Status")
+                        .HasColumnType("nvarchar(24)");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("char(36)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PackageId")
+                        .IsUnique();
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Deliveries");
+                });
+
+            modelBuilder.Entity("ShipperStation.Domain.Entities.DeliveryHistory", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<DateTimeOffset?>("CreatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("longtext");
+
+                    b.Property<DateTimeOffset?>("DeletedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("DeletedBy")
+                        .HasColumnType("longtext");
+
+                    b.Property<int>("DeliveryId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("longtext");
+
+                    b.Property<DateTimeOffset?>("ModifiedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("ModifiedBy")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Status")
+                        .HasColumnType("nvarchar(24)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DeliveryId");
+
+                    b.ToTable("DeliveryHistories");
+                });
+
+            modelBuilder.Entity("ShipperStation.Domain.Entities.Device", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
 
                     b.Property<string>("Token")
                         .IsRequired()
@@ -312,9 +389,6 @@ namespace ShipperStation.Infrastructure.Migrations
                     b.Property<DateTimeOffset?>("ReadAt")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<string>("ReferenceId")
-                        .HasColumnType("longtext");
-
                     b.Property<string>("Title")
                         .HasColumnType("longtext");
 
@@ -330,98 +404,6 @@ namespace ShipperStation.Infrastructure.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("Notifications");
-                });
-
-            modelBuilder.Entity("ShipperStation.Domain.Entities.Order", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<DateTimeOffset?>("CreatedAt")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("longtext");
-
-                    b.Property<DateTimeOffset?>("DeletedAt")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("DeletedBy")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("longtext");
-
-                    b.Property<DateTimeOffset?>("ModifiedAt")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("ModifiedBy")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("longtext");
-
-                    b.Property<Guid>("PackageId")
-                        .HasColumnType("char(36)");
-
-                    b.Property<string>("Status")
-                        .HasColumnType("nvarchar(24)");
-
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("char(36)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("PackageId")
-                        .IsUnique();
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Orders");
-                });
-
-            modelBuilder.Entity("ShipperStation.Domain.Entities.OrderHistory", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<DateTimeOffset?>("CreatedAt")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("longtext");
-
-                    b.Property<DateTimeOffset?>("DeletedAt")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("DeletedBy")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("longtext");
-
-                    b.Property<DateTimeOffset?>("ModifiedAt")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("ModifiedBy")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("longtext");
-
-                    b.Property<int>("OrderId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Status")
-                        .HasColumnType("nvarchar(24)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("OrderId");
-
-                    b.ToTable("OrderHistories");
                 });
 
             modelBuilder.Entity("ShipperStation.Domain.Entities.Package", b =>
@@ -466,22 +448,19 @@ namespace ShipperStation.Infrastructure.Migrations
                     b.Property<string>("Notes")
                         .HasColumnType("longtext");
 
-                    b.Property<string>("OwnerAddress")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("OwnerName")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("OwnerPhone")
-                        .IsRequired()
-                        .HasColumnType("longtext");
+                    b.Property<decimal>("PackagePrice")
+                        .HasColumnType("decimal(65,30)");
 
                     b.Property<string>("PlatformName")
                         .HasColumnType("longtext");
 
-                    b.Property<decimal>("Price")
-                        .HasColumnType("decimal(65,30)");
+                    b.Property<string>("ReceiverName")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("ReceiverPhone")
+                        .IsRequired()
+                        .HasColumnType("longtext");
 
                     b.Property<string>("SenderName")
                         .IsRequired()
@@ -498,8 +477,8 @@ namespace ShipperStation.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(24)");
 
-                    b.Property<string>("TrackingNumber")
-                        .HasColumnType("longtext");
+                    b.Property<double>("Volume")
+                        .HasColumnType("double");
 
                     b.Property<double>("Weight")
                         .HasColumnType("double");
@@ -520,26 +499,8 @@ namespace ShipperStation.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<DateTimeOffset?>("CreatedAt")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("longtext");
-
-                    b.Property<DateTimeOffset?>("DeletedAt")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("DeletedBy")
-                        .HasColumnType("longtext");
-
                     b.Property<string>("ImageUrl")
                         .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<DateTimeOffset?>("ModifiedAt")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("ModifiedBy")
                         .HasColumnType("longtext");
 
                     b.Property<Guid>("PackageId")
@@ -579,6 +540,9 @@ namespace ShipperStation.Infrastructure.Migrations
                     b.Property<string>("DeletedBy")
                         .HasColumnType("longtext");
 
+                    b.Property<int>("DeliveryId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Description")
                         .HasColumnType("longtext");
 
@@ -591,9 +555,6 @@ namespace ShipperStation.Infrastructure.Migrations
 
                     b.Property<string>("ModifiedBy")
                         .HasColumnType("longtext");
-
-                    b.Property<int>("OrderId")
-                        .HasColumnType("int");
 
                     b.Property<string>("Qr")
                         .HasColumnType("longtext");
@@ -613,7 +574,7 @@ namespace ShipperStation.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("OrderId");
+                    b.HasIndex("DeliveryId");
 
                     b.ToTable("Payments");
                 });
@@ -624,41 +585,49 @@ namespace ShipperStation.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<DateTimeOffset?>("CreatedAt")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("longtext");
-
-                    b.Property<DateTimeOffset?>("DeletedAt")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("DeletedBy")
-                        .HasColumnType("longtext");
-
                     b.Property<string>("Description")
                         .HasColumnType("longtext");
 
                     b.Property<int>("Index")
                         .HasColumnType("int");
 
-                    b.Property<DateTimeOffset?>("ModifiedAt")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("ModifiedBy")
-                        .HasColumnType("longtext");
-
                     b.Property<string>("Name")
                         .HasColumnType("longtext");
 
-                    b.Property<int>("ZoneId")
+                    b.Property<int>("StationId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ZoneId");
+                    b.HasIndex("StationId");
 
                     b.ToTable("Racks");
+                });
+
+            modelBuilder.Entity("ShipperStation.Domain.Entities.Setting", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Key")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(24)");
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(24)");
+
+                    b.Property<string>("Value")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Settings");
                 });
 
             modelBuilder.Entity("ShipperStation.Domain.Entities.Shelf", b =>
@@ -667,29 +636,11 @@ namespace ShipperStation.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<DateTimeOffset?>("CreatedAt")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("longtext");
-
-                    b.Property<DateTimeOffset?>("DeletedAt")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("DeletedBy")
-                        .HasColumnType("longtext");
-
                     b.Property<string>("Description")
                         .HasColumnType("longtext");
 
                     b.Property<int>("Index")
                         .HasColumnType("int");
-
-                    b.Property<DateTimeOffset?>("ModifiedAt")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("ModifiedBy")
-                        .HasColumnType("longtext");
 
                     b.Property<string>("Name")
                         .HasColumnType("longtext");
@@ -704,72 +655,11 @@ namespace ShipperStation.Infrastructure.Migrations
                     b.ToTable("Shelves");
                 });
 
-            modelBuilder.Entity("ShipperStation.Domain.Entities.Size", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<string>("Abbreviation")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<DateTimeOffset?>("CreatedAt")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("longtext");
-
-                    b.Property<DateTimeOffset?>("DeletedAt")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("DeletedBy")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("longtext");
-
-                    b.Property<double>("Height")
-                        .HasColumnType("double");
-
-                    b.Property<double>("Length")
-                        .HasColumnType("double");
-
-                    b.Property<DateTimeOffset?>("ModifiedAt")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("ModifiedBy")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<double>("Width")
-                        .HasColumnType("double");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Sizes");
-                });
-
             modelBuilder.Entity("ShipperStation.Domain.Entities.Slot", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
-
-                    b.Property<DateTimeOffset?>("CreatedAt")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("longtext");
-
-                    b.Property<DateTimeOffset?>("DeletedAt")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("DeletedBy")
-                        .HasColumnType("longtext");
 
                     b.Property<string>("Description")
                         .HasColumnType("longtext");
@@ -783,12 +673,6 @@ namespace ShipperStation.Infrastructure.Migrations
                     b.Property<double>("Length")
                         .HasColumnType("double");
 
-                    b.Property<DateTimeOffset?>("ModifiedAt")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("ModifiedBy")
-                        .HasColumnType("longtext");
-
                     b.Property<string>("Name")
                         .HasColumnType("longtext");
 
@@ -798,12 +682,12 @@ namespace ShipperStation.Infrastructure.Migrations
                     b.Property<int>("ShelfId")
                         .HasColumnType("int");
 
-                    b.Property<int>("SizeId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Status")
                         .IsRequired()
                         .HasColumnType("nvarchar(24)");
+
+                    b.Property<double>("Volume")
+                        .HasColumnType("double");
 
                     b.Property<double>("Width")
                         .HasColumnType("double");
@@ -811,8 +695,6 @@ namespace ShipperStation.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("ShelfId");
-
-                    b.HasIndex("SizeId");
 
                     b.ToTable("Slots");
                 });
@@ -873,26 +755,8 @@ namespace ShipperStation.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<DateTimeOffset?>("CreatedAt")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("longtext");
-
-                    b.Property<DateTimeOffset?>("DeletedAt")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("DeletedBy")
-                        .HasColumnType("longtext");
-
                     b.Property<string>("ImageUrl")
                         .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<DateTimeOffset?>("ModifiedAt")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("ModifiedBy")
                         .HasColumnType("longtext");
 
                     b.Property<int>("StationId")
@@ -903,6 +767,35 @@ namespace ShipperStation.Infrastructure.Migrations
                     b.HasIndex("StationId");
 
                     b.ToTable("StationImages");
+                });
+
+            modelBuilder.Entity("ShipperStation.Domain.Entities.StationSetting", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<int>("SettingId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("StationId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(24)");
+
+                    b.Property<string>("Value")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("SettingId");
+
+                    b.HasIndex("StationId");
+
+                    b.ToTable("StationSettings");
                 });
 
             modelBuilder.Entity("ShipperStation.Domain.Entities.Transaction", b =>
@@ -1009,44 +902,34 @@ namespace ShipperStation.Infrastructure.Migrations
                     b.ToTable("Wallets");
                 });
 
-            modelBuilder.Entity("ShipperStation.Domain.Entities.Zone", b =>
+            modelBuilder.Entity("ShipperStation.Domain.Entities.Delivery", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                    b.HasOne("ShipperStation.Domain.Entities.Package", "Package")
+                        .WithOne("Delivery")
+                        .HasForeignKey("ShipperStation.Domain.Entities.Delivery", "PackageId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.Property<DateTimeOffset?>("CreatedAt")
-                        .HasColumnType("datetime(6)");
+                    b.HasOne("ShipperStation.Domain.Entities.Identities.User", "User")
+                        .WithMany("Deliveries")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("longtext");
+                    b.Navigation("Package");
 
-                    b.Property<DateTimeOffset?>("DeletedAt")
-                        .HasColumnType("datetime(6)");
+                    b.Navigation("User");
+                });
 
-                    b.Property<string>("DeletedBy")
-                        .HasColumnType("longtext");
+            modelBuilder.Entity("ShipperStation.Domain.Entities.DeliveryHistory", b =>
+                {
+                    b.HasOne("ShipperStation.Domain.Entities.Delivery", "Delivery")
+                        .WithMany("DeliveryHistories")
+                        .HasForeignKey("DeliveryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.Property<string>("Description")
-                        .HasColumnType("longtext");
-
-                    b.Property<DateTimeOffset?>("ModifiedAt")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("ModifiedBy")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("longtext");
-
-                    b.Property<int>("StationId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("StationId");
-
-                    b.ToTable("Zones");
+                    b.Navigation("Delivery");
                 });
 
             modelBuilder.Entity("ShipperStation.Domain.Entities.Device", b =>
@@ -1124,36 +1007,6 @@ namespace ShipperStation.Infrastructure.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("ShipperStation.Domain.Entities.Order", b =>
-                {
-                    b.HasOne("ShipperStation.Domain.Entities.Package", "Package")
-                        .WithOne("Order")
-                        .HasForeignKey("ShipperStation.Domain.Entities.Order", "PackageId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("ShipperStation.Domain.Entities.Identities.User", "User")
-                        .WithMany("Orders")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Package");
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("ShipperStation.Domain.Entities.OrderHistory", b =>
-                {
-                    b.HasOne("ShipperStation.Domain.Entities.Order", "Order")
-                        .WithMany("OrderHistories")
-                        .HasForeignKey("OrderId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Order");
-                });
-
             modelBuilder.Entity("ShipperStation.Domain.Entities.Package", b =>
                 {
                     b.HasOne("ShipperStation.Domain.Entities.Slot", "Slot")
@@ -1178,24 +1031,24 @@ namespace ShipperStation.Infrastructure.Migrations
 
             modelBuilder.Entity("ShipperStation.Domain.Entities.Payment", b =>
                 {
-                    b.HasOne("ShipperStation.Domain.Entities.Order", "Order")
+                    b.HasOne("ShipperStation.Domain.Entities.Delivery", "Delivery")
                         .WithMany("Payments")
-                        .HasForeignKey("OrderId")
+                        .HasForeignKey("DeliveryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Order");
+                    b.Navigation("Delivery");
                 });
 
             modelBuilder.Entity("ShipperStation.Domain.Entities.Rack", b =>
                 {
-                    b.HasOne("ShipperStation.Domain.Entities.Zone", "Zone")
+                    b.HasOne("ShipperStation.Domain.Entities.Station", "Station")
                         .WithMany("Racks")
-                        .HasForeignKey("ZoneId")
+                        .HasForeignKey("StationId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Zone");
+                    b.Navigation("Station");
                 });
 
             modelBuilder.Entity("ShipperStation.Domain.Entities.Shelf", b =>
@@ -1217,15 +1070,7 @@ namespace ShipperStation.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("ShipperStation.Domain.Entities.Size", "Size")
-                        .WithMany("Slots")
-                        .HasForeignKey("SizeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.Navigation("Shelf");
-
-                    b.Navigation("Size");
                 });
 
             modelBuilder.Entity("ShipperStation.Domain.Entities.StationImage", b =>
@@ -1235,6 +1080,25 @@ namespace ShipperStation.Infrastructure.Migrations
                         .HasForeignKey("StationId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Station");
+                });
+
+            modelBuilder.Entity("ShipperStation.Domain.Entities.StationSetting", b =>
+                {
+                    b.HasOne("ShipperStation.Domain.Entities.Setting", "Setting")
+                        .WithMany("StationSettings")
+                        .HasForeignKey("SettingId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ShipperStation.Domain.Entities.Station", "Station")
+                        .WithMany("StationSettings")
+                        .HasForeignKey("StationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Setting");
 
                     b.Navigation("Station");
                 });
@@ -1280,24 +1144,20 @@ namespace ShipperStation.Infrastructure.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("ShipperStation.Domain.Entities.Zone", b =>
+            modelBuilder.Entity("ShipperStation.Domain.Entities.Delivery", b =>
                 {
-                    b.HasOne("ShipperStation.Domain.Entities.Station", "Station")
-                        .WithMany("Zones")
-                        .HasForeignKey("StationId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.Navigation("DeliveryHistories");
 
-                    b.Navigation("Station");
+                    b.Navigation("Payments");
                 });
 
             modelBuilder.Entity("ShipperStation.Domain.Entities.Identities.User", b =>
                 {
+                    b.Navigation("Deliveries");
+
                     b.Navigation("Devices");
 
                     b.Navigation("Notifications");
-
-                    b.Navigation("Orders");
 
                     b.Navigation("Transactions");
 
@@ -1309,16 +1169,9 @@ namespace ShipperStation.Infrastructure.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("ShipperStation.Domain.Entities.Order", b =>
-                {
-                    b.Navigation("OrderHistories");
-
-                    b.Navigation("Payments");
-                });
-
             modelBuilder.Entity("ShipperStation.Domain.Entities.Package", b =>
                 {
-                    b.Navigation("Order")
+                    b.Navigation("Delivery")
                         .IsRequired();
 
                     b.Navigation("PackageImages");
@@ -1329,12 +1182,12 @@ namespace ShipperStation.Infrastructure.Migrations
                     b.Navigation("Shelves");
                 });
 
-            modelBuilder.Entity("ShipperStation.Domain.Entities.Shelf", b =>
+            modelBuilder.Entity("ShipperStation.Domain.Entities.Setting", b =>
                 {
-                    b.Navigation("Slots");
+                    b.Navigation("StationSettings");
                 });
 
-            modelBuilder.Entity("ShipperStation.Domain.Entities.Size", b =>
+            modelBuilder.Entity("ShipperStation.Domain.Entities.Shelf", b =>
                 {
                     b.Navigation("Slots");
                 });
@@ -1346,16 +1199,13 @@ namespace ShipperStation.Infrastructure.Migrations
 
             modelBuilder.Entity("ShipperStation.Domain.Entities.Station", b =>
                 {
+                    b.Navigation("Racks");
+
                     b.Navigation("StationImages");
 
+                    b.Navigation("StationSettings");
+
                     b.Navigation("UserStations");
-
-                    b.Navigation("Zones");
-                });
-
-            modelBuilder.Entity("ShipperStation.Domain.Entities.Zone", b =>
-                {
-                    b.Navigation("Racks");
                 });
 #pragma warning restore 612, 618
         }

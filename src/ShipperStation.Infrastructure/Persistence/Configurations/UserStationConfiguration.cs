@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using ShipperStation.Domain.Entities;
 
 namespace ShipperStation.Infrastructure.Persistence.Configurations;
-internal class StationUserConfiguration : IEntityTypeConfiguration<UserStation>
+internal class UserStationConfiguration : IEntityTypeConfiguration<UserStation>
 {
     public void Configure(EntityTypeBuilder<UserStation> builder)
     {

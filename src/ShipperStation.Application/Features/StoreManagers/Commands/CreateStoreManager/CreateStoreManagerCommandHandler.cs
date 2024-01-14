@@ -26,7 +26,7 @@ internal sealed class CreateStoreManagerCommandHandler(UserManager<User> userMan
             throw new ValidationBadRequestException(result.Errors);
         }
 
-        result = await userManager.AddToRolesAsync(user, new[] { Roles.StoreManager });
+        result = await userManager.AddToRolesAsync(user, new[] { Roles.StationManager });
 
         if (!result.Succeeded)
         {

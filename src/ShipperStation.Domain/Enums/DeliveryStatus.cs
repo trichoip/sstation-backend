@@ -2,7 +2,7 @@ using System.ComponentModel;
 
 namespace ShipperStation.Domain.Enums;
 
-public enum OrderStatus
+public enum DeliveryStatus
 {
     [Description("Mới khởi tạo")]
     Initialized,
