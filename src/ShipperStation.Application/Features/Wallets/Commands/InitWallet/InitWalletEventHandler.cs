@@ -12,7 +12,7 @@ internal sealed class InitWalletEventHandler(
 
     public async Task Handle(InitWalletEvent notification, CancellationToken cancellationToken)
     {
-        //var userId = await currentUserService.FindCurrentUserIdAsync();
+        var userId = await currentUserService.FindCurrentUserIdAsync();
         //if (!await _walletRepository.ExistsByAsync(_ => _.UserId == userId, cancellationToken))
         //{
         //    await _walletRepository.CreateAsync(new Wallet

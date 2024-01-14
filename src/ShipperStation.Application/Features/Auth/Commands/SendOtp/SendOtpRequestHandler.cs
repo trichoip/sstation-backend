@@ -1,5 +1,4 @@
-﻿using Hangfire;
-using MediatR;
+﻿using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using ShipperStation.Application.Common.Exceptions;
@@ -53,7 +52,9 @@ internal sealed class SendOtpRequestHandler(
         logger.LogInformation($"OTP: {code} ");
 
         // send otp to phonenumber in background job
-        BackgroundJob.Enqueue(() => publisher.Publish(new SendOtpEvent(request.PhoneNumber, code), cancellationToken));
+        //BackgroundJob.Enqueue(() => );
+
+        _ = publisher.Publish(new SendOtpEvent(request.PhoneNumber, code), cancellationToken);
 
         return new MessageResponse(Resource.OtpSendSuccess);
     }
