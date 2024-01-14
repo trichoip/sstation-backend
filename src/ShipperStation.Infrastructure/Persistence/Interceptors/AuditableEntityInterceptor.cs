@@ -38,6 +38,7 @@ public class AuditableEntityInterceptor(IHttpContextAccessor httpContextAccessor
                 entry.Entity.ModifiedAt = DateTimeOffset.UtcNow;
             }
 
+            // nếu dùng delete này thì tất cả entity phải kế thừa BaseAuditableEntity
             //if (entry.State == EntityState.Deleted)
             //{
             //    entry.State = EntityState.Modified;

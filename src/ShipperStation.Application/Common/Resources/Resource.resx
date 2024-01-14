@@ -172,7 +172,7 @@
     <value>We couldn't find what you were looking for.</value>
   </data>
   <data name="NotificationContentOtpMessage" xml:space="preserve">
-    <value>Your verification code is {0}</value>
+    <value>Mã xác thực của bạn là {0}</value>
   </data>
   <data name="NotificationDeletedSuccess" xml:space="preserve">
     <value>Notification deleted successfully</value>
@@ -201,6 +201,9 @@
   <data name="PasswordRequired" xml:space="preserve">
     <value>Password is required</value>
   </data>
+  <data name="PasswordSetSuccess" xml:space="preserve">
+    <value>Your password has been set.</value>
+  </data>
   <data name="PhoneNumberExisted" xml:space="preserve">
     <value>Phone Number existed</value>
   </data>
@@ -225,6 +228,9 @@
   <data name="Unauthorized" xml:space="preserve">
     <value>Authentication required. Please provide valid credentials.</value>
   </data>
+  <data name="UserHavePassword" xml:space="preserve">
+    <value>You account is haved password</value>
+  </data>
   <data name="UserIsInactive" xml:space="preserve">
     <value>User Is Inactive</value>
   </data>
@@ -245,6 +251,9 @@
   </data>
   <data name="UserNotInStation" xml:space="preserve">
     <value>You are not the manager of this station</value>
+  </data>
+  <data name="UserUpdatedProfileSuccess" xml:space="preserve">
+    <value>Profile updated successfully</value>
   </data>
   <data name="ValidationBadRequest" xml:space="preserve">
     <value>Multiple errors occurred. See error details.</value>

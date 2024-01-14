@@ -1,7 +1,7 @@
 ﻿using ShipperStation.Domain.Common;
 
 namespace ShipperStation.Domain.Entities;
-public class Shelf : BaseAuditableEntity<int>
+public class Shelf : BaseEntity<int>
 {
     public string? Name { get; set; }
     public string? Description { get; set; }

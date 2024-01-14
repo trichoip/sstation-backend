@@ -117,10 +117,10 @@ public static class DependencyInjection
         {
             options.AddPolicy(Policies.Admin, policy => policy.RequireRole(Roles.Admin));
             options.AddPolicy(Policies.Staff, policy => policy.RequireRole(Roles.Staff));
-            options.AddPolicy(Policies.StoreManager, policy => policy.RequireRole(Roles.StoreManager));
+            options.AddPolicy(Policies.StoreManager, policy => policy.RequireRole(Roles.StationManager));
             options.AddPolicy(Policies.User, policy => policy.RequireRole(Roles.User));
-            options.AddPolicy(Policies.StoreManager_And_Staff, policy => policy.RequireRole(Roles.StoreManager).RequireRole(Roles.Staff));
-            options.AddPolicy(Policies.Admin_Or_StoreManager, policy => policy.RequireRole(Roles.Admin, Roles.StoreManager));
+            options.AddPolicy(Policies.StoreManager_And_Staff, policy => policy.RequireRole(Roles.StationManager).RequireRole(Roles.Staff));
+            options.AddPolicy(Policies.Admin_Or_StationManager, policy => policy.RequireRole(Roles.Admin, Roles.StationManager));
         });
     }
 

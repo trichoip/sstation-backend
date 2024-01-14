@@ -9,6 +9,6 @@ internal static class RoleSeed
         new(Roles.Admin),
         new(Roles.User),
         new(Roles.Staff),
-        new(Roles.StoreManager),
+        new(Roles.StationManager),
     };
 }

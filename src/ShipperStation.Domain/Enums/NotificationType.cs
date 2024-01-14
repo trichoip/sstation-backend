@@ -30,18 +30,18 @@ public enum NotificationType
     [Description("[System] Locker is overloaded")]
     SystemLockerBoxOverloaded,
 
-    // Order
+    // Delivery
     [Description("[System] New order created")]
     SystemOrderCreated,
 
-    [Description("[System] Order is overtime")]
+    [Description("[System] Delivery is overtime")]
     SystemOrderOverTime,
 
     /**
      * CUSTOMER NOTIFICATION TYPES
      */
 
-    // Order
+    // Delivery
     [Description("[Customer] You has a new order created")]
     CustomerOrderCreated,
 
@@ -54,7 +54,7 @@ public enum NotificationType
     [Description("[Customer] Your order is completed")]
     CustomerOrderCompleted,
 
-    [Description("[Customer] Your Order is overtime")]
+    [Description("[Customer] Your Delivery is overtime")]
     CustomerOrderOverTime,
 
 }

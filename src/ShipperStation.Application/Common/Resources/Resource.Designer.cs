@@ -223,7 +223,7 @@ namespace ShipperStation.Application.Common.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Your verification code is {0}.
+        ///   Looks up a localized string similar to Mã xác thực của bạn là {0}.
         /// </summary>
         public static string NotificationContentOtpMessage {
             get {
@@ -313,6 +313,15 @@ namespace ShipperStation.Application.Common.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Your password has been set..
+        /// </summary>
+        public static string PasswordSetSuccess {
+            get {
+                return ResourceManager.GetString("PasswordSetSuccess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Phone Number existed.
         /// </summary>
         public static string PhoneNumberExisted {
@@ -385,6 +394,15 @@ namespace ShipperStation.Application.Common.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to You account is haved password.
+        /// </summary>
+        public static string UserHavePassword {
+            get {
+                return ResourceManager.GetString("UserHavePassword", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to User Is Inactive.
         /// </summary>
         public static string UserIsInactive {
@@ -444,6 +462,15 @@ namespace ShipperStation.Application.Common.Resources {
         public static string UserNotInStation {
             get {
                 return ResourceManager.GetString("UserNotInStation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Profile updated successfully.
+        /// </summary>
+        public static string UserUpdatedProfileSuccess {
+            get {
+                return ResourceManager.GetString("UserUpdatedProfileSuccess", resourceCulture);
             }
         }
         
