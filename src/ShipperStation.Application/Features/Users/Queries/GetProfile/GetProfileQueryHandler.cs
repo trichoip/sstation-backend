@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using ShipperStation.Application.Common.Exceptions;
 using ShipperStation.Application.Contracts.Users;
+using ShipperStation.Application.Features.Wallets.Commands.InitWallet;
 using ShipperStation.Application.Interfaces.Repositories;
 using ShipperStation.Application.Interfaces.Services;
 using ShipperStation.Domain.Entities.Identities;
@@ -18,7 +19,7 @@ internal sealed class GetProfileQueryHandler(
     {
         var user = await currentUserService.FindCurrentUserAsync();
 
-        //_ = publisher.Publish(new InitWalletEvent(), cancellationToken);
+        await publisher.Publish(new InitWalletEvent() with { UserId = user.Id }, cancellationToken);
 
         if (await _userRepository
             .FindByAsync<UserResponse>(_ => _.Id == user.Id, cancellationToken) is not { } userResponse)

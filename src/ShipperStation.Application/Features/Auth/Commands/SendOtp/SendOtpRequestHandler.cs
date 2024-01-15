@@ -52,8 +52,6 @@ internal sealed class SendOtpRequestHandler(
         logger.LogInformation($"OTP: {code} ");
 
         // send otp to phonenumber in background job
-        //BackgroundJob.Enqueue(() => );
-
         _ = publisher.Publish(new SendOtpEvent(request.PhoneNumber, code), cancellationToken);
 
         return new MessageResponse(Resource.OtpSendSuccess);

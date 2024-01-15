@@ -4,7 +4,7 @@ public enum SettingType
     Int,
     String,
     Bool,
-    Decimal,
+    Double,
     DateTime,
     Guid,
     Json,

@@ -47,7 +47,7 @@ public class AuthController(ISender sender) : ControllerBase
     /// </param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    [HttpPost("login/send-otp")]
+    [HttpPost("send-otp")]
     public async Task<ActionResult<MessageResponse>> SendOtp(SendOtpRequest request, CancellationToken cancellationToken)
     {
         return await sender.Send(request, cancellationToken);
@@ -63,7 +63,7 @@ public class AuthController(ISender sender) : ControllerBase
     /// </param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    [HttpPost("login/verify-otp")]
+    [HttpPost("verify-otp")]
     public async Task<ActionResult<AccessTokenResponse>> VerifyOtp(VerifyOtpRequest request, CancellationToken cancellationToken)
     {
         return await sender.Send(request, cancellationToken);

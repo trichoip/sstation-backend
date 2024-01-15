@@ -6,6 +6,7 @@ using ShipperStation.Application.Contracts;
 using ShipperStation.Application.Contracts.Stations;
 using ShipperStation.Application.Contracts.Users;
 using ShipperStation.Application.Features.StoreManagers.Commands.CreateStaff;
+using ShipperStation.Application.Features.StoreManagers.Commands.CreateStation;
 using ShipperStation.Application.Features.StoreManagers.Commands.CreateStoreManager;
 using ShipperStation.Application.Features.StoreManagers.Queries.GetStaffs;
 using ShipperStation.Application.Features.StoreManagers.Queries.GetStationsByStoreManager;
@@ -92,4 +93,10 @@ public class StoreManagersController(ISender sender) : ControllerBase
         return await sender.Send(request, cancellationToken);
     }
 
+    [Authorize(Policy = Policies.StoreManager)]
+    [HttpPost("stations")]
+    public async Task<ActionResult<MessageResponse>> CreateStation(CreateStationCommand command, CancellationToken cancellationToken)
+    {
+        return await sender.Send(command, cancellationToken);
+    }
 }
