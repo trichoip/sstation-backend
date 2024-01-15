@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace ShipperStation.Domain.Entities;
 public class Payment : BaseAuditableEntity<Guid>
 {
-    public decimal Amount { get; set; }
+    public double Amount { get; set; }
     public string? Content { get; set; }
 
     [Column(TypeName = "nvarchar(24)")]

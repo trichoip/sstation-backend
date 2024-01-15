@@ -198,8 +198,14 @@
   <data name="OtpSendSuccess" xml:space="preserve">
     <value>Send Otp successfully</value>
   </data>
+  <data name="PasswordChangeSuccess" xml:space="preserve">
+    <value>Your password has been changed.</value>
+  </data>
   <data name="PasswordRequired" xml:space="preserve">
     <value>Password is required</value>
+  </data>
+  <data name="PasswordResetSuccess" xml:space="preserve">
+    <value>Your password has been reset.</value>
   </data>
   <data name="PasswordSetSuccess" xml:space="preserve">
     <value>Your password has been set.</value>
@@ -221,6 +227,9 @@
   </data>
   <data name="StaffNotFound" xml:space="preserve">
     <value>Staff is not found</value>
+  </data>
+  <data name="StationCreatedSuccess" xml:space="preserve">
+    <value>Create station successfully</value>
   </data>
   <data name="StoreManagerCreatedSuccess" xml:space="preserve">
     <value>Store manager created successfully</value>
@@ -248,6 +257,9 @@
   </data>
   <data name="UserNotHaveNotification" xml:space="preserve">
     <value>User ({0}) not have notification ({1})</value>
+  </data>
+  <data name="UserNotHavePassword" xml:space="preserve">
+    <value>You account is not have password</value>
   </data>
   <data name="UserNotInStation" xml:space="preserve">
     <value>You are not the manager of this station</value>

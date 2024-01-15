@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ShipperStation.Infrastructure.Persistence.Data;
 
@@ -10,9 +11,11 @@ using ShipperStation.Infrastructure.Persistence.Data;
 namespace ShipperStation.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240114065845_Update-Decimal-To-Double")]
+    partial class UpdateDecimalToDouble
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -448,8 +451,8 @@ namespace ShipperStation.Infrastructure.Migrations
                     b.Property<string>("Notes")
                         .HasColumnType("longtext");
 
-                    b.Property<double>("PackagePrice")
-                        .HasColumnType("double");
+                    b.Property<decimal>("PackagePrice")
+                        .HasColumnType("decimal(65,30)");
 
                     b.Property<string>("PlatformName")
                         .HasColumnType("longtext");
@@ -519,8 +522,8 @@ namespace ShipperStation.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("char(36)");
 
-                    b.Property<double>("Amount")
-                        .HasColumnType("double");
+                    b.Property<decimal>("Amount")
+                        .HasColumnType("decimal(65,30)");
 
                     b.Property<string>("Content")
                         .HasColumnType("longtext");
@@ -804,8 +807,8 @@ namespace ShipperStation.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<double>("Amount")
-                        .HasColumnType("double");
+                    b.Property<decimal>("Amount")
+                        .HasColumnType("decimal(65,30)");
 
                     b.Property<DateTimeOffset?>("CreatedAt")
                         .HasColumnType("datetime(6)");

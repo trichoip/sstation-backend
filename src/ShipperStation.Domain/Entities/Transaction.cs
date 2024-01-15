@@ -7,7 +7,7 @@ namespace ShipperStation.Domain.Entities;
 public class Transaction : BaseAuditableEntity<int>
 {
     public string? Description { get; set; }
-    public decimal Amount { get; set; }
+    public double Amount { get; set; }
 
     [Column(TypeName = "nvarchar(24)")]
     public TransactionStatus Status { get; set; }

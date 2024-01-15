@@ -19,10 +19,6 @@ public class SmsSender(
 
     public async Task SendAsync(string phoneNumber, string message, CancellationToken cancellationToken = default)
     {
-
-        await Task.Delay(30000, cancellationToken);
-        Console.WriteLine("InitWalletEvent InitWalletEvent");
-
         var response = await SendSmsGatewayAsync(phoneNumber, message, cancellationToken);
         //var response = await SendSpeedSMSAsync(phoneNumber, message, cancellationToken);
 

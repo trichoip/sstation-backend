@@ -304,11 +304,29 @@ namespace ShipperStation.Application.Common.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Your password has been changed..
+        /// </summary>
+        public static string PasswordChangeSuccess {
+            get {
+                return ResourceManager.GetString("PasswordChangeSuccess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Password is required.
         /// </summary>
         public static string PasswordRequired {
             get {
                 return ResourceManager.GetString("PasswordRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Your password has been reset..
+        /// </summary>
+        public static string PasswordResetSuccess {
+            get {
+                return ResourceManager.GetString("PasswordResetSuccess", resourceCulture);
             }
         }
         
@@ -372,6 +390,15 @@ namespace ShipperStation.Application.Common.Resources {
         public static string StaffNotFound {
             get {
                 return ResourceManager.GetString("StaffNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Create station successfully.
+        /// </summary>
+        public static string StationCreatedSuccess {
+            get {
+                return ResourceManager.GetString("StationCreatedSuccess", resourceCulture);
             }
         }
         
@@ -453,6 +480,15 @@ namespace ShipperStation.Application.Common.Resources {
         public static string UserNotHaveNotification {
             get {
                 return ResourceManager.GetString("UserNotHaveNotification", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You account is not have password.
+        /// </summary>
+        public static string UserNotHavePassword {
+            get {
+                return ResourceManager.GetString("UserNotHavePassword", resourceCulture);
             }
         }
         

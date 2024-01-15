@@ -5,16 +5,7 @@ public sealed class ResetPasswordRequestValidator : AbstractValidator<ResetPassw
 {
     public ResetPasswordRequestValidator()
     {
-        RuleFor(x => x.Email)
-            .NotEmpty()
-            .EmailAddress();
-
         RuleFor(x => x.NewPassword)
             .NotEmpty();
-
-        RuleFor(x => x.ResetCode)
-            .NotEmpty()
-            .MinimumLength(6)
-            .MaximumLength(6);
     }
 }
