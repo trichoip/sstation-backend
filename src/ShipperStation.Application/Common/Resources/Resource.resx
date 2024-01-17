@@ -222,6 +222,15 @@
   <data name="RefreshTokenRequired" xml:space="preserve">
     <value>RefreshToken is required</value>
   </data>
+  <data name="SizeCreatedSuccess" xml:space="preserve">
+    <value>Size created successfully</value>
+  </data>
+  <data name="SizeDeletedSuccess" xml:space="preserve">
+    <value>Size deleted successfully</value>
+  </data>
+  <data name="SizeUpdatedSuccess" xml:space="preserve">
+    <value>Size updated successfully</value>
+  </data>
   <data name="StaffCreatedSuccess" xml:space="preserve">
     <value>Staff created successfully</value>
   </data>

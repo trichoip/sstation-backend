@@ -38,8 +38,7 @@ internal sealed class CreateStationCommandHandler(
             station.StationSettings.Add(new StationSetting
             {
                 SettingId = item.Id,
-                Status = StationSettingStatus.Default,
-                Value = item.Value
+                Status = StationSettingStatus.Default
             });
         }
 

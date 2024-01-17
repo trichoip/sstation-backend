@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace ShipperStation.Domain.Entities;
 public class StationSetting : BaseEntity<int>
 {
-    public string Value { get; set; } = default!;
+    public string? CustomValue { get; set; }
 
     [Column(TypeName = "nvarchar(24)")]
     public StationSettingStatus Status { get; set; }
