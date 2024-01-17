@@ -376,6 +376,33 @@ namespace ShipperStation.Application.Common.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Size created successfully.
+        /// </summary>
+        public static string SizeCreatedSuccess {
+            get {
+                return ResourceManager.GetString("SizeCreatedSuccess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Size deleted successfully.
+        /// </summary>
+        public static string SizeDeletedSuccess {
+            get {
+                return ResourceManager.GetString("SizeDeletedSuccess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Size updated successfully.
+        /// </summary>
+        public static string SizeUpdatedSuccess {
+            get {
+                return ResourceManager.GetString("SizeUpdatedSuccess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Staff created successfully.
         /// </summary>
         public static string StaffCreatedSuccess {

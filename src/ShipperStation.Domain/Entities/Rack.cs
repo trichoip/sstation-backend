@@ -10,6 +10,9 @@ public class Rack : BaseEntity<int>
     public int StationId { get; set; }
     public virtual Station Station { get; set; } = default!;
 
+    public int SizeId { get; set; }
+    public virtual Size Size { get; set; } = default!;
+
     public virtual ICollection<Shelf> Shelves { get; set; } = new HashSet<Shelf>();
 
 }
