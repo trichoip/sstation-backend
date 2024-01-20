@@ -8,7 +8,6 @@ using ShipperStation.Application.Interfaces.Services;
 using ShipperStation.Domain.Constants;
 using ShipperStation.Domain.Entities;
 using ShipperStation.Domain.Entities.Identities;
-using ShipperStation.Domain.Enums;
 
 namespace ShipperStation.Application.Features.StoreManagers.Commands.CreateStaff;
 internal sealed class CreateStaffCommandHandler(
@@ -40,7 +39,7 @@ internal sealed class CreateStaffCommandHandler(
         {
             UserName = request.UserName,
             FullName = request.FullName,
-            Status = UserStatus.Active
+            IsActive = true,
         };
 
         var result = await userManager.CreateAsync(staff, request.Password);

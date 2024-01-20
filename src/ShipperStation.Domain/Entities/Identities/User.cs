@@ -1,8 +1,6 @@
 ﻿using EntityFrameworkCore.Projectables;
 using Microsoft.AspNetCore.Identity;
 using ShipperStation.Domain.Common.Interfaces;
-using ShipperStation.Domain.Enums;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ShipperStation.Domain.Entities.Identities;
 public class User : IdentityUser<Guid>, IAuditableEntity
@@ -10,8 +8,7 @@ public class User : IdentityUser<Guid>, IAuditableEntity
     public string? FullName { get; set; }
     public string? AvatarUrl { get; set; }
 
-    [Column(TypeName = "nvarchar(24)")]
-    public UserStatus Status { get; set; }
+    public bool IsActive { get; set; }
 
     public string? CreatedBy { get; set; }
     public DateTimeOffset? CreatedAt { get; set; }
@@ -27,7 +24,7 @@ public class User : IdentityUser<Guid>, IAuditableEntity
     public virtual ICollection<UserStation> UserStations { get; set; } = new HashSet<UserStation>();
     public virtual ICollection<Notification> Notifications { get; set; } = new HashSet<Notification>();
     public virtual ICollection<Transaction> Transactions { get; set; } = new HashSet<Transaction>();
-    public virtual ICollection<Delivery> Deliveries { get; set; } = new HashSet<Delivery>();
+    public virtual ICollection<Package> Packages { get; set; } = new HashSet<Package>();
     public virtual ICollection<Device> Devices { get; set; } = new HashSet<Device>();
 
     public virtual ICollection<UserRole> UserRoles { get; set; } = new HashSet<UserRole>();

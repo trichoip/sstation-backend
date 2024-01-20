@@ -14,6 +14,10 @@ public class Transaction : BaseAuditableEntity<int>
 
     [Column(TypeName = "nvarchar(24)")]
     public TransactionType Type { get; set; }
+    public string Url { get; set; } = default!;
+
+    [Column(TypeName = "nvarchar(24)")]
+    public TransactionMethod Method { get; set; }
 
     public Guid UserId { get; set; }
     public virtual User User { get; set; } = default!;

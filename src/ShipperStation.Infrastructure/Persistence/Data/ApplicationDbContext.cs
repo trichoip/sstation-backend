@@ -10,13 +10,10 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
 {
     private const string Prefix = "AspNet";
 
-    public DbSet<Delivery> Deliveries { get; set; }
-    public DbSet<DeliveryHistory> DeliveryHistories { get; set; }
     public DbSet<Notification> Notifications { get; set; }
     public DbSet<Device> Devices { get; set; }
     public DbSet<Package> Packages { get; set; }
     public DbSet<PackageImage> PackageImages { get; set; }
-    public DbSet<Payment> Payments { get; set; }
     public DbSet<Setting> Settings { get; set; }
     public DbSet<Rack> Racks { get; set; }
     public DbSet<Shelf> Shelves { get; set; }
@@ -28,6 +25,7 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
     public DbSet<UserStation> UserStations { get; set; }
     public DbSet<Wallet> Wallets { get; set; }
     public DbSet<Size> Sizes { get; set; }
+    public DbSet<PackageStatusHistory> PackageStatusHistories { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

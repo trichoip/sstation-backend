@@ -1,9 +1,6 @@
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
 using ShipperStation.Application.Contracts.Payments;
 using ShipperStation.Application.Interfaces.Services.Payments;
-using ShipperStation.Domain.Entities;
-using ShipperStation.Domain.Enums;
 using ShipperStation.Infrastructure.Settings;
 using ShipperStation.Shared.Extensions;
 
@@ -13,46 +10,30 @@ public class VnPayPaymentService : IVnPayPaymentService
 {
     private readonly VnPaySettings _vnPaySettings;
 
-    private readonly IHttpContextAccessor _contextAccessor;
-
-    private const string PayCommand = "pay";
-
-    private const string RefundCommand = "refund";
-
-    private const string CurrCode = "VND";
-
-    private const string Locale = "vn";
-
     private const string DefaultPaymentInfo = "Thanh toán với VnPay";
 
-    public VnPayPaymentService(IOptions<VnPaySettings> vnPaySettings, IHttpContextAccessor contextAccessor)
+    public VnPayPaymentService(IOptions<VnPaySettings> vnPaySettings)
     {
         _vnPaySettings = vnPaySettings.Value;
-        _contextAccessor = contextAccessor;
     }
 
-    public async Task<Payment> CreatePaymentAsync(VnPayPayment payment)
+    public async Task<string> CreatePaymentAsync(VnPayPayment payment)
     {
-        HttpContext? context = _contextAccessor.HttpContext;
-        if (context == null)
-        {
-            throw new Exception("Http Context not found");
-        }
 
         var pay = new VnPayLibrary();
         var urlCallBack = $"{_vnPaySettings.CallbackUrl}/{payment.PaymentReferenceId}";
 
         pay.AddRequestData("vnp_ReturnUrl", urlCallBack);
         pay.AddRequestData("vnp_Version", _vnPaySettings.Version);
-        pay.AddRequestData("vnp_Command", PayCommand);
+        pay.AddRequestData("vnp_Command", _vnPaySettings.Command);
         pay.AddRequestData("vnp_TmnCode", _vnPaySettings.TmnCode);
-        pay.AddRequestData("vnp_CurrCode", CurrCode);
+        pay.AddRequestData("vnp_CurrCode", _vnPaySettings.CurrCode);
 
         pay.AddRequestData("vnp_Amount", ((int)payment.Amount * 100).ToString());
         pay.AddRequestData("vnp_CreateDate", payment.Time.ToString("yyyyMMddHHmmss"));
 
         pay.AddRequestData("vnp_IpAddr", UtilitiesExtensions.GetIpAddress());
-        pay.AddRequestData("vnp_Locale", Locale);
+        pay.AddRequestData("vnp_Locale", _vnPaySettings.Locale);
         pay.AddRequestData("vnp_OrderInfo", payment.Info ?? DefaultPaymentInfo);
         pay.AddRequestData("vnp_OrderType", payment.OrderType.ToString());
 
@@ -62,16 +43,16 @@ public class VnPayPaymentService : IVnPayPaymentService
         var paymentUrl =
             pay.CreateRequestUrl(_vnPaySettings.PaymentEndpoint, _vnPaySettings.HashSecret);
 
-        var pm = new Payment()
-        {
-            Method = PaymentMethod.VnPay,
-            Amount = payment.Amount,
-            Content = payment.Info,
-            //ReferenceId = payment.PaymentReferenceId,
-            TransactionUrl = paymentUrl,
-            Qr = paymentUrl
-        };
+        //var pm = new Payment()
+        //{
+        //    Method = PaymentMethod.VnPay,
+        //    Amount = payment.Amount,
+        //    Content = payment.Info,
+        //    //ReferenceId = payment.PaymentReferenceId,
+        //    TransactionUrl = paymentUrl,
+        //    Qr = paymentUrl
+        //};
 
-        return await Task.FromResult(pm);
+        return await Task.FromResult(paymentUrl);
     }
 }
