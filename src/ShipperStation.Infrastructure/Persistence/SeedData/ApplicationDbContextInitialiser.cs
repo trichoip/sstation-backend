@@ -5,7 +5,6 @@ using ShipperStation.Application.Interfaces.Repositories;
 using ShipperStation.Domain.Constants;
 using ShipperStation.Domain.Entities;
 using ShipperStation.Domain.Entities.Identities;
-using ShipperStation.Domain.Enums;
 using ShipperStation.Infrastructure.Persistence.Data;
 
 namespace ShipperStation.Infrastructure.Persistence.SeedData;
@@ -78,7 +77,7 @@ public class ApplicationDbContextInitialiser(
             var user = new User
             {
                 UserName = "admin",
-                Status = UserStatus.Active
+                IsActive = true,
             };
             await userManager.CreateAsync(user, "admin");
             await userManager.AddToRolesAsync(user, new[] { Roles.Admin });
@@ -86,7 +85,7 @@ public class ApplicationDbContextInitialiser(
             user = new User
             {
                 UserName = "user",
-                Status = UserStatus.Active
+                IsActive = true,
             };
             await userManager.CreateAsync(user, "user");
             await userManager.AddToRolesAsync(user, new[] { Roles.User });
@@ -94,7 +93,7 @@ public class ApplicationDbContextInitialiser(
             user = new User
             {
                 UserName = "store",
-                Status = UserStatus.Active,
+                IsActive = true,
             };
             await userManager.CreateAsync(user, "store");
             await userManager.AddToRolesAsync(user, new[] { Roles.StationManager });
@@ -108,7 +107,7 @@ public class ApplicationDbContextInitialiser(
             user = new User
             {
                 UserName = "staff",
-                Status = UserStatus.Active,
+                IsActive = true,
             };
             await userManager.CreateAsync(user, "staff");
             await userManager.AddToRolesAsync(user, new[] { Roles.Staff });

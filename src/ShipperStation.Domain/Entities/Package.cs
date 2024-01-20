@@ -1,4 +1,5 @@
 ﻿using ShipperStation.Domain.Common;
+using ShipperStation.Domain.Entities.Identities;
 using ShipperStation.Domain.Enums;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -16,8 +17,6 @@ public class Package : BaseAuditableEntity<Guid>
 
     [Column(TypeName = "nvarchar(24)")]
     public PackageStatus Status { get; set; }
-    public string? Notes { get; set; }
-    public string? PlatformName { get; set; }
     public double Weight { get; set; }
     public double Height { get; set; }
     public double Width { get; set; }
@@ -26,7 +25,11 @@ public class Package : BaseAuditableEntity<Guid>
 
     public int SlotId { get; set; }
     public virtual Slot Slot { get; set; } = default!;
-    public virtual Delivery Delivery { get; set; } = default!;
+
+    public Guid UserId { get; set; }
+    public virtual User User { get; set; } = default!;
     public virtual ICollection<PackageImage> PackageImages { get; set; } = new HashSet<PackageImage>();
+
+    public virtual ICollection<PackageStatusHistory> PackageStatusHistories { get; set; } = new HashSet<PackageStatusHistory>();
 
 }

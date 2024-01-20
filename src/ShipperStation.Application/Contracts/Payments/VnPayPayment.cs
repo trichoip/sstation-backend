@@ -13,7 +13,7 @@ public class VnPayPayment
 
     public string? Info { get; set; }
 
-    public OrderType OrderType { get; set; }
+    public TransactionType OrderType { get; set; }
 
     public DateTimeOffset Time { get; set; }
 

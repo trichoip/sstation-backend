@@ -1,6 +1,5 @@
 ﻿using ShipperStation.Application.Contracts.Devices;
 using ShipperStation.Application.Contracts.Wallets;
-using ShipperStation.Domain.Enums;
 
 namespace ShipperStation.Application.Contracts.Users;
 
@@ -13,7 +12,7 @@ public sealed record UserResponse : BaseAuditableEntityResponse<Guid>
     public string? PhoneNumber { get; set; }
     public bool PhoneNumberConfirmed { get; set; }
     public string? FullName { get; set; }
-    public UserStatus Status { get; set; }
+    public bool IsActive { get; set; }
     public bool IsDeleted { get; set; }
 
     public WalletResponse Wallet { get; set; } = default!;

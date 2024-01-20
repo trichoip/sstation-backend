@@ -5,7 +5,6 @@ using ShipperStation.Application.Common.Resources;
 using ShipperStation.Application.Contracts;
 using ShipperStation.Domain.Constants;
 using ShipperStation.Domain.Entities.Identities;
-using ShipperStation.Domain.Enums;
 
 namespace ShipperStation.Application.Features.StoreManagers.Commands.CreateStoreManager;
 internal sealed class CreateStoreManagerCommandHandler(UserManager<User> userManager) : IRequestHandler<CreateStoreManagerCommand, MessageResponse>
@@ -16,7 +15,7 @@ internal sealed class CreateStoreManagerCommandHandler(UserManager<User> userMan
         {
             UserName = request.UserName,
             FullName = request.FullName,
-            Status = UserStatus.Active
+            IsActive = true,
         };
 
         var result = await userManager.CreateAsync(user, request.Password);

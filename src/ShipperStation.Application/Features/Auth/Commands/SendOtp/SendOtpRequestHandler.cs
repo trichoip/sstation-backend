@@ -6,7 +6,6 @@ using ShipperStation.Application.Common.Resources;
 using ShipperStation.Application.Contracts;
 using ShipperStation.Domain.Constants;
 using ShipperStation.Domain.Entities.Identities;
-using ShipperStation.Domain.Enums;
 
 namespace ShipperStation.Application.Features.Auth.Commands.SendOtp;
 internal sealed class SendOtpRequestHandler(
@@ -23,7 +22,7 @@ internal sealed class SendOtpRequestHandler(
             {
                 UserName = request.PhoneNumber,
                 PhoneNumber = request.PhoneNumber,
-                Status = UserStatus.Active,
+                IsActive = true,
                 PhoneNumberConfirmed = true
             };
 

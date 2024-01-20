@@ -1,9 +1,6 @@
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using ShipperStation.Application.Contracts.Payments;
 using ShipperStation.Application.Interfaces.Services.Payments;
-using ShipperStation.Domain.Entities;
-using ShipperStation.Domain.Enums;
 using ShipperStation.Infrastructure.Settings;
 using ShipperStation.Shared.Helpers;
 using System.Security.Cryptography;
@@ -13,39 +10,15 @@ namespace ShipperStation.Infrastructure.Services.Payments;
 
 public class MomoPaymentService : IMomoPaymentService
 {
-    private readonly ILogger<MomoPaymentService> _logger;
-
-    private const string DefaultOrderInfo = "[Laundry locker] Thanh toán với Momo";
+    private const string DefaultOrderInfo = "[SStation] Thanh toán với Momo";
 
     private readonly MomoSettings _momoSettings;
-
-    public MomoPaymentService(
-        IOptions<MomoSettings> momoSettings,
-        ILogger<MomoPaymentService> logger)
+    public MomoPaymentService(IOptions<MomoSettings> momoSettings)
     {
         _momoSettings = momoSettings.Value;
-        _logger = logger;
     }
 
-    public async Task<string> CreateQrCodeUrl(MomoPayment payment)
-    {
-        var momoPaymentResponse = await CreatePayment(payment);
-        return momoPaymentResponse.Qr ?? string.Empty;
-    }
-
-    public async Task<string> CreatePaymentUrl(MomoPayment payment)
-    {
-        var momoPaymentResponse = await CreatePayment(payment);
-        return momoPaymentResponse.TransactionUrl ?? string.Empty;
-    }
-
-    public async Task<string> CreateDeeplink(MomoPayment payment)
-    {
-        var momoPaymentResponse = await CreatePayment(payment);
-        return momoPaymentResponse.Deeplink ?? string.Empty;
-    }
-
-    public async Task<Payment> CreatePayment(MomoPayment payment)
+    public async Task<string> CreatePayment(MomoPayment payment)
     {
         var requestType = "captureWallet";
         var request = new MomoPaymentRequest();
@@ -76,21 +49,23 @@ public class MomoPaymentService : IMomoPaymentService
             var momoPaymentResponse = JsonSerializerUtils.Deserialize<MomoPaymentResponse>(responseContent);
             if (momoPaymentResponse != null)
             {
-                var pm = new Payment()
-                {
-                    Method = PaymentMethod.Momo,
-                    Amount = momoPaymentResponse.Amount,
-                    // Test with QR
-                    Qr = momoPaymentResponse.PayUrl,
-                    TransactionUrl = momoPaymentResponse.PayUrl,
-                    Deeplink = momoPaymentResponse.Deeplink,
-                    //ReferenceId = payment.PaymentReferenceId,
-                    Content = payment.Info,
-                    Status = PaymentStatus.Created,
-                    Description = "Payment with momo"
-                };
+                //var pm = new Payment()
+                //{
+                //    Method = PaymentMethod.Momo,
+                //    Amount = momoPaymentResponse.Amount,
+                //    // Test with QR
+                //    Qr = momoPaymentResponse.PayUrl,
+                //    TransactionUrl = momoPaymentResponse.PayUrl,
+                //    Deeplink = momoPaymentResponse.Deeplink,
+                //    //ReferenceId = payment.PaymentReferenceId,
+                //    Content = payment.Info,
+                //    Status = PaymentStatus.Created,
+                //    Description = "Payment with momo"
+                //};
 
-                return pm;
+                //return pm;
+
+                return momoPaymentResponse.PayUrl;
             }
         }
 
