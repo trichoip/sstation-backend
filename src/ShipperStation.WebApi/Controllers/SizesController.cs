@@ -15,7 +15,7 @@ namespace ShipperStation.WebApi.Controllers;
 [Route("api/[controller]")]
 [ApiController]
 [SwaggerTag("Api for create, read, update, delete size's")]
-[Authorize(Policy = Policies.Admin)]
+[Authorize(Roles = Policies.Admin)]
 public class SizesController(ISender sender) : ControllerBase
 {
     [HttpGet]

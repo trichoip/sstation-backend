@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ShipperStation.Infrastructure.Persistence.Data;
 
@@ -10,9 +11,11 @@ using ShipperStation.Infrastructure.Persistence.Data;
 namespace ShipperStation.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240122074736_Add-Table-Pricing")]
+    partial class AddTablePricing
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -497,14 +500,14 @@ namespace ShipperStation.Infrastructure.Migrations
                     b.Property<int>("SizeId")
                         .HasColumnType("int");
 
-                    b.Property<int>("ZoneId")
+                    b.Property<int>("StationId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
                     b.HasIndex("SizeId");
 
-                    b.HasIndex("ZoneId");
+                    b.HasIndex("StationId");
 
                     b.ToTable("Racks");
                 });
@@ -667,7 +670,7 @@ namespace ShipperStation.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<double?>("CustomPrice")
+                    b.Property<double>("CustomPrice")
                         .HasColumnType("double");
 
                     b.Property<int>("PricingId")
@@ -797,29 +800,6 @@ namespace ShipperStation.Infrastructure.Migrations
                     b.ToTable("Wallets");
                 });
 
-            modelBuilder.Entity("ShipperStation.Domain.Entities.Zone", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<int>("StationId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("StationId");
-
-                    b.ToTable("Zones");
-                });
-
             modelBuilder.Entity("ShipperStation.Domain.Entities.Device", b =>
                 {
                     b.HasOne("ShipperStation.Domain.Entities.Identities.User", "User")
@@ -944,15 +924,15 @@ namespace ShipperStation.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("ShipperStation.Domain.Entities.Zone", "Zone")
+                    b.HasOne("ShipperStation.Domain.Entities.Station", "Station")
                         .WithMany("Racks")
-                        .HasForeignKey("ZoneId")
+                        .HasForeignKey("StationId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Size");
 
-                    b.Navigation("Zone");
+                    b.Navigation("Station");
                 });
 
             modelBuilder.Entity("ShipperStation.Domain.Entities.Shelf", b =>
@@ -1048,17 +1028,6 @@ namespace ShipperStation.Infrastructure.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("ShipperStation.Domain.Entities.Zone", b =>
-                {
-                    b.HasOne("ShipperStation.Domain.Entities.Station", "Station")
-                        .WithMany("Zones")
-                        .HasForeignKey("StationId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Station");
-                });
-
             modelBuilder.Entity("ShipperStation.Domain.Entities.Identities.User", b =>
                 {
                     b.Navigation("Devices");
@@ -1111,18 +1080,13 @@ namespace ShipperStation.Infrastructure.Migrations
 
             modelBuilder.Entity("ShipperStation.Domain.Entities.Station", b =>
                 {
+                    b.Navigation("Racks");
+
                     b.Navigation("StationImages");
 
                     b.Navigation("StationPricings");
 
                     b.Navigation("UserStations");
-
-                    b.Navigation("Zones");
-                });
-
-            modelBuilder.Entity("ShipperStation.Domain.Entities.Zone", b =>
-                {
-                    b.Navigation("Racks");
                 });
 #pragma warning restore 612, 618
         }

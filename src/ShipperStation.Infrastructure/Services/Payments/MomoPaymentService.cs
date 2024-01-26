@@ -10,7 +10,7 @@ namespace ShipperStation.Infrastructure.Services.Payments;
 
 public class MomoPaymentService : IMomoPaymentService
 {
-    private const string DefaultOrderInfo = "[SStation] Thanh toán với Momo";
+    private const string DefaultOrderInfo = "Thanh toán với Momo";
 
     private readonly MomoSettings _momoSettings;
     public MomoPaymentService(IOptions<MomoSettings> momoSettings)
@@ -24,8 +24,9 @@ public class MomoPaymentService : IMomoPaymentService
         var request = new MomoPaymentRequest();
         request.OrderInfo = payment.Info ?? DefaultOrderInfo;
         request.PartnerCode = _momoSettings.PartnerCode;
-        request.IpnUrl = $"{_momoSettings.IpnUrl}/{payment.PaymentReferenceId}";
-        request.RedirectUrl = $"{_momoSettings.RedirectUrl}/{payment.PaymentReferenceId}";
+        request.IpnUrl = _momoSettings.IpnUrl;
+        request.RedirectUrl = _momoSettings.RedirectUrl;
+
         request.Amount = payment.Amount;
         request.OrderId = payment.PaymentReferenceId;
         request.ReferenceId = $"{payment.PaymentReferenceId}";
@@ -49,22 +50,6 @@ public class MomoPaymentService : IMomoPaymentService
             var momoPaymentResponse = JsonSerializerUtils.Deserialize<MomoPaymentResponse>(responseContent);
             if (momoPaymentResponse != null)
             {
-                //var pm = new Payment()
-                //{
-                //    Method = PaymentMethod.Momo,
-                //    Amount = momoPaymentResponse.Amount,
-                //    // Test with QR
-                //    Qr = momoPaymentResponse.PayUrl,
-                //    TransactionUrl = momoPaymentResponse.PayUrl,
-                //    Deeplink = momoPaymentResponse.Deeplink,
-                //    //ReferenceId = payment.PaymentReferenceId,
-                //    Content = payment.Info,
-                //    Status = PaymentStatus.Created,
-                //    Description = "Payment with momo"
-                //};
-
-                //return pm;
-
                 return momoPaymentResponse.PayUrl;
             }
         }

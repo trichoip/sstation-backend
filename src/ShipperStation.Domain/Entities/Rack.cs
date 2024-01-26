@@ -7,8 +7,8 @@ public class Rack : BaseEntity<int>
     public string? Description { get; set; }
     public int Index { get; set; }
 
-    public int StationId { get; set; }
-    public virtual Station Station { get; set; } = default!;
+    public int ZoneId { get; set; }
+    public virtual Zone Zone { get; set; } = default!;
 
     public int SizeId { get; set; }
     public virtual Size Size { get; set; } = default!;
