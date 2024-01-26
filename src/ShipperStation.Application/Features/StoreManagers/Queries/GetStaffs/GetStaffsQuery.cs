@@ -33,8 +33,9 @@ public sealed record GetStaffsQuery : PaginationRequest<User>, IRequest<Paginate
         }
 
         Expression = Expression.And(u =>
-            u.UserStations.Any(_ => _.StationId == StationId) &&
-            u.UserRoles.Any(_ => _.Role.Name == Roles.Staff));
+            u.UserStations.Any(_ => _.StationId == StationId)
+                //&& u.UserRoles.Any(_ => _.Role.Name == Roles.Staff)
+                );
 
         return Expression;
     }

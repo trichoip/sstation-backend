@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Identity;
 using ShipperStation.Application.Common.Exceptions;
 using ShipperStation.Application.Common.Resources;
 using ShipperStation.Application.Contracts;
-using ShipperStation.Application.Features.Auth.Commands.ResetPassword;
 using ShipperStation.Application.Interfaces.Services;
 using ShipperStation.Domain.Entities.Identities;
 

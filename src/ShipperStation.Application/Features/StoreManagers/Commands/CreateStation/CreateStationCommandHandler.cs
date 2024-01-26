@@ -5,7 +5,6 @@ using ShipperStation.Application.Contracts;
 using ShipperStation.Application.Interfaces.Repositories;
 using ShipperStation.Application.Interfaces.Services;
 using ShipperStation.Domain.Entities;
-using ShipperStation.Domain.Enums;
 
 namespace ShipperStation.Application.Features.StoreManagers.Commands.CreateStation;
 internal sealed class CreateStationCommandHandler(
@@ -13,35 +12,29 @@ internal sealed class CreateStationCommandHandler(
     ICurrentUserService currentUserService) : IRequestHandler<CreateStationCommand, MessageResponse>
 {
     private readonly IGenericRepository<Station> _stationRepository = unitOfWork.Repository<Station>();
-    private readonly IGenericRepository<UserStation> _userStationRepository = unitOfWork.Repository<UserStation>();
-    private readonly IGenericRepository<StationSetting> _stationSettingRepository = unitOfWork.Repository<StationSetting>();
-    private readonly IGenericRepository<Setting> _settingRepository = unitOfWork.Repository<Setting>();
+    private readonly IGenericRepository<Pricing> _pricingRepository = unitOfWork.Repository<Pricing>();
 
     public async Task<MessageResponse> Handle(CreateStationCommand request, CancellationToken cancellationToken)
     {
         var userId = await currentUserService.FindCurrentUserIdAsync();
 
         var station = request.Adapt<Station>();
-
-        var userStation = new UserStation
+        station.UserStations.Add(new UserStation
         {
-            UserId = userId,
-            Station = station
-        };
+            UserId = userId
+        });
 
-        await _stationRepository.CreateAsync(station, cancellationToken);
-        await _userStationRepository.CreateAsync(userStation, cancellationToken);
+        var pricingDefault = await _pricingRepository.FindAsync(cancellationToken: cancellationToken);
 
-        var settingDefault = await _settingRepository.FindAsync();
-        foreach (var item in settingDefault)
+        foreach (var pricing in pricingDefault)
         {
-            station.StationSettings.Add(new StationSetting
+            station.StationPricings.Add(new StationPricing
             {
-                SettingId = item.Id,
-                Status = StationSettingStatus.Default
+                PricingId = pricing.Id
             });
         }
 
+        await _stationRepository.CreateAsync(station, cancellationToken);
         await unitOfWork.CommitAsync(cancellationToken);
 
         return new MessageResponse(Resource.StationCreatedSuccess);

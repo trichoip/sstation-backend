@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 
-namespace ShipperStation.Application.Features.Auth.Commands.ResetPassword;
+namespace ShipperStation.Application.Features.Users.Commands.ResetPassword;
 public sealed class ResetPasswordRequestValidator : AbstractValidator<ResetPasswordRequest>
 {
     public ResetPasswordRequestValidator()

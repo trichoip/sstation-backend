@@ -53,6 +53,6 @@ internal sealed class SendOtpRequestHandler(
         // send otp to phonenumber in background job
         _ = publisher.Publish(new SendOtpEvent(request.PhoneNumber, code), cancellationToken);
 
-        return new MessageResponse(Resource.OtpSendSuccess);
+        return new MessageResponse(Resource.OtpSendSuccess + $" (OTP: {code})");
     }
 }

@@ -30,7 +30,8 @@ public class Notifier : INotifier
 
         _provider.Attach(NotificationType.VerificationCode, new List<INotificationService>()
         {
-            smsNotificationService
+            smsNotificationService,
+            firebaseNotificationService
         });
 
     }

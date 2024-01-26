@@ -1,7 +1,7 @@
 ﻿using MediatR;
 using ShipperStation.Application.Contracts;
 
-namespace ShipperStation.Application.Features.Auth.Commands.ResetPassword;
+namespace ShipperStation.Application.Features.Users.Commands.ResetPassword;
 
 public sealed record ResetPasswordRequest : IRequest<MessageResponse>
 {

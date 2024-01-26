@@ -25,7 +25,7 @@ public class StoreManagersController(ISender sender) : ControllerBase
     /// <param name="request"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    [Authorize(Policy = Policies.Admin)]
+    [Authorize(Roles = Policies.Admin)]
     [HttpPost]
     public async Task<ActionResult<MessageResponse>> CreateStoreManager(
         CreateStoreManagerCommand request,
@@ -40,7 +40,7 @@ public class StoreManagersController(ISender sender) : ControllerBase
     /// <param name="request"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    [Authorize(Policy = Policies.StoreManager)]
+    [Authorize(Roles = Policies.StationManager)]
     [HttpGet("stations")]
     public async Task<ActionResult<PaginatedResponse<StationResponse>>> GetStationsByStoreManager(
         [FromQuery] GetStationsByStoreManagerQuery request,
@@ -56,7 +56,7 @@ public class StoreManagersController(ISender sender) : ControllerBase
     /// <param name="request"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    [Authorize(Policy = Policies.StoreManager)]
+    [Authorize(Roles = Policies.StationManager)]
     [HttpPost("stations/{id}/staff")]
     public async Task<ActionResult<MessageResponse>> CreateStaff(
         int id,
@@ -78,7 +78,7 @@ public class StoreManagersController(ISender sender) : ControllerBase
     /// <param name="request"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    [Authorize(Policy = Policies.StoreManager)]
+    [Authorize(Roles = Policies.StationManager)]
     [HttpGet("stations/{id}/staff")]
     public async Task<ActionResult<PaginatedResponse<UserResponse>>> GetStaffs(
         int id,
@@ -93,7 +93,7 @@ public class StoreManagersController(ISender sender) : ControllerBase
         return await sender.Send(request, cancellationToken);
     }
 
-    [Authorize(Policy = Policies.StoreManager)]
+    [Authorize(Roles = Policies.StationManager)]
     [HttpPost("stations")]
     public async Task<ActionResult<MessageResponse>> CreateStation(CreateStationCommand command, CancellationToken cancellationToken)
     {

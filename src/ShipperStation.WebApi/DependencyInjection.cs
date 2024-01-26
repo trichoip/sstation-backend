@@ -1,4 +1,6 @@
-﻿using Hangfire;
+﻿using FirebaseAdmin;
+using Google.Apis.Auth.OAuth2;
+using Hangfire;
 using Hangfire.MemoryStorage;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Diagnostics;
@@ -40,6 +42,7 @@ public static class DependencyInjection
         services.AddAuthorizationServices();
         services.AddSignalRServices();
         services.AddHangfireServices(configuration);
+        services.AddFirebaseServices();
 
     }
 
@@ -117,9 +120,9 @@ public static class DependencyInjection
         {
             options.AddPolicy(Policies.Admin, policy => policy.RequireRole(Roles.Admin));
             options.AddPolicy(Policies.Staff, policy => policy.RequireRole(Roles.Staff));
-            options.AddPolicy(Policies.StoreManager, policy => policy.RequireRole(Roles.StationManager));
+            options.AddPolicy(Policies.StationManager, policy => policy.RequireRole(Roles.StationManager));
             options.AddPolicy(Policies.User, policy => policy.RequireRole(Roles.User));
-            options.AddPolicy(Policies.StoreManager_And_Staff, policy => policy.RequireRole(Roles.StationManager).RequireRole(Roles.Staff));
+            options.AddPolicy(Policies.StationManager_Or_Staff, policy => policy.RequireRole(Roles.StationManager).RequireRole(Roles.Staff));
             options.AddPolicy(Policies.Admin_Or_StationManager, policy => policy.RequireRole(Roles.Admin, Roles.StationManager));
         });
     }
@@ -134,6 +137,15 @@ public static class DependencyInjection
         services.AddHangfire(c => c.UseMemoryStorage());
         services.AddHangfireServer();
     }
+
+    private static void AddFirebaseServices(this IServiceCollection services)
+    {
+        FirebaseApp.Create(new AppOptions()
+        {
+            Credential = GoogleCredential.FromFile("sstation-ac2ef-firebase-adminsdk-vpk23-43e3a5a330.json")
+        });
+    }
+
     public static async Task UseWebApplication(this WebApplication app)
     {
 
