@@ -1,13 +1,10 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using ShipperStation.Application.Contracts;
-using ShipperStation.Application.Contracts.Users;
-using ShipperStation.Application.Features.Users.Commands.ChangePassword;
-using ShipperStation.Application.Features.Users.Commands.ResetPassword;
-using ShipperStation.Application.Features.Users.Commands.SetPassword;
-using ShipperStation.Application.Features.Users.Commands.UpdateProfile;
-using ShipperStation.Application.Features.Users.Queries.GetProfile;
+using ShipperStation.Application.Features.Users.Commands;
+using ShipperStation.Application.Features.Users.Models;
+using ShipperStation.Application.Features.Users.Queries;
+using ShipperStation.Application.Models;
 
 namespace ShipperStation.WebApi.Controllers;
 

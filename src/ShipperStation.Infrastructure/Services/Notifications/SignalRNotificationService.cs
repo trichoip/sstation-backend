@@ -1,8 +1,8 @@
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Logging;
-using ShipperStation.Application.Contracts.Notifications;
-using ShipperStation.Application.Interfaces.Hubs;
-using ShipperStation.Application.Interfaces.Services.Notifications;
+using ShipperStation.Application.Contracts.Hubs;
+using ShipperStation.Application.Contracts.Services.Notifications;
+using ShipperStation.Application.Models.Notifications;
 using ShipperStation.Infrastructure.Hubs;
 
 namespace ShipperStation.Infrastructure.Services.Notifications;

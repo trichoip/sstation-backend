@@ -2,19 +2,15 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ShipperStation.Application.Common.Constants;
-using ShipperStation.Application.Contracts;
-using ShipperStation.Application.Contracts.Sizes;
-using ShipperStation.Application.Features.Sizes.Commands.CreateSize;
-using ShipperStation.Application.Features.Sizes.Commands.DeleteSize;
-using ShipperStation.Application.Features.Sizes.Commands.UpdateSize;
-using ShipperStation.Application.Features.Sizes.Queries.GetSizeById;
-using ShipperStation.Application.Features.Sizes.Queries.GetSizes;
-using Swashbuckle.AspNetCore.Annotations;
+using ShipperStation.Application.Features.Sizes.Commands;
+using ShipperStation.Application.Features.Sizes.Models;
+using ShipperStation.Application.Features.Sizes.Queries;
+using ShipperStation.Application.Models;
 
 namespace ShipperStation.WebApi.Controllers;
 [Route("api/[controller]")]
 [ApiController]
-[SwaggerTag("Api for create, read, update, delete size's")]
+//[SwaggerTag("Api for create, read, update, delete size's")]
 [Authorize(Roles = Policies.Admin)]
 public class SizesController(ISender sender) : ControllerBase
 {

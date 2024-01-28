@@ -6,9 +6,9 @@ internal static class RoleSeed
 {
     public static IList<Role> Default => new List<Role>()
     {
-        new(Roles.Admin),
-        new(Roles.User),
-        new(Roles.Staff),
-        new(Roles.StationManager),
+        new(RoleName.Admin),
+        new(RoleName.User),
+        new(RoleName.Staff),
+        new(RoleName.StationManager),
     };
 }

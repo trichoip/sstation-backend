@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
-using ShipperStation.Application.Contracts.Notifications;
-using ShipperStation.Application.Interfaces.Services;
-using ShipperStation.Application.Interfaces.Services.Notifications;
+using ShipperStation.Application.Contracts.Services;
+using ShipperStation.Application.Contracts.Services.Notifications;
+using ShipperStation.Application.Models.Notifications;
 
 namespace ShipperStation.Infrastructure.Services.Notifications;
 public class SmsNotificationService(

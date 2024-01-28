@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using ShipperStation.Application.Common.Resources;
-using ShipperStation.Application.Interfaces.Services;
+using ShipperStation.Application.Contracts.Services;
 using ShipperStation.Domain.Entities.Identities;
 using ShipperStation.Shared.Extensions;
 using System.Security.Claims;

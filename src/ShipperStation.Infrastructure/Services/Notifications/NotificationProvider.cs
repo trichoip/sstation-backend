@@ -1,5 +1,5 @@
-using ShipperStation.Application.Contracts.Notifications;
-using ShipperStation.Application.Interfaces.Services.Notifications;
+using ShipperStation.Application.Contracts.Services.Notifications;
+using ShipperStation.Application.Models.Notifications;
 using ShipperStation.Domain.Enums;
 
 namespace ShipperStation.Infrastructure.Services.Notifications;

@@ -1,5 +1,5 @@
 ﻿using Microsoft.Extensions.Options;
-using ShipperStation.Application.Interfaces.Services;
+using ShipperStation.Application.Contracts.Services;
 using ShipperStation.Infrastructure.Settings;
 using System.Net;
 using System.Net.Mail;

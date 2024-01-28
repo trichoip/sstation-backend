@@ -5,7 +5,7 @@ using Amazon.S3.Transfer;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
 using ShipperStation.Application.Common.Resources;
-using ShipperStation.Application.Interfaces.Services;
+using ShipperStation.Application.Contracts.Services;
 using ShipperStation.Infrastructure.Settings;
 using System.Net;
 

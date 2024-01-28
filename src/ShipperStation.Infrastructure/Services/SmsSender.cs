@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using ShipperStation.Application.Interfaces.Services;
+using ShipperStation.Application.Contracts.Services;
 using ShipperStation.Infrastructure.Settings;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
