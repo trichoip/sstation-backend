@@ -1,6 +1,6 @@
 using Microsoft.Extensions.Options;
-using ShipperStation.Application.Contracts.Payments;
-using ShipperStation.Application.Interfaces.Services.Payments;
+using ShipperStation.Application.Contracts.Services.Payments;
+using ShipperStation.Application.Models.Payments;
 using ShipperStation.Infrastructure.Settings;
 using ShipperStation.Shared.Extensions;
 

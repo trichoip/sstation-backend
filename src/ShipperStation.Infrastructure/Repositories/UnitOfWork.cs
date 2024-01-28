@@ -1,4 +1,4 @@
-﻿using ShipperStation.Application.Interfaces.Repositories;
+﻿using ShipperStation.Application.Contracts.Repositories;
 using ShipperStation.Infrastructure.Persistence.Data;
 using System.Collections;
 

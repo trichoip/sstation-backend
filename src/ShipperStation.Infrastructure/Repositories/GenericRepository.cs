@@ -1,6 +1,6 @@
 ﻿using Mapster;
 using Microsoft.EntityFrameworkCore;
-using ShipperStation.Application.Interfaces.Repositories;
+using ShipperStation.Application.Contracts.Repositories;
 using ShipperStation.Infrastructure.Persistence.Data;
 using ShipperStation.Shared.Pages;
 using System.Linq.Expressions;

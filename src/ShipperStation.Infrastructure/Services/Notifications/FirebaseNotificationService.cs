@@ -1,11 +1,12 @@
 using FirebaseAdmin.Messaging;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using ShipperStation.Application.Contracts.Notifications;
-using ShipperStation.Application.Interfaces.Repositories;
-using ShipperStation.Application.Interfaces.Services.Notifications;
+using ShipperStation.Application.Contracts.Repositories;
+using ShipperStation.Application.Contracts.Services.Notifications;
+using ShipperStation.Application.Models.Notifications;
 using ShipperStation.Domain.Entities;
 using ShipperStation.Infrastructure.Settings;
+using ShipperStation.Shared.Extensions;
 
 namespace ShipperStation.Infrastructure.Services.Notifications;
 
@@ -27,7 +28,6 @@ public class FirebaseNotificationService : IFirebaseNotificationService
 
     public async Task NotifyAsync(NotificationRequest notification, CancellationToken cancellationToken = default)
     {
-
         var deviceIds = (await _unitOfWork.Repository<Device>()
             .FindAsync(
                 expression: token => token.UserId == notification.UserId,
@@ -37,7 +37,7 @@ public class FirebaseNotificationService : IFirebaseNotificationService
         var messages = new MulticastMessage()
         {
             Tokens = deviceIds,
-            Data = new Dictionary<string, string>(),
+            Data = notification.ObjectToDictionary(),
             Notification = new FirebaseAdmin.Messaging.Notification()
             {
                 Title = notification.Title,
@@ -45,60 +45,16 @@ public class FirebaseNotificationService : IFirebaseNotificationService
             }
         };
 
-        var response = await FirebaseMessaging.DefaultInstance.SendMulticastAsync(messages, cancellationToken);
-
-        //var settings = new FirebaseSettings(
-        //    _fcmSettings.ProjectId,
-        //    _fcmSettings.PrivateKey,
-        //    _fcmSettings.ClientEmail,
-        //    _fcmSettings.TokenUri);
-
-        //var fcmSender = new FirebaseSender(settings, new HttpClient());
-
-        foreach (var token in deviceIds)
+        try
         {
-            try
-            {
-
-                //var message = new Message()
-                //{
-                //    Token = token,
-                //    Data = new Dictionary<string, string>(),
-                //    Notification = new Notification()
-                //    {
-                //        Title = notification.Title,
-                //        Body = notification.Content
-                //    }
-                //};
-
-                //string response = await FirebaseMessaging.DefaultInstance.SendAsync(message, cancellationToken);
-
-                var firebaseNotification = new
-                {
-                    message = new
-                    {
-                        token,
-                        notification = new
-                        {
-                            title = notification.Title,
-                            body = notification.Content
-                        },
-                        data = new
-                        {
-                            type = notification.Type.ToString(),
-                            //entityType = notification.EntityType.ToString(),
-                            //notification.ReferenceId
-                        },
-                    }
-                };
-
-                //await fcmSender.SendAsync(firebaseNotification, cancellationToken);
-            }
-            catch (Exception exception)
-            {
-                _logger.LogError($"[MOBILE NOTIFICATION] Error when push notification: {exception.Message}");
-            }
+            var response = await FirebaseMessaging.DefaultInstance.SendMulticastAsync(messages, cancellationToken);
+            _logger.LogInformation($"[MOBILE NOTIFICATION] Success push notification: {response}");
         }
+        catch (Exception ex)
+        {
+            _logger.LogError($"[MOBILE NOTIFICATION] Error when push notification: {ex.Message}");
+        }
+
         _logger.LogInformation($"[[MOBILE NOTIFICATION]] Handle firebase notification: {notification.Id}");
     }
 }

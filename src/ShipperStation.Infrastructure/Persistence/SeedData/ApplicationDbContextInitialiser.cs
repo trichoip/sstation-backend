@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using ShipperStation.Application.Interfaces.Repositories;
+using ShipperStation.Application.Contracts.Repositories;
 using ShipperStation.Domain.Constants;
 using ShipperStation.Domain.Entities;
 using ShipperStation.Domain.Entities.Identities;
@@ -80,7 +80,7 @@ public class ApplicationDbContextInitialiser(
                 IsActive = true,
             };
             await userManager.CreateAsync(user, "admin");
-            await userManager.AddToRolesAsync(user, new[] { Roles.Admin });
+            await userManager.AddToRolesAsync(user, new[] { RoleName.Admin });
 
             user = new User
             {
@@ -88,7 +88,7 @@ public class ApplicationDbContextInitialiser(
                 IsActive = true,
             };
             await userManager.CreateAsync(user, "user");
-            await userManager.AddToRolesAsync(user, new[] { Roles.User });
+            await userManager.AddToRolesAsync(user, new[] { RoleName.User });
 
             user = new User
             {
@@ -96,7 +96,7 @@ public class ApplicationDbContextInitialiser(
                 IsActive = true,
             };
             await userManager.CreateAsync(user, "store");
-            await userManager.AddToRolesAsync(user, new[] { Roles.StationManager });
+            await userManager.AddToRolesAsync(user, new[] { RoleName.StationManager });
             var station = await unitOfWork.Repository<Station>().FindByAsync(_ => !_.IsDeleted);
             user.UserStations.Add(new UserStation
             {
@@ -110,7 +110,7 @@ public class ApplicationDbContextInitialiser(
                 IsActive = true,
             };
             await userManager.CreateAsync(user, "staff");
-            await userManager.AddToRolesAsync(user, new[] { Roles.Staff });
+            await userManager.AddToRolesAsync(user, new[] { RoleName.Staff });
             user.UserStations.Add(new UserStation
             {
                 UserId = user.Id,

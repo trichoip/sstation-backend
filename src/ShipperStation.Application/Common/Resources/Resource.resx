@@ -123,6 +123,12 @@
   <data name="Conflict" xml:space="preserve">
     <value>Entity already exists!</value>
   </data>
+  <data name="CreatedSuccess" xml:space="preserve">
+    <value>Created successfully</value>
+  </data>
+  <data name="DeletedSuccess" xml:space="preserve">
+    <value>Deleted successfully</value>
+  </data>
   <data name="DeviceCreatedSuccess" xml:space="preserve">
     <value>Device created successfully</value>
   </data>
@@ -245,6 +251,9 @@
   </data>
   <data name="Unauthorized" xml:space="preserve">
     <value>Authentication required. Please provide valid credentials.</value>
+  </data>
+  <data name="UpdatedSuccess" xml:space="preserve">
+    <value>Updated successfully</value>
   </data>
   <data name="UserHavePassword" xml:space="preserve">
     <value>You account is haved password</value>

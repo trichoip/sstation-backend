@@ -79,6 +79,24 @@ namespace ShipperStation.Application.Common.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Created successfully.
+        /// </summary>
+        public static string CreatedSuccess {
+            get {
+                return ResourceManager.GetString("CreatedSuccess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Deleted successfully.
+        /// </summary>
+        public static string DeletedSuccess {
+            get {
+                return ResourceManager.GetString("DeletedSuccess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Device created successfully.
         /// </summary>
         public static string DeviceCreatedSuccess {
@@ -444,6 +462,15 @@ namespace ShipperStation.Application.Common.Resources {
         public static string Unauthorized {
             get {
                 return ResourceManager.GetString("Unauthorized", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Updated successfully.
+        /// </summary>
+        public static string UpdatedSuccess {
+            get {
+                return ResourceManager.GetString("UpdatedSuccess", resourceCulture);
             }
         }
         

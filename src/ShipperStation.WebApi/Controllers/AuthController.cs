@@ -1,18 +1,14 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using ShipperStation.Application.Contracts;
-using ShipperStation.Application.Contracts.Auth;
-using ShipperStation.Application.Features.Auth.Commands.Login;
-using ShipperStation.Application.Features.Auth.Commands.RefreshToken;
-using ShipperStation.Application.Features.Auth.Commands.SendOtp;
-using ShipperStation.Application.Features.Auth.Commands.VerifyOtp;
-using Swashbuckle.AspNetCore.Annotations;
+using ShipperStation.Application.Features.Auth.Commands;
+using ShipperStation.Application.Features.Auth.Models;
+using ShipperStation.Application.Models;
 
 namespace ShipperStation.WebApi.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-[SwaggerTag("Api for auth")]
+//[SwaggerTag("Api for auth")]
 public class AuthController(ISender sender) : ControllerBase
 {
 
@@ -53,28 +49,12 @@ public class AuthController(ISender sender) : ControllerBase
         return await sender.Send(request, cancellationToken);
     }
 
-    /// <summary>
-    /// Verify otp to login
-    /// </summary>
-    /// <param name="request">
-    /// ```
-    /// Otp code: 6 digits
-    /// ```
-    /// </param>
-    /// <param name="cancellationToken"></param>
-    /// <returns></returns>
     [HttpPost("verify-otp")]
     public async Task<ActionResult<AccessTokenResponse>> VerifyOtp(VerifyOtpRequest request, CancellationToken cancellationToken)
     {
         return await sender.Send(request, cancellationToken);
     }
 
-    /// <summary>
-    /// Refresh token
-    /// </summary>
-    /// <param name="request"></param>
-    /// <param name="cancellationToken"></param>
-    /// <returns></returns>
     [HttpPost("refresh")]
     public async Task<ActionResult<AccessTokenResponse>> RefreshToken(RefreshTokenRequest request, CancellationToken cancellationToken)
     {

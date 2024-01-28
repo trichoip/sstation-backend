@@ -1,5 +1,5 @@
 using Microsoft.AspNetCore.SignalR;
-using ShipperStation.Application.Interfaces.Hubs;
+using ShipperStation.Application.Contracts.Hubs;
 
 namespace ShipperStation.Infrastructure.Hubs;
 

@@ -118,12 +118,12 @@ public static class DependencyInjection
     {
         services.AddAuthorization(options =>
         {
-            options.AddPolicy(Policies.Admin, policy => policy.RequireRole(Roles.Admin));
-            options.AddPolicy(Policies.Staff, policy => policy.RequireRole(Roles.Staff));
-            options.AddPolicy(Policies.StationManager, policy => policy.RequireRole(Roles.StationManager));
-            options.AddPolicy(Policies.User, policy => policy.RequireRole(Roles.User));
-            options.AddPolicy(Policies.StationManager_Or_Staff, policy => policy.RequireRole(Roles.StationManager).RequireRole(Roles.Staff));
-            options.AddPolicy(Policies.Admin_Or_StationManager, policy => policy.RequireRole(Roles.Admin, Roles.StationManager));
+            options.AddPolicy(Policies.Admin, policy => policy.RequireRole(RoleName.Admin));
+            options.AddPolicy(Policies.Staff, policy => policy.RequireRole(RoleName.Staff));
+            options.AddPolicy(Policies.StationManager, policy => policy.RequireRole(RoleName.StationManager));
+            options.AddPolicy(Policies.User, policy => policy.RequireRole(RoleName.User));
+            options.AddPolicy(Policies.StationManager_Or_Staff, policy => policy.RequireRole(RoleName.StationManager).RequireRole(RoleName.Staff));
+            options.AddPolicy(Policies.Admin_Or_StationManager, policy => policy.RequireRole(RoleName.Admin, RoleName.StationManager));
         });
     }
 

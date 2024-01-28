@@ -1,12 +1,12 @@
 using Mapster;
 using Microsoft.Extensions.Logging;
 using ShipperStation.Application.Common.Extensions;
-using ShipperStation.Application.Contracts.Notifications;
-using ShipperStation.Application.Interfaces.Repositories;
-using ShipperStation.Application.Interfaces.Services.Notifications;
+using ShipperStation.Application.Contracts.Repositories;
+using ShipperStation.Application.Contracts.Services.Notifications;
+using ShipperStation.Application.Models.Notifications;
 using ShipperStation.Domain.Entities;
 using ShipperStation.Domain.Enums;
-using INotificationService = ShipperStation.Application.Interfaces.Services.Notifications.INotificationService;
+using INotificationService = ShipperStation.Application.Contracts.Services.Notifications.INotificationService;
 
 namespace ShipperStation.Infrastructure.Services.Notifications;
 
@@ -30,8 +30,13 @@ public class Notifier : INotifier
 
         _provider.Attach(NotificationType.VerificationCode, new List<INotificationService>()
         {
-            smsNotificationService,
-            firebaseNotificationService
+            smsNotificationService
+        });
+
+        _provider.Attach(NotificationType.SystemStaffCreated, new List<INotificationService>()
+        {
+            firebaseNotificationService,
+            signalRNotificationService,
         });
 
     }
