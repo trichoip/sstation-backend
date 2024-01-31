@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using Mapster;
+using MediatR;
 using Microsoft.AspNetCore.Identity;
 using ShipperStation.Application.Common.Exceptions;
 using ShipperStation.Application.Common.Resources;
@@ -21,6 +22,7 @@ internal sealed class SetPasswordCommandHandler(
             throw new BadRequestException(Resource.UserHavePassword);
         }
 
+        request.Adapt(user);
         var result = await userManager.AddPasswordAsync(user, request.NewPassword);
 
         if (!result.Succeeded)
