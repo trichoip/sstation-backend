@@ -37,15 +37,21 @@ public class JwtService : IJwtService
         ticketDataFormat = new TicketDataFormat(protector);
     }
 
-    public async Task<AccessTokenResponse> GenerateTokenAsync(User user)
+    public async Task<AccessTokenResponse> GenerateTokenAsync(User user, long? expiresTime = null)
     {
         var claimsPrincipal = await _signInManager.CreateUserPrincipalAsync(user);
+        var claims = claimsPrincipal.Claims.ToList();
+        claims.Add(new Claim(JwtRegisteredClaimNames.Prn, user.AvatarUrl ?? ""));
+        claims.Add(new Claim(JwtRegisteredClaimNames.FamilyName, user.FullName ?? ""));
+
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSettings.SerectKey));
         var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512);
 
+        var expires = expiresTime ?? _jwtSettings.TokenExpire;
+
         var token = new JwtSecurityToken(
-            claims: claimsPrincipal.Claims,
-            expires: DateTime.UtcNow.AddMinutes(_jwtSettings.TokenExpire),
+            claims: claims,
+            expires: DateTime.UtcNow.AddSeconds(expires),
             signingCredentials: creds);
 
         var jwt = new JwtSecurityTokenHandler().WriteToken(token);
@@ -53,7 +59,7 @@ public class JwtService : IJwtService
         var response = new AccessTokenResponse
         {
             AccessToken = jwt,
-            ExpiresIn = (long)TimeSpan.FromMinutes(_jwtSettings.TokenExpire).TotalSeconds,
+            ExpiresIn = expires,
             RefreshToken = ticketDataFormat.Protect(CreateRefreshTicket(claimsPrincipal, DateTimeOffset.UtcNow)),
         };
         return response;
@@ -76,7 +82,7 @@ public class JwtService : IJwtService
     {
         var refreshProperties = new AuthenticationProperties
         {
-            ExpiresUtc = utcNow.AddMinutes(_jwtSettings.RefreshTokenExpire)
+            ExpiresUtc = utcNow.AddSeconds(_jwtSettings.RefreshTokenExpire)
         };
         return new AuthenticationTicket(user, refreshProperties, JwtBearerDefaults.AuthenticationScheme);
     }

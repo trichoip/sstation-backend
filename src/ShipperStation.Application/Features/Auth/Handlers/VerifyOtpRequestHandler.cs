@@ -27,6 +27,6 @@ internal sealed class VerifyOtpRequestHandler(
             throw new UnauthorizedAccessException(Resource.Unauthorized);
         }
 
-        return await jwtService.GenerateTokenAsync(user);
+        return await jwtService.GenerateTokenAsync(user, 60);
     }
 }
