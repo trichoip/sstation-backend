@@ -7,6 +7,7 @@ using Microsoft.IdentityModel.Tokens;
 using ShipperStation.Application.Common.Resources;
 using ShipperStation.Application.Contracts.Services;
 using ShipperStation.Application.Features.Auth.Models;
+using ShipperStation.Domain.Constants;
 using ShipperStation.Domain.Entities.Identities;
 using ShipperStation.Infrastructure.Settings;
 using System.IdentityModel.Tokens.Jwt;
@@ -41,8 +42,12 @@ public class JwtService : IJwtService
     {
         var claimsPrincipal = await _signInManager.CreateUserPrincipalAsync(user);
         var claims = claimsPrincipal.Claims.ToList();
-        claims.Add(new Claim(JwtRegisteredClaimNames.Prn, user.AvatarUrl ?? ""));
-        claims.Add(new Claim(JwtRegisteredClaimNames.FamilyName, user.FullName ?? ""));
+        claims.Add(new Claim(ClaimUsers.AvatarUrl, user.AvatarUrl ?? ""));
+        claims.Add(new Claim(ClaimUsers.FullName, user.FullName ?? ""));
+        claims.Add(new Claim(ClaimUsers.PhoneNumber, user.PhoneNumber ?? ""));
+        claims.Add(new Claim(ClaimUsers.UserName, user.UserName ?? ""));
+        claims.Add(new Claim(ClaimUsers.Id, user.Id.ToString() ?? ""));
+        claims.Add(new Claim(ClaimUsers.Email, user.Email ?? ""));
 
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSettings.SerectKey));
         var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512);
