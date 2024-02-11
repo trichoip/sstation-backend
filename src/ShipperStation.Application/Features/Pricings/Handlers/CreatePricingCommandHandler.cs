@@ -13,8 +13,8 @@ internal sealed class CreatePricingCommandHandler(IUnitOfWork unitOfWork) : IReq
     public async Task<MessageResponse> Handle(CreatePricingCommand request, CancellationToken cancellationToken)
     {
         var pricing = request.Adapt<Pricing>();
-        await _pricingRepository.CreateAsync(pricing);
-        await unitOfWork.CommitAsync();
+        await _pricingRepository.CreateAsync(pricing, cancellationToken);
+        await unitOfWork.CommitAsync(cancellationToken);
 
         return new MessageResponse(Resource.CreatedSuccess);
     }

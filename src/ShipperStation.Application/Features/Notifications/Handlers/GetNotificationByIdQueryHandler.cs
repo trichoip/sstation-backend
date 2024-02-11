@@ -20,16 +20,14 @@ internal sealed class GetNotificationByIdQueryHandler(
         var userId = await currentUserService.FindCurrentUserIdAsync();
 
         var notification = await _notificationRepository
-            .FindByAsync<NotificationResponse>(_ => _.Id == request.Id, cancellationToken);
+            .FindByAsync<NotificationResponse>(
+            _ => _.Id == request.Id &&
+                 _.UserId == userId,
+            cancellationToken);
 
         if (notification == null)
         {
             throw new NotFoundException(nameof(Notification), request.Id);
-        }
-
-        if (notification.UserId != userId)
-        {
-            throw new NotFoundException(Resource.UserNotHaveNotification.Format(userId, request.Id));
         }
 
         return notification;

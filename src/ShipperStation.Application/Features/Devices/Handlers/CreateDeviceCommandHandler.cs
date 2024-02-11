@@ -32,8 +32,8 @@ internal sealed class CreateDeviceCommandHandler(
         var device = request.Adapt<Device>();
         device.UserId = userId;
 
-        await _deviceRepository.CreateAsync(device);
-        await unitOfWork.CommitAsync();
+        await _deviceRepository.CreateAsync(device, cancellationToken);
+        await unitOfWork.CommitAsync(cancellationToken);
 
         return new MessageResponse(Resource.DeviceCreatedSuccess);
     }

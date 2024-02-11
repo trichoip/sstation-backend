@@ -19,5 +19,6 @@ public sealed record UserResponse : BaseAuditableEntityResponse<Guid>
     public WalletResponse Wallet { get; set; } = default!;
 
     public ICollection<DeviceResponse> Devices { get; set; } = new HashSet<DeviceResponse>();
-    public string[] Roles { get; set; } = Array.Empty<string>();
+
+    public ICollection<UserRoleResponse> UserRoles { get; set; } = new HashSet<UserRoleResponse>();
 }

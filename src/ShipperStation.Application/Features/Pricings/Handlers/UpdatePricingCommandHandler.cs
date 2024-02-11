@@ -23,7 +23,7 @@ internal sealed class UpdatePricingCommandHandler(IUnitOfWork unitOfWork) : IReq
 
         request.Adapt(pricing);
 
-        await unitOfWork.CommitAsync();
+        await unitOfWork.CommitAsync(cancellationToken);
 
         return new MessageResponse(Resource.UpdatedSuccess);
 

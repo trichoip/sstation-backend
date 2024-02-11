@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.EntityFrameworkCore;
 using ShipperStation.Application.Features.Users.Models;
 using ShipperStation.Application.Models.Pages;
-using ShipperStation.Domain.Constants;
 using ShipperStation.Domain.Entities.Identities;
 using ShipperStation.Shared.Pages;
 using System.Linq.Expressions;
@@ -20,6 +19,9 @@ public sealed record GetStaffsQuery : PaginationRequest<User>, IRequest<Paginate
     [BindNever]
     public int StationId { get; set; }
 
+    [BindNever]
+    public Guid UserId { get; set; }
+
     public override Expression<Func<User, bool>> GetExpressions()
     {
         if (!string.IsNullOrWhiteSpace(Search))
@@ -33,9 +35,9 @@ public sealed record GetStaffsQuery : PaginationRequest<User>, IRequest<Paginate
         }
 
         Expression = Expression.And(u =>
-            u.UserStations.Any(_ => _.StationId == StationId)
-                //&& u.UserRoles.Any(_ => _.Role.Name == Roles.Staff)
-                );
+            u.UserStations.Any(_ =>
+                _.StationId == StationId &&
+                _.Station.UserStations.Any(_ => _.UserId == UserId)));
 
         return Expression;
     }

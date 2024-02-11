@@ -22,7 +22,7 @@ internal sealed class DeleteSizeCommandHandler(IUnitOfWork unitOfWork) : IReques
 
         await _sizeRepository.DeleteAsync(size);
 
-        await unitOfWork.CommitAsync();
+        await unitOfWork.CommitAsync(cancellationToken);
 
         return new MessageResponse(Resource.SizeDeletedSuccess);
     }

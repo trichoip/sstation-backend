@@ -1,12 +1,10 @@
 ﻿using MediatR;
 using ShipperStation.Application.Common.Exceptions;
-using ShipperStation.Application.Common.Resources;
 using ShipperStation.Application.Contracts.Repositories;
 using ShipperStation.Application.Contracts.Services;
 using ShipperStation.Application.Features.Devices.Models;
 using ShipperStation.Application.Features.Devices.Queries;
 using ShipperStation.Domain.Entities;
-using ShipperStation.Shared.Extensions;
 
 namespace ShipperStation.Application.Features.Devices.Handlers;
 internal sealed class GetDeviceByIdQueryHandler(
@@ -19,16 +17,14 @@ internal sealed class GetDeviceByIdQueryHandler(
         var userId = await currentUserService.FindCurrentUserIdAsync();
 
         var device = await _deviceRepository
-            .FindByAsync<DeviceResponse>(x => x.Id == request.Id, cancellationToken);
+            .FindByAsync<DeviceResponse>(
+            x => x.Id == request.Id &&
+                 x.UserId == userId,
+            cancellationToken);
 
         if (device == null)
         {
             throw new NotFoundException(nameof(Device), request.Id);
-        }
-
-        if (device.UserId != userId)
-        {
-            throw new NotFoundException(Resource.UserNotHaveDevice.Format(userId, request.Id));
         }
 
         return device;

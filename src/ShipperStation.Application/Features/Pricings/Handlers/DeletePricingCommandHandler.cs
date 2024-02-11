@@ -22,7 +22,7 @@ internal sealed class DeletePricingCommandHandler(IUnitOfWork unitOfWork) : IReq
 
         await _pricingRepository.DeleteAsync(pricing);
 
-        await unitOfWork.CommitAsync();
+        await unitOfWork.CommitAsync(cancellationToken);
 
         return new MessageResponse(Resource.DeletedSuccess);
     }
