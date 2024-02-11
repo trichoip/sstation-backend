@@ -11,7 +11,6 @@ using ShipperStation.Shared.Pages;
 namespace ShipperStation.WebApi.Controllers;
 [Route("api/[controller]")]
 [ApiController]
-[Authorize(Roles = Policies.StationManager)]
 public class ManagersController(ISender sender) : ControllerBase
 {
     [Authorize(Roles = Policies.Admin)]
@@ -24,6 +23,7 @@ public class ManagersController(ISender sender) : ControllerBase
     }
 
     [HttpGet("stations")]
+    [Authorize(Roles = Policies.StationManager)]
     public async Task<ActionResult<PaginatedResponse<StationResponse>>> GetStationsByStoreManager(
         [FromQuery] GetStationsByStoreManagerQuery request,
         CancellationToken cancellationToken)

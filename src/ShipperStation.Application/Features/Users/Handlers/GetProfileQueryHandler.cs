@@ -28,8 +28,6 @@ internal sealed class GetProfileQueryHandler(
             throw new NotFoundException(nameof(User), user);
         }
 
-        userResponse.Roles = (await userManager.GetRolesAsync(user)).ToArray();
-
         return userResponse;
     }
 }

@@ -6,7 +6,6 @@ using ShipperStation.Application.Contracts.Services;
 using ShipperStation.Application.Features.Devices.Commands;
 using ShipperStation.Application.Models;
 using ShipperStation.Domain.Entities;
-using ShipperStation.Shared.Extensions;
 
 namespace ShipperStation.Application.Features.Devices.Handlers;
 internal sealed class DeleteDeviceCommandHandler(
@@ -19,21 +18,18 @@ internal sealed class DeleteDeviceCommandHandler(
         var userId = await currentUserService.FindCurrentUserIdAsync();
 
         var device = await _deviceRepository
-            .FindByAsync(x => x.Id == request.Id, cancellationToken: cancellationToken);
+            .FindByAsync(x =>
+            x.Id == request.Id &&
+            x.UserId == userId, cancellationToken: cancellationToken);
 
         if (device == null)
         {
             throw new NotFoundException(nameof(Device), request.Id);
         }
 
-        if (device.UserId != userId)
-        {
-            throw new NotFoundException(Resource.UserNotHaveDevice.Format(userId, request.Id));
-        }
-
         await _deviceRepository.DeleteAsync(device);
 
-        await unitOfWork.CommitAsync();
+        await unitOfWork.CommitAsync(cancellationToken);
 
         return new MessageResponse(Resource.DeviceDeletedSuccess);
     }

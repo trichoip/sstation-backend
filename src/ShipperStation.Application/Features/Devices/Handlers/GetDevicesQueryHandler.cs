@@ -16,6 +16,8 @@ internal sealed class GetDevicesQueryHandler(
     {
         var userId = await currentUserService.FindCurrentUserIdAsync();
 
-        return await _deviceRepository.FindAsync<DeviceResponse>(_ => _.UserId == userId, cancellationToken: cancellationToken);
+        return await _deviceRepository.FindAsync<DeviceResponse>(
+            _ => _.UserId == userId,
+            cancellationToken: cancellationToken);
     }
 }

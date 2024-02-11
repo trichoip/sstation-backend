@@ -23,7 +23,7 @@ internal sealed class UpdateSizeCommandHandler(IUnitOfWork unitOfWork) : IReques
 
         request.Adapt(size);
 
-        await unitOfWork.CommitAsync();
+        await unitOfWork.CommitAsync(cancellationToken);
 
         return new MessageResponse(Resource.SizeUpdatedSuccess);
     }

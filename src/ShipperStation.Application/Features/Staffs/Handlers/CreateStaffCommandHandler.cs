@@ -23,17 +23,12 @@ internal sealed class CreateStaffCommandHandler(
     {
         var storeManagerId = await currentUserService.FindCurrentUserIdAsync();
 
-        if (!await _stationRepository.ExistsByAsync(_ => _.Id == request.StationId))
+        if (!await _stationRepository.ExistsByAsync(
+            _ => _.Id == request.StationId &&
+                 _.UserStations.Any(_ => _.UserId == storeManagerId),
+            cancellationToken))
         {
             throw new NotFoundException(nameof(Station), request.StationId);
-        }
-
-        if (!await _userStationRepository
-            .ExistsByAsync(_ =>
-            _.UserId == storeManagerId &&
-            _.StationId == request.StationId))
-        {
-            throw new BadRequestException(Resource.UserNotInStation);
         }
 
         var staff = new User
@@ -63,8 +58,8 @@ internal sealed class CreateStaffCommandHandler(
             UserId = staff.Id
         };
 
-        await _userStationRepository.CreateAsync(stationUser);
-        await unitOfWork.CommitAsync();
+        await _userStationRepository.CreateAsync(stationUser, cancellationToken);
+        await unitOfWork.CommitAsync(cancellationToken);
 
         return new MessageResponse(Resource.StaffCreatedSuccess);
     }
