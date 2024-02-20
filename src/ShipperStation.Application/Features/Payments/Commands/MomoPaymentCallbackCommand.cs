@@ -1,5 +1,7 @@
-﻿namespace ShipperStation.Application.Models.Payments;
-public sealed record MomoPaymentCallback
+﻿using MediatR;
+
+namespace ShipperStation.Application.Features.Payments.Commands;
+public sealed record MomoPaymentCallbackCommand : IRequest
 {
     public string PartnerCode { get; set; } = default!;
 
@@ -13,7 +15,7 @@ public sealed record MomoPaymentCallback
 
     public string OrderType { get; set; } = default!;
 
-    public string TransId { get; set; } = default!;
+    public long TransId { get; set; } = default!;
 
     public int ResultCode { get; set; } = default!;
 
@@ -21,11 +23,12 @@ public sealed record MomoPaymentCallback
 
     public string PayType { get; set; } = default!;
 
-    public string ResponseTime { get; set; } = default!;
+    public long ResponseTime { get; set; } = default!;
 
     public string ExtraData { get; set; } = default!;
 
     public string Signature { get; set; } = default!;
 
-    public bool IsSuccess => Equals(ResultCode, 0);
+    public bool IsSuccess => ResultCode == 0;
+    public string returnUrl { get; set; } = default!;
 }

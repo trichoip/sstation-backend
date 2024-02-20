@@ -43,4 +43,5 @@ public class UsersController(ISender sender) : ControllerBase
     {
         return await sender.Send(request, cancellationToken);
     }
+
 }

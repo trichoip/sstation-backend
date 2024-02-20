@@ -11,8 +11,8 @@ using ShipperStation.Infrastructure.Persistence.Data;
 namespace ShipperStation.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240120040702_Remove-Delivery")]
-    partial class RemoveDelivery
+    [Migration("20240219105118_Init-Database")]
+    partial class InitDatabase
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -462,6 +462,26 @@ namespace ShipperStation.Infrastructure.Migrations
                     b.ToTable("PackageStatusHistories");
                 });
 
+            modelBuilder.Entity("ShipperStation.Domain.Entities.Pricing", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<int>("FromDate")
+                        .HasColumnType("int");
+
+                    b.Property<double>("Price")
+                        .HasColumnType("double");
+
+                    b.Property<int>("ToDate")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Pricings");
+                });
+
             modelBuilder.Entity("ShipperStation.Domain.Entities.Rack", b =>
                 {
                     b.Property<int>("Id")
@@ -480,42 +500,16 @@ namespace ShipperStation.Infrastructure.Migrations
                     b.Property<int>("SizeId")
                         .HasColumnType("int");
 
-                    b.Property<int>("StationId")
+                    b.Property<int>("ZoneId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
                     b.HasIndex("SizeId");
 
-                    b.HasIndex("StationId");
+                    b.HasIndex("ZoneId");
 
                     b.ToTable("Racks");
-                });
-
-            modelBuilder.Entity("ShipperStation.Domain.Entities.Setting", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("Key")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(24)");
-
-                    b.Property<string>("Type")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(24)");
-
-                    b.Property<string>("Value")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Settings");
                 });
 
             modelBuilder.Entity("ShipperStation.Domain.Entities.Shelf", b =>
@@ -670,39 +664,35 @@ namespace ShipperStation.Infrastructure.Migrations
                     b.ToTable("StationImages");
                 });
 
-            modelBuilder.Entity("ShipperStation.Domain.Entities.StationSetting", b =>
+            modelBuilder.Entity("ShipperStation.Domain.Entities.StationPricing", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<string>("CustomValue")
-                        .HasColumnType("longtext");
+                    b.Property<double?>("CustomPrice")
+                        .HasColumnType("double");
 
-                    b.Property<int>("SettingId")
+                    b.Property<int>("PricingId")
                         .HasColumnType("int");
 
                     b.Property<int>("StationId")
                         .HasColumnType("int");
 
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(24)");
-
                     b.HasKey("Id");
 
-                    b.HasIndex("SettingId");
+                    b.HasIndex("PricingId");
 
                     b.HasIndex("StationId");
 
-                    b.ToTable("StationSettings");
+                    b.ToTable("StationPricings");
                 });
 
             modelBuilder.Entity("ShipperStation.Domain.Entities.Transaction", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("char(36)");
 
                     b.Property<double>("Amount")
                         .HasColumnType("double");
@@ -739,10 +729,6 @@ namespace ShipperStation.Infrastructure.Migrations
                     b.Property<string>("Type")
                         .IsRequired()
                         .HasColumnType("nvarchar(24)");
-
-                    b.Property<string>("Url")
-                        .IsRequired()
-                        .HasColumnType("longtext");
 
                     b.Property<Guid>("UserId")
                         .HasColumnType("char(36)");
@@ -808,6 +794,29 @@ namespace ShipperStation.Infrastructure.Migrations
                         .IsUnique();
 
                     b.ToTable("Wallets");
+                });
+
+            modelBuilder.Entity("ShipperStation.Domain.Entities.Zone", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<int>("StationId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("StationId");
+
+                    b.ToTable("Zones");
                 });
 
             modelBuilder.Entity("ShipperStation.Domain.Entities.Device", b =>
@@ -934,15 +943,15 @@ namespace ShipperStation.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("ShipperStation.Domain.Entities.Station", "Station")
+                    b.HasOne("ShipperStation.Domain.Entities.Zone", "Zone")
                         .WithMany("Racks")
-                        .HasForeignKey("StationId")
+                        .HasForeignKey("ZoneId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Size");
 
-                    b.Navigation("Station");
+                    b.Navigation("Zone");
                 });
 
             modelBuilder.Entity("ShipperStation.Domain.Entities.Shelf", b =>
@@ -978,21 +987,21 @@ namespace ShipperStation.Infrastructure.Migrations
                     b.Navigation("Station");
                 });
 
-            modelBuilder.Entity("ShipperStation.Domain.Entities.StationSetting", b =>
+            modelBuilder.Entity("ShipperStation.Domain.Entities.StationPricing", b =>
                 {
-                    b.HasOne("ShipperStation.Domain.Entities.Setting", "Setting")
-                        .WithMany("StationSettings")
-                        .HasForeignKey("SettingId")
+                    b.HasOne("ShipperStation.Domain.Entities.Pricing", "Pricing")
+                        .WithMany("StationPricings")
+                        .HasForeignKey("PricingId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("ShipperStation.Domain.Entities.Station", "Station")
-                        .WithMany("StationSettings")
+                        .WithMany("StationPricings")
                         .HasForeignKey("StationId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Setting");
+                    b.Navigation("Pricing");
 
                     b.Navigation("Station");
                 });
@@ -1038,6 +1047,17 @@ namespace ShipperStation.Infrastructure.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("ShipperStation.Domain.Entities.Zone", b =>
+                {
+                    b.HasOne("ShipperStation.Domain.Entities.Station", "Station")
+                        .WithMany("Zones")
+                        .HasForeignKey("StationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Station");
+                });
+
             modelBuilder.Entity("ShipperStation.Domain.Entities.Identities.User", b =>
                 {
                     b.Navigation("Devices");
@@ -1063,14 +1083,14 @@ namespace ShipperStation.Infrastructure.Migrations
                     b.Navigation("PackageStatusHistories");
                 });
 
+            modelBuilder.Entity("ShipperStation.Domain.Entities.Pricing", b =>
+                {
+                    b.Navigation("StationPricings");
+                });
+
             modelBuilder.Entity("ShipperStation.Domain.Entities.Rack", b =>
                 {
                     b.Navigation("Shelves");
-                });
-
-            modelBuilder.Entity("ShipperStation.Domain.Entities.Setting", b =>
-                {
-                    b.Navigation("StationSettings");
                 });
 
             modelBuilder.Entity("ShipperStation.Domain.Entities.Shelf", b =>
@@ -1090,13 +1110,18 @@ namespace ShipperStation.Infrastructure.Migrations
 
             modelBuilder.Entity("ShipperStation.Domain.Entities.Station", b =>
                 {
-                    b.Navigation("Racks");
-
                     b.Navigation("StationImages");
 
-                    b.Navigation("StationSettings");
+                    b.Navigation("StationPricings");
 
                     b.Navigation("UserStations");
+
+                    b.Navigation("Zones");
+                });
+
+            modelBuilder.Entity("ShipperStation.Domain.Entities.Zone", b =>
+                {
+                    b.Navigation("Racks");
                 });
 #pragma warning restore 612, 618
         }

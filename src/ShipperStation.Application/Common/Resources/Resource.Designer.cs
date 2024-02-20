@@ -97,6 +97,15 @@ namespace ShipperStation.Application.Common.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Nạp tiền vào tài khoản.
+        /// </summary>
+        public static string DepositMessage {
+            get {
+                return ResourceManager.GetString("DepositMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Device created successfully.
         /// </summary>
         public static string DeviceCreatedSuccess {
@@ -354,6 +363,15 @@ namespace ShipperStation.Application.Common.Resources {
         public static string PasswordSetSuccess {
             get {
                 return ResourceManager.GetString("PasswordSetSuccess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Payment already confirmed!..
+        /// </summary>
+        public static string PaymentAlreadySuccess {
+            get {
+                return ResourceManager.GetString("PaymentAlreadySuccess", resourceCulture);
             }
         }
         

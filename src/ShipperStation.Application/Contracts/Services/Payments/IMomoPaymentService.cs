@@ -4,5 +4,5 @@ namespace ShipperStation.Application.Contracts.Services.Payments;
 
 public interface IMomoPaymentService
 {
-    public Task<string> CreatePayment(MomoPayment payment);
+    public Task<string> CreatePaymentAsync(MomoPayment payment);
 }
