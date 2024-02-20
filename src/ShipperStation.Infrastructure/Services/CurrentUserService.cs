@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using ShipperStation.Application.Common.Exceptions;
 using ShipperStation.Application.Common.Resources;
 using ShipperStation.Application.Contracts.Services;
 using ShipperStation.Domain.Entities.Identities;
@@ -14,6 +15,8 @@ public class CurrentUserService(
     public string? CurrentUserId => CurrentUserPrincipal?.Identity?.Name;
 
     public ClaimsPrincipal? CurrentUserPrincipal => httpContextAccessor.HttpContext?.User;
+
+    public string ServerUrl => string.Concat(httpContextAccessor?.HttpContext?.Request.Scheme, "://", httpContextAccessor?.HttpContext?.Request.Host.ToUriComponent()) ?? throw new NotFoundException("not have url server");
 
     public async Task<User> FindCurrentUserAsync()
     {

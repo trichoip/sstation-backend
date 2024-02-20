@@ -687,9 +687,9 @@ namespace ShipperStation.Infrastructure.Migrations
 
             modelBuilder.Entity("ShipperStation.Domain.Entities.Transaction", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("char(36)");
 
                     b.Property<double>("Amount")
                         .HasColumnType("double");
@@ -726,10 +726,6 @@ namespace ShipperStation.Infrastructure.Migrations
                     b.Property<string>("Type")
                         .IsRequired()
                         .HasColumnType("nvarchar(24)");
-
-                    b.Property<string>("Url")
-                        .IsRequired()
-                        .HasColumnType("longtext");
 
                     b.Property<Guid>("UserId")
                         .HasColumnType("char(36)");

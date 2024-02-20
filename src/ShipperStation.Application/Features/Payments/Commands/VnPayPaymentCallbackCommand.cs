@@ -1,5 +1,7 @@
-﻿namespace ShipperStation.Application.Models.Payments;
-public sealed record VnPayPaymentCallback
+﻿using MediatR;
+
+namespace ShipperStation.Application.Features.Payments.Commands;
+public sealed record VnPayPaymentCallbackCommand : IRequest
 {
     public string? vnp_TransactionStatus { get; set; } = default!;
 
@@ -26,6 +28,7 @@ public sealed record VnPayPaymentCallback
     public string? vnp_SecureHash { get; set; } = default!;
 
     public string? vnp_ResponseCode { get; set; } = default!;
+    public string returnUrl { get; set; } = default!;
 
     public bool IsSuccess => "00".Equals(vnp_ResponseCode);
 }

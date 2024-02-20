@@ -1,4 +1,5 @@
 using Microsoft.Extensions.Options;
+using ShipperStation.Application.Contracts.Services;
 using ShipperStation.Application.Contracts.Services.Payments;
 using ShipperStation.Application.Models.Payments;
 using ShipperStation.Infrastructure.Settings;
@@ -11,16 +12,20 @@ public class VnPayPaymentService : IVnPayPaymentService
     private readonly VnPaySettings _vnPaySettings;
 
     private const string DefaultPaymentInfo = "Thanh toán với VnPay";
+    private readonly ICurrentUserService _currentUserService;
 
-    public VnPayPaymentService(IOptions<VnPaySettings> vnPaySettings)
+    public VnPayPaymentService(
+        IOptions<VnPaySettings> vnPaySettings,
+        ICurrentUserService currentUserService)
     {
         _vnPaySettings = vnPaySettings.Value;
+        _currentUserService = currentUserService;
     }
 
     public async Task<string> CreatePaymentAsync(VnPayPayment payment)
     {
         var pay = new VnPayLibrary();
-        pay.AddRequestData("vnp_ReturnUrl", _vnPaySettings.CallbackUrl);
+        pay.AddRequestData("vnp_ReturnUrl", $"{_currentUserService.ServerUrl}/{_vnPaySettings.CallbackUrl}?returnUrl={payment.returnUrl}");
         pay.AddRequestData("vnp_Version", _vnPaySettings.Version);
         pay.AddRequestData("vnp_Command", _vnPaySettings.Command);
         pay.AddRequestData("vnp_TmnCode", _vnPaySettings.TmnCode);

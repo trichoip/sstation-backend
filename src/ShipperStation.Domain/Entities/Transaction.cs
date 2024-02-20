@@ -4,7 +4,7 @@ using ShipperStation.Domain.Enums;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ShipperStation.Domain.Entities;
-public class Transaction : BaseAuditableEntity<int>
+public class Transaction : BaseAuditableEntity<Guid>
 {
     public string? Description { get; set; }
     public double Amount { get; set; }
@@ -14,7 +14,6 @@ public class Transaction : BaseAuditableEntity<int>
 
     [Column(TypeName = "nvarchar(24)")]
     public TransactionType Type { get; set; }
-    public string Url { get; set; } = default!;
 
     [Column(TypeName = "nvarchar(24)")]
     public TransactionMethod Method { get; set; }

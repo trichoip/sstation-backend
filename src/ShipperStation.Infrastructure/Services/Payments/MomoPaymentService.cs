@@ -1,4 +1,6 @@
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using ShipperStation.Application.Contracts.Services;
 using ShipperStation.Application.Contracts.Services.Payments;
 using ShipperStation.Application.Models.Payments;
 using ShipperStation.Infrastructure.Settings;
@@ -13,26 +15,33 @@ public class MomoPaymentService : IMomoPaymentService
     private const string DefaultOrderInfo = "Thanh toán với Momo";
 
     private readonly MomoSettings _momoSettings;
-    public MomoPaymentService(IOptions<MomoSettings> momoSettings)
+    private readonly ILogger<MomoPaymentService> _logger;
+    private readonly ICurrentUserService _currentUserService;
+    public MomoPaymentService(
+        IOptions<MomoSettings> momoSettings,
+        ILogger<MomoPaymentService> logger,
+        ICurrentUserService currentUserService)
     {
         _momoSettings = momoSettings.Value;
+        _logger = logger;
+        _currentUserService = currentUserService;
     }
 
-    public async Task<string> CreatePayment(MomoPayment payment)
+    public async Task<string> CreatePaymentAsync(MomoPayment payment)
     {
         var requestType = "captureWallet";
         var request = new MomoPaymentRequest();
         request.OrderInfo = payment.Info ?? DefaultOrderInfo;
         request.PartnerCode = _momoSettings.PartnerCode;
         request.IpnUrl = _momoSettings.IpnUrl;
-        request.RedirectUrl = _momoSettings.RedirectUrl;
+        request.RedirectUrl = $"{_currentUserService.ServerUrl}/{_momoSettings.RedirectUrl}?returnUrl={payment.returnUrl}";
 
         request.Amount = payment.Amount;
         request.OrderId = payment.PaymentReferenceId;
         request.ReferenceId = $"{payment.PaymentReferenceId}";
         request.RequestId = Guid.NewGuid().ToString();
         request.RequestType = requestType;
-        request.ExtraData = string.Empty;
+        request.ExtraData = "s";
         request.AutoCapture = true;
         request.Lang = "vi";
 
@@ -48,6 +57,7 @@ public class MomoPaymentService : IMomoPaymentService
         if (momoResponse.IsSuccessStatusCode)
         {
             var momoPaymentResponse = JsonSerializerUtils.Deserialize<MomoPaymentResponse>(responseContent);
+            _logger.LogInformation($"[Momo payment] Message: {momoPaymentResponse?.Message}");
             if (momoPaymentResponse != null)
             {
                 return momoPaymentResponse.PayUrl;
