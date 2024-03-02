@@ -1,8 +1,8 @@
 using Mapster;
 using Microsoft.Extensions.Logging;
-using ShipperStation.Application.Common.Extensions;
 using ShipperStation.Application.Contracts.Repositories;
 using ShipperStation.Application.Contracts.Services.Notifications;
+using ShipperStation.Application.Extensions;
 using ShipperStation.Application.Models.Notifications;
 using ShipperStation.Domain.Entities;
 using ShipperStation.Domain.Enums;

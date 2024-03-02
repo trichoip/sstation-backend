@@ -7,5 +7,6 @@ public class Pricing : BaseEntity<int>
     public int ToDate { get; set; }
     public double Price { get; set; }
 
-    public virtual ICollection<StationPricing> StationPricings { get; set; } = new HashSet<StationPricing>();
+    public int StationId { get; set; }
+    public Station Station { get; set; } = default!;
 }

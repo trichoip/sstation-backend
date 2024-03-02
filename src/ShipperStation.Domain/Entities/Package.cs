@@ -8,12 +8,9 @@ public class Package : BaseAuditableEntity<Guid>
 {
     public string? Name { get; set; }
     public string? Description { get; set; }
-    public double PackagePrice { get; set; }
+    public double PriceCod { get; set; }
+    public bool IsCod { get; set; }
     public string? Barcode { get; set; }
-    public string ReceiverName { get; set; } = default!;
-    public string ReceiverPhone { get; set; } = default!;
-    public string SenderName { get; set; } = default!;
-    public string SenderPhone { get; set; } = default!;
 
     [Column(TypeName = "nvarchar(24)")]
     public PackageStatus Status { get; set; }
@@ -26,8 +23,12 @@ public class Package : BaseAuditableEntity<Guid>
     public int SlotId { get; set; }
     public virtual Slot Slot { get; set; } = default!;
 
-    public Guid UserId { get; set; }
-    public virtual User User { get; set; } = default!;
+    public Guid SenderId { get; set; }
+    public virtual User Sender { get; set; } = default!;
+
+    public Guid ReceiverId { get; set; }
+    public virtual User Receiver { get; set; } = default!;
+
     public virtual ICollection<PackageImage> PackageImages { get; set; } = new HashSet<PackageImage>();
 
     public virtual ICollection<PackageStatusHistory> PackageStatusHistories { get; set; } = new HashSet<PackageStatusHistory>();

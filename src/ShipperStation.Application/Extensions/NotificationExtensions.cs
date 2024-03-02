@@ -3,7 +3,7 @@ using ShipperStation.Application.Models.Notifications;
 using ShipperStation.Domain.Enums;
 using ShipperStation.Shared.Extensions;
 
-namespace ShipperStation.Application.Common.Extensions;
+namespace ShipperStation.Application.Extensions;
 public static class NotificationExtensions
 {
     public static void InitNotification(this NotificationRequest notification)

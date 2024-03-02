@@ -16,22 +16,6 @@ namespace ShipperStation.Infrastructure.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "Pricings",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    FromDate = table.Column<int>(type: "int", nullable: false),
-                    ToDate = table.Column<int>(type: "int", nullable: false),
-                    Price = table.Column<double>(type: "double", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Pricings", x => x.Id);
-                })
-                .Annotation("MySql:CharSet", "utf8mb4");
-
-            migrationBuilder.CreateTable(
                 name: "Roles",
                 columns: table => new
                 {
@@ -46,27 +30,6 @@ namespace ShipperStation.Infrastructure.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Roles", x => x.Id);
-                })
-                .Annotation("MySql:CharSet", "utf8mb4");
-
-            migrationBuilder.CreateTable(
-                name: "Sizes",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    Name = table.Column<string>(type: "longtext", nullable: true)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    Description = table.Column<string>(type: "longtext", nullable: true)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    Width = table.Column<double>(type: "double", nullable: false),
-                    Height = table.Column<double>(type: "double", nullable: false),
-                    Length = table.Column<double>(type: "double", nullable: false),
-                    Volume = table.Column<double>(type: "double", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Sizes", x => x.Id);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
@@ -177,6 +140,29 @@ namespace ShipperStation.Infrastructure.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
+                name: "Pricings",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    FromDate = table.Column<int>(type: "int", nullable: false),
+                    ToDate = table.Column<int>(type: "int", nullable: false),
+                    Price = table.Column<double>(type: "double", nullable: false),
+                    StationId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Pricings", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Pricings_Stations_StationId",
+                        column: x => x.StationId,
+                        principalTable: "Stations",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
                 name: "StationImages",
                 columns: table => new
                 {
@@ -191,34 +177,6 @@ namespace ShipperStation.Infrastructure.Migrations
                     table.PrimaryKey("PK_StationImages", x => x.Id);
                     table.ForeignKey(
                         name: "FK_StationImages_Stations_StationId",
-                        column: x => x.StationId,
-                        principalTable: "Stations",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                })
-                .Annotation("MySql:CharSet", "utf8mb4");
-
-            migrationBuilder.CreateTable(
-                name: "StationPricings",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    CustomPrice = table.Column<double>(type: "double", nullable: true),
-                    PricingId = table.Column<int>(type: "int", nullable: false),
-                    StationId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_StationPricings", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_StationPricings_Pricings_PricingId",
-                        column: x => x.PricingId,
-                        principalTable: "Pricings",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_StationPricings_Stations_StationId",
                         column: x => x.StationId,
                         principalTable: "Stations",
                         principalColumn: "Id",
@@ -496,38 +454,6 @@ namespace ShipperStation.Infrastructure.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "Racks",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    Name = table.Column<string>(type: "longtext", nullable: true)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    Description = table.Column<string>(type: "longtext", nullable: true)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    Index = table.Column<int>(type: "int", nullable: false),
-                    ZoneId = table.Column<int>(type: "int", nullable: false),
-                    SizeId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Racks", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Racks_Sizes_SizeId",
-                        column: x => x.SizeId,
-                        principalTable: "Sizes",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Racks_Zones_ZoneId",
-                        column: x => x.ZoneId,
-                        principalTable: "Zones",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                })
-                .Annotation("MySql:CharSet", "utf8mb4");
-
-            migrationBuilder.CreateTable(
                 name: "Shelves",
                 columns: table => new
                 {
@@ -538,15 +464,44 @@ namespace ShipperStation.Infrastructure.Migrations
                     Description = table.Column<string>(type: "longtext", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Index = table.Column<int>(type: "int", nullable: false),
-                    RackId = table.Column<int>(type: "int", nullable: false)
+                    Width = table.Column<double>(type: "double", nullable: false),
+                    Height = table.Column<double>(type: "double", nullable: false),
+                    Length = table.Column<double>(type: "double", nullable: false),
+                    Volume = table.Column<double>(type: "double", nullable: false),
+                    ZoneId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Shelves", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Shelves_Racks_RackId",
-                        column: x => x.RackId,
-                        principalTable: "Racks",
+                        name: "FK_Shelves_Zones_ZoneId",
+                        column: x => x.ZoneId,
+                        principalTable: "Zones",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
+                name: "Racks",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    Name = table.Column<string>(type: "longtext", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Description = table.Column<string>(type: "longtext", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Index = table.Column<int>(type: "int", nullable: false),
+                    ShelfId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Racks", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Racks_Shelves_ShelfId",
+                        column: x => x.ShelfId,
+                        principalTable: "Shelves",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 })
@@ -563,16 +518,20 @@ namespace ShipperStation.Infrastructure.Migrations
                     Description = table.Column<string>(type: "longtext", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Index = table.Column<int>(type: "int", nullable: false),
+                    Width = table.Column<double>(type: "double", nullable: false),
+                    Height = table.Column<double>(type: "double", nullable: false),
+                    Length = table.Column<double>(type: "double", nullable: false),
+                    Volume = table.Column<double>(type: "double", nullable: false),
                     NumberOfPackages = table.Column<int>(type: "int", nullable: false),
-                    ShelfId = table.Column<int>(type: "int", nullable: false)
+                    RackId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Slots", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Slots_Shelves_ShelfId",
-                        column: x => x.ShelfId,
-                        principalTable: "Shelves",
+                        name: "FK_Slots_Racks_RackId",
+                        column: x => x.RackId,
+                        principalTable: "Racks",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 })
@@ -587,16 +546,9 @@ namespace ShipperStation.Infrastructure.Migrations
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Description = table.Column<string>(type: "longtext", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    PackagePrice = table.Column<double>(type: "double", nullable: false),
+                    PriceCod = table.Column<double>(type: "double", nullable: false),
+                    IsCod = table.Column<bool>(type: "tinyint(1)", nullable: false),
                     Barcode = table.Column<string>(type: "longtext", nullable: true)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    ReceiverName = table.Column<string>(type: "longtext", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    ReceiverPhone = table.Column<string>(type: "longtext", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    SenderName = table.Column<string>(type: "longtext", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    SenderPhone = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Status = table.Column<string>(type: "nvarchar(24)", nullable: false),
                     Weight = table.Column<double>(type: "double", nullable: false),
@@ -605,7 +557,8 @@ namespace ShipperStation.Infrastructure.Migrations
                     Length = table.Column<double>(type: "double", nullable: false),
                     Volume = table.Column<double>(type: "double", nullable: false),
                     SlotId = table.Column<int>(type: "int", nullable: false),
-                    UserId = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
+                    SenderId = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
+                    ReceiverId = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
                     CreatedBy = table.Column<string>(type: "longtext", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     CreatedAt = table.Column<DateTimeOffset>(type: "datetime(6)", nullable: true),
@@ -626,8 +579,14 @@ namespace ShipperStation.Infrastructure.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Packages_Users_UserId",
-                        column: x => x.UserId,
+                        name: "FK_Packages_Users_ReceiverId",
+                        column: x => x.ReceiverId,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Packages_Users_SenderId",
+                        column: x => x.SenderId,
                         principalTable: "Users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -706,14 +665,19 @@ namespace ShipperStation.Infrastructure.Migrations
                 column: "PackageId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Packages_ReceiverId",
+                table: "Packages",
+                column: "ReceiverId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Packages_SenderId",
+                table: "Packages",
+                column: "SenderId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Packages_SlotId",
                 table: "Packages",
                 column: "SlotId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Packages_UserId",
-                table: "Packages",
-                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_PackageStatusHistories_PackageId",
@@ -721,14 +685,14 @@ namespace ShipperStation.Infrastructure.Migrations
                 column: "PackageId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Racks_SizeId",
-                table: "Racks",
-                column: "SizeId");
+                name: "IX_Pricings_StationId",
+                table: "Pricings",
+                column: "StationId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Racks_ZoneId",
+                name: "IX_Racks_ShelfId",
                 table: "Racks",
-                column: "ZoneId");
+                column: "ShelfId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_RoleClaims_RoleId",
@@ -742,28 +706,18 @@ namespace ShipperStation.Infrastructure.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Shelves_RackId",
+                name: "IX_Shelves_ZoneId",
                 table: "Shelves",
-                column: "RackId");
+                column: "ZoneId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Slots_ShelfId",
+                name: "IX_Slots_RackId",
                 table: "Slots",
-                column: "ShelfId");
+                column: "RackId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_StationImages_StationId",
                 table: "StationImages",
-                column: "StationId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_StationPricings_PricingId",
-                table: "StationPricings",
-                column: "PricingId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_StationPricings_StationId",
-                table: "StationPricings",
                 column: "StationId");
 
             migrationBuilder.CreateIndex(
@@ -830,13 +784,13 @@ namespace ShipperStation.Infrastructure.Migrations
                 name: "PackageStatusHistories");
 
             migrationBuilder.DropTable(
+                name: "Pricings");
+
+            migrationBuilder.DropTable(
                 name: "RoleClaims");
 
             migrationBuilder.DropTable(
                 name: "StationImages");
-
-            migrationBuilder.DropTable(
-                name: "StationPricings");
 
             migrationBuilder.DropTable(
                 name: "Transactions");
@@ -863,9 +817,6 @@ namespace ShipperStation.Infrastructure.Migrations
                 name: "Packages");
 
             migrationBuilder.DropTable(
-                name: "Pricings");
-
-            migrationBuilder.DropTable(
                 name: "Roles");
 
             migrationBuilder.DropTable(
@@ -875,13 +826,10 @@ namespace ShipperStation.Infrastructure.Migrations
                 name: "Users");
 
             migrationBuilder.DropTable(
-                name: "Shelves");
-
-            migrationBuilder.DropTable(
                 name: "Racks");
 
             migrationBuilder.DropTable(
-                name: "Sizes");
+                name: "Shelves");
 
             migrationBuilder.DropTable(
                 name: "Zones");

@@ -1,12 +1,12 @@
 ﻿using MediatR;
 using ShipperStation.Application.Contracts.Repositories;
 using ShipperStation.Application.Contracts.Services;
-using ShipperStation.Application.Features.Staffs.Queries;
 using ShipperStation.Application.Features.Stations.Models;
+using ShipperStation.Application.Features.Stations.Queries;
 using ShipperStation.Domain.Entities;
 using ShipperStation.Shared.Pages;
 
-namespace ShipperStation.Application.Features.Staffs.Handlers;
+namespace ShipperStation.Application.Features.Stations.Handlers;
 internal sealed class GetStationsByStoreManagerQueryHandler(
     IUnitOfWork unitOfWork,
     ICurrentUserService currentUserService) : IRequestHandler<GetStationsByStoreManagerQuery, PaginatedResponse<StationResponse>>

@@ -13,7 +13,6 @@ internal sealed class CreateStationCommandHandler(
     ICurrentUserService currentUserService) : IRequestHandler<CreateStationCommand, MessageResponse>
 {
     private readonly IGenericRepository<Station> _stationRepository = unitOfWork.Repository<Station>();
-    private readonly IGenericRepository<Pricing> _pricingRepository = unitOfWork.Repository<Pricing>();
 
     public async Task<MessageResponse> Handle(CreateStationCommand request, CancellationToken cancellationToken)
     {
@@ -24,16 +23,6 @@ internal sealed class CreateStationCommandHandler(
         {
             UserId = userId
         });
-
-        var pricingDefault = await _pricingRepository.FindAsync(cancellationToken: cancellationToken);
-
-        foreach (var pricing in pricingDefault)
-        {
-            station.StationPricings.Add(new StationPricing
-            {
-                PricingId = pricing.Id
-            });
-        }
 
         await _stationRepository.CreateAsync(station, cancellationToken);
         await unitOfWork.CommitAsync(cancellationToken);

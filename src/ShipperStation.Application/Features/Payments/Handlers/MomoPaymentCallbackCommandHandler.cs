@@ -9,7 +9,7 @@ using ShipperStation.Domain.Enums;
 using ShipperStation.Shared.Extensions;
 
 namespace ShipperStation.Application.Features.Payments.Handlers;
-internal class MomoPaymentCallbackCommandHandler(
+internal sealed class MomoPaymentCallbackCommandHandler(
     IUnitOfWork unitOfWork,
     IPublisher publisher) : IRequestHandler<MomoPaymentCallbackCommand>
 {

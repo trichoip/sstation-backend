@@ -9,7 +9,7 @@ using ShipperStation.Shared.Pages;
 using System.Linq.Expressions;
 using System.Text.Json.Serialization;
 
-namespace ShipperStation.Application.Features.Staffs.Queries;
+namespace ShipperStation.Application.Features.Stations.Queries;
 public sealed record GetStationsByStoreManagerQuery : PaginationRequest<Station>, IRequest<PaginatedResponse<StationResponse>>
 {
     /// <summary>
