@@ -14,8 +14,9 @@ public sealed record CreateShelfCommand : IRequest<MessageResponse>
     public double Volume => Width * Height * Length;
 
     public int ZoneId { get; set; }
-    public int SizeId { get; set; }
-    public int NumberOfShelves { get; set; }
-    public int NumberOfSlots { get; set; }
+    public int NumberOfRacks { get; set; }
+    public int NumberOfSlotsPerRack { get; set; }
+
+    public CreateSlotRequest Slot { get; set; } = default!;
 
 }

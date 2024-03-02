@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using ShipperStation.Application.Common.Exceptions;
 using ShipperStation.Application.Contracts.Repositories;
 using ShipperStation.Application.Contracts.Services;
 using ShipperStation.Application.Features.Shelfs.Models;
@@ -10,24 +11,23 @@ internal sealed class GetShelfByIdQueryHandler(
     IUnitOfWork unitOfWork,
     ICurrentUserService currentUserService) : IRequestHandler<GetShelfByIdQuery, ShelfResponse>
 {
-    private readonly IGenericRepository<Rack> _rackRepository = unitOfWork.Repository<Rack>();
+    private readonly IGenericRepository<Shelf> _shelfRepository = unitOfWork.Repository<Shelf>();
 
     public async Task<ShelfResponse> Handle(GetShelfByIdQuery request, CancellationToken cancellationToken)
     {
         var userId = await currentUserService.FindCurrentUserIdAsync();
 
-        //var rack = await _rackRepository
-        //    .FindByAsync<ShelfResponse>(
-        //    x => x.Id == request.Id &&
-        //         x.Zone.Station.UserStations.Any(_ => _.UserId == userId),
-        //    cancellationToken);
+        var shelf = await _shelfRepository
+            .FindByAsync<ShelfResponse>(x =>
+                x.Id == request.Id &&
+                x.Zone.Station.UserStations.Any(_ => _.UserId == userId),
+            cancellationToken);
 
-        //if (rack == null)
-        //{
-        //    throw new NotFoundException(nameof(Rack), request.Id);
-        //}
+        if (shelf == null)
+        {
+            throw new NotFoundException(nameof(Shelf), request.Id);
+        }
 
-        //return rack;
-        return null;
+        return shelf;
     }
 }

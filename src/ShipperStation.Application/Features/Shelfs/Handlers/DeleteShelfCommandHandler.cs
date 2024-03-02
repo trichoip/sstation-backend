@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using ShipperStation.Application.Common.Exceptions;
 using ShipperStation.Application.Common.Resources;
 using ShipperStation.Application.Contracts.Repositories;
 using ShipperStation.Application.Contracts.Services;
@@ -11,23 +12,24 @@ internal sealed class DeleteShelfCommandHandler(
     IUnitOfWork unitOfWork,
     ICurrentUserService currentUserService) : IRequestHandler<DeleteShelfCommand, MessageResponse>
 {
-    private readonly IGenericRepository<Rack> _rackRepository = unitOfWork.Repository<Rack>();
+    private readonly IGenericRepository<Shelf> _shelfRepository = unitOfWork.Repository<Shelf>();
     public async Task<MessageResponse> Handle(DeleteShelfCommand request, CancellationToken cancellationToken)
     {
         var userId = await currentUserService.FindCurrentUserIdAsync();
 
-        //var rack = await _rackRepository.FindByAsync(
-        //    _ => _.Id == request.Id &&
-        //         _.Zone.Station.UserStations.Any(_ => _.UserId == userId),
-        //    cancellationToken: cancellationToken);
+        var shelf = await _shelfRepository
+            .FindByAsync(x =>
+                x.Id == request.Id &&
+                x.Zone.Station.UserStations.Any(_ => _.UserId == userId),
+             cancellationToken: cancellationToken);
 
-        //if (rack is null)
-        //{
-        //    throw new NotFoundException(nameof(Rack), request.Id);
-        //}
+        if (shelf is null)
+        {
+            throw new NotFoundException(nameof(Shelf), request.Id);
+        }
 
-        //await _rackRepository.DeleteAsync(rack);
-        //await unitOfWork.CommitAsync(cancellationToken);
+        await _shelfRepository.DeleteAsync(shelf);
+        await unitOfWork.CommitAsync(cancellationToken);
 
         return new MessageResponse(Resource.DeletedSuccess);
     }
