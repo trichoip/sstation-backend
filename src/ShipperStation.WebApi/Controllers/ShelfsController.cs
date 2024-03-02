@@ -15,9 +15,9 @@ namespace ShipperStation.WebApi.Controllers;
 public class ShelfsController(ISender sender) : ControllerBase
 {
     [HttpGet]
-    public async Task<IActionResult> GetShelfs(CancellationToken cancellationToken)
+    public async Task<IActionResult> GetShelfs(int zoneId, CancellationToken cancellationToken)
     {
-        return Ok(await sender.Send(new GetShelfsQuery(), cancellationToken));
+        return Ok(await sender.Send(new GetShelfsQuery() with { ZoneId = zoneId }, cancellationToken));
     }
 
     [HttpGet("{id}")]

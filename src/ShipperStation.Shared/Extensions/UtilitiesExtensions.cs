@@ -35,6 +35,11 @@ public static class UtilitiesExtensions
         return result;
     }
 
+    public static string GenerateNameIndex(this int number, string nameIndex)
+    {
+        return nameIndex + number.ToString("D4");
+    }
+
     public static bool IsNullOrEmpty(this IEnumerable? @this)
     {
         if (@this != null)

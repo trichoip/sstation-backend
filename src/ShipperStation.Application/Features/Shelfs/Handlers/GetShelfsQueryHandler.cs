@@ -10,19 +10,18 @@ internal sealed class GetShelfsQueryHandler(
     IUnitOfWork unitOfWork,
     ICurrentUserService currentUserService) : IRequestHandler<GetShelfsQuery, IList<ShelfResponse>>
 {
-    private readonly IGenericRepository<Rack> _rackRepository = unitOfWork.Repository<Rack>();
+    private readonly IGenericRepository<Shelf> _shelfRepository = unitOfWork.Repository<Shelf>();
 
     public async Task<IList<ShelfResponse>> Handle(GetShelfsQuery request, CancellationToken cancellationToken)
     {
         var userId = await currentUserService.FindCurrentUserIdAsync();
 
-        //var racks = await _rackRepository
-        //    .FindAsync<ShelfResponse>(
-        //    x => x.ZoneId == request.ZoneId &&
-        //         x.Zone.Station.UserStations.Any(_ => _.UserId == userId),
-        //    cancellationToken: cancellationToken);
+        var shelfs = await _shelfRepository
+            .FindAsync<ShelfResponse>(
+            x => x.ZoneId == request.ZoneId &&
+                 x.Zone.Station.UserStations.Any(_ => _.UserId == userId),
+            cancellationToken: cancellationToken);
 
-        //return racks;
-        return null;
+        return shelfs;
     }
 }

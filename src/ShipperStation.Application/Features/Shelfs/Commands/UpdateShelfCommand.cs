@@ -11,5 +11,4 @@ public sealed record UpdateShelfCommand : IRequest<MessageResponse>
     public string? Description { get; set; }
     public int Index { get; set; }
     public int ZoneId { get; set; }
-    public int SizeId { get; set; }
 }

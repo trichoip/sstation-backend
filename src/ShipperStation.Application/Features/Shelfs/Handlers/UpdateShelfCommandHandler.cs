@@ -1,4 +1,6 @@
-﻿using MediatR;
+﻿using Mapster;
+using MediatR;
+using ShipperStation.Application.Common.Exceptions;
 using ShipperStation.Application.Common.Resources;
 using ShipperStation.Application.Contracts.Repositories;
 using ShipperStation.Application.Contracts.Services;
@@ -11,41 +13,35 @@ internal sealed class UpdateShelfCommandHandler(
     IUnitOfWork unitOfWork,
     ICurrentUserService currentUserService) : IRequestHandler<UpdateShelfCommand, MessageResponse>
 {
-    private readonly IGenericRepository<Rack> _rackRepository = unitOfWork.Repository<Rack>();
-    //private readonly IGenericRepository<Size> _sizeRepository = unitOfWork.Repository<Size>();
+    private readonly IGenericRepository<Shelf> _shelfRepository = unitOfWork.Repository<Shelf>();
     private readonly IGenericRepository<Zone> _zoneRepository = unitOfWork.Repository<Zone>();
 
     public async Task<MessageResponse> Handle(UpdateShelfCommand request, CancellationToken cancellationToken)
     {
         var userId = await currentUserService.FindCurrentUserIdAsync();
 
-        //if (!await _sizeRepository
-        //    .ExistsByAsync(_ => _.Id == request.SizeId, cancellationToken))
-        //{
-        //    throw new NotFoundException(nameof(Size), request.SizeId);
-        //}
+        if (!await _zoneRepository
+            .ExistsByAsync(_ =>
+                _.Id == request.ZoneId &&
+                _.Station.UserStations.Any(_ => _.UserId == userId),
+            cancellationToken))
+        {
+            throw new NotFoundException(nameof(Zone), request.ZoneId);
+        }
 
-        //if (!await _zoneRepository
-        //    .ExistsByAsync(_ =>
-        //        _.Id == request.ZoneId &&
-        //        _.Station.UserStations.Any(_ => _.UserId == userId),
-        //    cancellationToken))
-        //{
-        //    throw new NotFoundException(nameof(Zone), request.ZoneId);
-        //}
+        var shelf = await _shelfRepository
+            .FindByAsync(x =>
+                x.Id == request.Id &&
+                x.Zone.Station.UserStations.Any(_ => _.UserId == userId),
+             cancellationToken: cancellationToken);
 
-        //var rack = await _rackRepository.FindByAsync(
-        //    _ => _.Id == request.Id &&
-        //         _.Zone.Station.UserStations.Any(_ => _.UserId == userId),
-        //    cancellationToken: cancellationToken);
+        if (shelf is null)
+        {
+            throw new NotFoundException(nameof(Shelf), request.Id);
+        }
 
-        //if (rack is null)
-        //{
-        //    throw new NotFoundException(nameof(Rack), request.Id);
-        //}
-
-        //request.Adapt(rack);
-        //await unitOfWork.CommitAsync(cancellationToken);
+        request.Adapt(shelf);
+        await unitOfWork.CommitAsync(cancellationToken);
 
         return new MessageResponse(Resource.UpdatedSuccess);
     }
