@@ -2,4 +2,7 @@
 using ShipperStation.Application.Models;
 
 namespace ShipperStation.Application.Features.Pricings.Commands;
-public sealed record DeletePricingCommand(int Id) : IRequest<MessageResponse>;
+public sealed record DeletePricingCommand(int Id) : IRequest<MessageResponse>
+{
+    public int StationId { get; set; }
+}

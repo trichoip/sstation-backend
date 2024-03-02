@@ -7,5 +7,6 @@ public sealed record PricingResponse
     public int FromDate { get; set; }
     public int ToDate { get; set; }
     public double Price { get; set; }
+    public int StationId { get; set; }
     public string FormatPrice => Price.FormatMoney();
 }

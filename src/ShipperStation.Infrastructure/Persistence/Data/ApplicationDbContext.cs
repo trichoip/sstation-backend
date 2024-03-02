@@ -22,10 +22,8 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
     public DbSet<Transaction> Transactions { get; set; }
     public DbSet<UserStation> UserStations { get; set; }
     public DbSet<Wallet> Wallets { get; set; }
-    public DbSet<Size> Sizes { get; set; }
     public DbSet<PackageStatusHistory> PackageStatusHistories { get; set; }
     public DbSet<Pricing> Pricings { get; set; }
-    public DbSet<StationPricing> StationPricings { get; set; }
     public DbSet<Zone> Zones { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)

@@ -7,9 +7,14 @@ public class Shelf : BaseEntity<int>
     public string? Description { get; set; }
     public int Index { get; set; }
 
-    public int RackId { get; set; }
-    public virtual Rack Rack { get; set; } = default!;
+    public double Width { get; set; }
+    public double Height { get; set; }
+    public double Length { get; set; }
+    public double Volume { get; set; }
 
-    public virtual ICollection<Slot> Slots { get; set; } = new HashSet<Slot>();
+    public int ZoneId { get; set; }
+    public virtual Zone Zone { get; set; } = default!;
+
+    public virtual ICollection<Rack> Racks { get; set; } = new HashSet<Rack>();
 
 }

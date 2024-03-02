@@ -10,4 +10,7 @@ public sealed record UpdatePricingCommand : IRequest<MessageResponse>
     public int FromDate { get; set; }
     public int ToDate { get; set; }
     public double Price { get; set; }
+
+    [JsonIgnore]
+    public int StationId { get; set; }
 }

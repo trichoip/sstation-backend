@@ -11,7 +11,7 @@ using ShipperStation.Infrastructure.Persistence.Data;
 namespace ShipperStation.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240219105118_Init-Database")]
+    [Migration("20240302100306_Init-Database")]
     partial class InitDatabase
     {
         /// <inheritdoc />
@@ -339,6 +339,9 @@ namespace ShipperStation.Infrastructure.Migrations
                     b.Property<double>("Height")
                         .HasColumnType("double");
 
+                    b.Property<bool>("IsCod")
+                        .HasColumnType("tinyint(1)");
+
                     b.Property<double>("Length")
                         .HasColumnType("double");
 
@@ -351,24 +354,14 @@ namespace ShipperStation.Infrastructure.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("longtext");
 
-                    b.Property<double>("PackagePrice")
+                    b.Property<double>("PriceCod")
                         .HasColumnType("double");
 
-                    b.Property<string>("ReceiverName")
-                        .IsRequired()
-                        .HasColumnType("longtext");
+                    b.Property<Guid>("ReceiverId")
+                        .HasColumnType("char(36)");
 
-                    b.Property<string>("ReceiverPhone")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("SenderName")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("SenderPhone")
-                        .IsRequired()
-                        .HasColumnType("longtext");
+                    b.Property<Guid>("SenderId")
+                        .HasColumnType("char(36)");
 
                     b.Property<int>("SlotId")
                         .HasColumnType("int");
@@ -376,9 +369,6 @@ namespace ShipperStation.Infrastructure.Migrations
                     b.Property<string>("Status")
                         .IsRequired()
                         .HasColumnType("nvarchar(24)");
-
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("char(36)");
 
                     b.Property<double>("Volume")
                         .HasColumnType("double");
@@ -391,9 +381,11 @@ namespace ShipperStation.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("SlotId");
+                    b.HasIndex("ReceiverId");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("SenderId");
+
+                    b.HasIndex("SlotId");
 
                     b.ToTable("Packages");
                 });
@@ -474,10 +466,15 @@ namespace ShipperStation.Infrastructure.Migrations
                     b.Property<double>("Price")
                         .HasColumnType("double");
 
+                    b.Property<int>("StationId")
+                        .HasColumnType("int");
+
                     b.Property<int>("ToDate")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("StationId");
 
                     b.ToTable("Pricings");
                 });
@@ -497,17 +494,12 @@ namespace ShipperStation.Infrastructure.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("longtext");
 
-                    b.Property<int>("SizeId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ZoneId")
+                    b.Property<int>("ShelfId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("SizeId");
-
-                    b.HasIndex("ZoneId");
+                    b.HasIndex("ShelfId");
 
                     b.ToTable("Racks");
                 });
@@ -521,33 +513,11 @@ namespace ShipperStation.Infrastructure.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("longtext");
 
-                    b.Property<int>("Index")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("longtext");
-
-                    b.Property<int>("RackId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("RackId");
-
-                    b.ToTable("Shelves");
-                });
-
-            modelBuilder.Entity("ShipperStation.Domain.Entities.Size", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("longtext");
-
                     b.Property<double>("Height")
                         .HasColumnType("double");
+
+                    b.Property<int>("Index")
+                        .HasColumnType("int");
 
                     b.Property<double>("Length")
                         .HasColumnType("double");
@@ -561,9 +531,14 @@ namespace ShipperStation.Infrastructure.Migrations
                     b.Property<double>("Width")
                         .HasColumnType("double");
 
+                    b.Property<int>("ZoneId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
-                    b.ToTable("Sizes");
+                    b.HasIndex("ZoneId");
+
+                    b.ToTable("Shelves");
                 });
 
             modelBuilder.Entity("ShipperStation.Domain.Entities.Slot", b =>
@@ -575,8 +550,14 @@ namespace ShipperStation.Infrastructure.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("longtext");
 
+                    b.Property<double>("Height")
+                        .HasColumnType("double");
+
                     b.Property<int>("Index")
                         .HasColumnType("int");
+
+                    b.Property<double>("Length")
+                        .HasColumnType("double");
 
                     b.Property<string>("Name")
                         .HasColumnType("longtext");
@@ -584,12 +565,18 @@ namespace ShipperStation.Infrastructure.Migrations
                     b.Property<int>("NumberOfPackages")
                         .HasColumnType("int");
 
-                    b.Property<int>("ShelfId")
+                    b.Property<int>("RackId")
                         .HasColumnType("int");
+
+                    b.Property<double>("Volume")
+                        .HasColumnType("double");
+
+                    b.Property<double>("Width")
+                        .HasColumnType("double");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ShelfId");
+                    b.HasIndex("RackId");
 
                     b.ToTable("Slots");
                 });
@@ -662,30 +649,6 @@ namespace ShipperStation.Infrastructure.Migrations
                     b.HasIndex("StationId");
 
                     b.ToTable("StationImages");
-                });
-
-            modelBuilder.Entity("ShipperStation.Domain.Entities.StationPricing", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<double?>("CustomPrice")
-                        .HasColumnType("double");
-
-                    b.Property<int>("PricingId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("StationId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("PricingId");
-
-                    b.HasIndex("StationId");
-
-                    b.ToTable("StationPricings");
                 });
 
             modelBuilder.Entity("ShipperStation.Domain.Entities.Transaction", b =>
@@ -896,21 +859,29 @@ namespace ShipperStation.Infrastructure.Migrations
 
             modelBuilder.Entity("ShipperStation.Domain.Entities.Package", b =>
                 {
+                    b.HasOne("ShipperStation.Domain.Entities.Identities.User", "Receiver")
+                        .WithMany("ReceivePackages")
+                        .HasForeignKey("ReceiverId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ShipperStation.Domain.Entities.Identities.User", "Sender")
+                        .WithMany("SendPackages")
+                        .HasForeignKey("SenderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("ShipperStation.Domain.Entities.Slot", "Slot")
                         .WithMany("Packages")
                         .HasForeignKey("SlotId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("ShipperStation.Domain.Entities.Identities.User", "User")
-                        .WithMany("Packages")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.Navigation("Receiver");
+
+                    b.Navigation("Sender");
 
                     b.Navigation("Slot");
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("ShipperStation.Domain.Entities.PackageImage", b =>
@@ -935,45 +906,48 @@ namespace ShipperStation.Infrastructure.Migrations
                     b.Navigation("Package");
                 });
 
+            modelBuilder.Entity("ShipperStation.Domain.Entities.Pricing", b =>
+                {
+                    b.HasOne("ShipperStation.Domain.Entities.Station", "Station")
+                        .WithMany("Pricings")
+                        .HasForeignKey("StationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Station");
+                });
+
             modelBuilder.Entity("ShipperStation.Domain.Entities.Rack", b =>
                 {
-                    b.HasOne("ShipperStation.Domain.Entities.Size", "Size")
-                        .WithMany("Racks")
-                        .HasForeignKey("SizeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("ShipperStation.Domain.Entities.Zone", "Zone")
-                        .WithMany("Racks")
-                        .HasForeignKey("ZoneId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Size");
-
-                    b.Navigation("Zone");
-                });
-
-            modelBuilder.Entity("ShipperStation.Domain.Entities.Shelf", b =>
-                {
-                    b.HasOne("ShipperStation.Domain.Entities.Rack", "Rack")
-                        .WithMany("Shelves")
-                        .HasForeignKey("RackId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Rack");
-                });
-
-            modelBuilder.Entity("ShipperStation.Domain.Entities.Slot", b =>
-                {
                     b.HasOne("ShipperStation.Domain.Entities.Shelf", "Shelf")
-                        .WithMany("Slots")
+                        .WithMany("Racks")
                         .HasForeignKey("ShelfId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Shelf");
+                });
+
+            modelBuilder.Entity("ShipperStation.Domain.Entities.Shelf", b =>
+                {
+                    b.HasOne("ShipperStation.Domain.Entities.Zone", "Zone")
+                        .WithMany("Shelves")
+                        .HasForeignKey("ZoneId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Zone");
+                });
+
+            modelBuilder.Entity("ShipperStation.Domain.Entities.Slot", b =>
+                {
+                    b.HasOne("ShipperStation.Domain.Entities.Rack", "Rack")
+                        .WithMany("Slots")
+                        .HasForeignKey("RackId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Rack");
                 });
 
             modelBuilder.Entity("ShipperStation.Domain.Entities.StationImage", b =>
@@ -983,25 +957,6 @@ namespace ShipperStation.Infrastructure.Migrations
                         .HasForeignKey("StationId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Station");
-                });
-
-            modelBuilder.Entity("ShipperStation.Domain.Entities.StationPricing", b =>
-                {
-                    b.HasOne("ShipperStation.Domain.Entities.Pricing", "Pricing")
-                        .WithMany("StationPricings")
-                        .HasForeignKey("PricingId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("ShipperStation.Domain.Entities.Station", "Station")
-                        .WithMany("StationPricings")
-                        .HasForeignKey("StationId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Pricing");
 
                     b.Navigation("Station");
                 });
@@ -1064,7 +1019,9 @@ namespace ShipperStation.Infrastructure.Migrations
 
                     b.Navigation("Notifications");
 
-                    b.Navigation("Packages");
+                    b.Navigation("ReceivePackages");
+
+                    b.Navigation("SendPackages");
 
                     b.Navigation("Transactions");
 
@@ -1083,22 +1040,12 @@ namespace ShipperStation.Infrastructure.Migrations
                     b.Navigation("PackageStatusHistories");
                 });
 
-            modelBuilder.Entity("ShipperStation.Domain.Entities.Pricing", b =>
-                {
-                    b.Navigation("StationPricings");
-                });
-
             modelBuilder.Entity("ShipperStation.Domain.Entities.Rack", b =>
-                {
-                    b.Navigation("Shelves");
-                });
-
-            modelBuilder.Entity("ShipperStation.Domain.Entities.Shelf", b =>
                 {
                     b.Navigation("Slots");
                 });
 
-            modelBuilder.Entity("ShipperStation.Domain.Entities.Size", b =>
+            modelBuilder.Entity("ShipperStation.Domain.Entities.Shelf", b =>
                 {
                     b.Navigation("Racks");
                 });
@@ -1110,9 +1057,9 @@ namespace ShipperStation.Infrastructure.Migrations
 
             modelBuilder.Entity("ShipperStation.Domain.Entities.Station", b =>
                 {
-                    b.Navigation("StationImages");
+                    b.Navigation("Pricings");
 
-                    b.Navigation("StationPricings");
+                    b.Navigation("StationImages");
 
                     b.Navigation("UserStations");
 
@@ -1121,7 +1068,7 @@ namespace ShipperStation.Infrastructure.Migrations
 
             modelBuilder.Entity("ShipperStation.Domain.Entities.Zone", b =>
                 {
-                    b.Navigation("Racks");
+                    b.Navigation("Shelves");
                 });
 #pragma warning restore 612, 618
         }

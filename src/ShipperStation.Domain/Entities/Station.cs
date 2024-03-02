@@ -13,6 +13,6 @@ public class Station : BaseAuditableEntity<int>
     public virtual ICollection<UserStation> UserStations { get; set; } = new HashSet<UserStation>();
     public virtual ICollection<StationImage> StationImages { get; set; } = new HashSet<StationImage>();
     public virtual ICollection<Zone> Zones { get; set; } = new HashSet<Zone>();
-    public virtual ICollection<StationPricing> StationPricings { get; set; } = new HashSet<StationPricing>();
+    public virtual ICollection<Pricing> Pricings { get; set; } = new HashSet<Pricing>();
 
 }
