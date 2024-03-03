@@ -1,10 +1,12 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using ShipperStation.Application.Common.Constants;
 using ShipperStation.Application.Features.Users.Commands;
 using ShipperStation.Application.Features.Users.Models;
 using ShipperStation.Application.Features.Users.Queries;
 using ShipperStation.Application.Models;
+using ShipperStation.Shared.Pages;
 
 namespace ShipperStation.WebApi.Controllers;
 
@@ -44,4 +46,24 @@ public class UsersController(ISender sender) : ControllerBase
         return await sender.Send(request, cancellationToken);
     }
 
+    [Authorize(Roles = Policies.StationManager_Or_Staff)]
+    [HttpGet]
+    public async Task<ActionResult<PaginatedResponse<UserResponse>>> GetUsers([FromQuery] GetUsersQuery query, CancellationToken cancellationToken)
+    {
+        return await sender.Send(query, cancellationToken);
+    }
+
+    [Authorize(Roles = Policies.StationManager_Or_Staff)]
+    [HttpGet("phone/{number}")]
+    public async Task<ActionResult<UserResponse>> GetUserByPhone(string number, CancellationToken cancellationToken)
+    {
+        return await sender.Send(new GetUserByPhoneQuery(number), cancellationToken);
+    }
+
+    [Authorize(Roles = Policies.StationManager_Or_Staff)]
+    [HttpPost]
+    public async Task<ActionResult<MessageResponse>> CreateUser(CreateUserCommand command, CancellationToken cancellationToken)
+    {
+        return await sender.Send(command, cancellationToken);
+    }
 }
