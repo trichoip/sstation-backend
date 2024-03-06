@@ -23,7 +23,7 @@ internal sealed class GetNotificationsQueryHandler(
             SortColumn = nameof(Notification.CreatedAt)
         };
 
-        var notification = await _notificationRepository
+        var notifications = await _notificationRepository
             .FindAsync<NotificationResponse>(
                 request.PageIndex,
                 request.PageSize,
@@ -34,6 +34,6 @@ internal sealed class GetNotificationsQueryHandler(
         var countUnread = await _notificationRepository
             .CountAsync(_ => _.UserId == userId && !_.IsRead, cancellationToken);
 
-        return new NotificationPaginatedResponse(notification, countUnread);
+        return new NotificationPaginatedResponse(notifications, countUnread);
     }
 }
