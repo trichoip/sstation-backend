@@ -3,9 +3,11 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ShipperStation.Application.Common.Constants;
 using ShipperStation.Application.Features.Managers.Commands;
+using ShipperStation.Application.Features.Managers.Queries;
 using ShipperStation.Application.Features.Stations.Commands;
 using ShipperStation.Application.Features.Stations.Models;
 using ShipperStation.Application.Features.Stations.Queries;
+using ShipperStation.Application.Features.Users.Models;
 using ShipperStation.Application.Models;
 using ShipperStation.Shared.Pages;
 
@@ -14,20 +16,50 @@ namespace ShipperStation.WebApi.Controllers;
 [ApiController]
 public class ManagersController(ISender sender) : ControllerBase
 {
+    #region Manager
     [Authorize(Roles = Policies.Admin)]
     [HttpPost]
     public async Task<ActionResult<MessageResponse>> CreateStoreManager(
-        CreateStoreManagerCommand request,
+       CreateStoreManagerCommand request,
+       CancellationToken cancellationToken)
+    {
+        return await sender.Send(request, cancellationToken);
+    }
+
+    [Authorize(Roles = Policies.Admin)]
+    [HttpGet]
+    public async Task<ActionResult<PaginatedResponse<UserResponse>>> GetStoreManagers(
+        [FromQuery] GetStoreManagersQuery request,
         CancellationToken cancellationToken)
     {
         return await sender.Send(request, cancellationToken);
     }
 
+    [Authorize(Roles = Policies.Admin)]
+    [HttpGet("{id}")]
+    public async Task<ActionResult<UserResponse>> GetStoreManagerById(
+        Guid id,
+        CancellationToken cancellationToken)
+    {
+        return await sender.Send(new GetStoreManagerByIdQuery(id), cancellationToken);
+    }
+
+    [Authorize(Roles = Policies.Admin)]
+    [HttpDelete("{id}")]
+    public async Task<ActionResult<MessageResponse>> DeleteStoreManager(
+        Guid id,
+        CancellationToken cancellationToken)
+    {
+        return await sender.Send(new DeleteStoreManagerCommand(id), cancellationToken);
+    }
+    #endregion
+
+    #region Stations
     [Authorize(Roles = Policies.StationManager)]
     [HttpGet("stations")]
     public async Task<ActionResult<PaginatedResponse<StationResponse>>> GetStationsByStoreManager(
-        [FromQuery] GetStationsByStoreManagerQuery request,
-        CancellationToken cancellationToken)
+    [FromQuery] GetStationsByStoreManagerQuery request,
+    CancellationToken cancellationToken)
     {
         return await sender.Send(request, cancellationToken);
     }
@@ -50,5 +82,6 @@ public class ManagersController(ISender sender) : ControllerBase
     {
         return await sender.Send(new GetStationByIdForStoreManagerQuery(id), cancellationToken);
     }
+    #endregion
 
 }

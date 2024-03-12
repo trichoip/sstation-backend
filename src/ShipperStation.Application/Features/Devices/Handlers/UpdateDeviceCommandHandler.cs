@@ -45,6 +45,6 @@ internal sealed class UpdateDeviceCommandHandler(
 
         await unitOfWork.CommitAsync(cancellationToken);
 
-        return new MessageResponse(Resource.DeviceDeletedSuccess);
+        return new MessageResponse(Resource.DeviceUpdatedSuccess);
     }
 }

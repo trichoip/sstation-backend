@@ -24,33 +24,54 @@ public class StationsController(ISender sender) : ControllerBase
 
     #region Staff
     [Authorize(Roles = Policies.StationManager)]
-    [HttpPost("{stationId}/staff")]
+    [HttpPost("{stationId}/staffs")]
     public async Task<ActionResult<MessageResponse>> CreateStaff(
        int stationId,
        CreateStaffCommand request,
        CancellationToken cancellationToken)
     {
-        request = request with
-        {
-            StationId = stationId
-        };
-
-        return await sender.Send(request, cancellationToken);
+        return await sender.Send(request with { StationId = stationId }, cancellationToken);
     }
 
     [Authorize(Roles = Policies.StationManager)]
-    [HttpGet("{stationId}/staff")]
+    [HttpGet("{stationId}/staffs")]
     public async Task<ActionResult<PaginatedResponse<UserResponse>>> GetStaffs(
         int stationId,
         [FromQuery] GetStaffsQuery request,
         CancellationToken cancellationToken)
     {
-        request = request with
-        {
-            StationId = stationId
-        };
+        return await sender.Send(request with { StationId = stationId }, cancellationToken);
+    }
 
-        return await sender.Send(request, cancellationToken);
+    [Authorize(Roles = Policies.StationManager)]
+    [HttpGet("{stationId}/staffs/{staffId}")]
+    public async Task<ActionResult<UserResponse>> GetStaffById(
+        int stationId,
+        Guid staffId,
+        CancellationToken cancellationToken)
+    {
+        return await sender.Send(new GetStaffByIdQuery(staffId) with { StationId = stationId }, cancellationToken);
+    }
+
+    [Authorize(Roles = Policies.StationManager)]
+    [HttpDelete("{stationId}/staffs/{staffId}")]
+    public async Task<ActionResult<MessageResponse>> DeleteStaff(
+        int stationId,
+        Guid staffId,
+        CancellationToken cancellationToken)
+    {
+        return await sender.Send(new DeleteStaffCommand(staffId) with { StationId = stationId }, cancellationToken);
+    }
+
+    [Authorize(Roles = Policies.StationManager)]
+    [HttpPut("{stationId}/staffs/{staffId}")]
+    public async Task<ActionResult<MessageResponse>> UpdateStaff(
+        int stationId,
+        Guid staffId,
+        UpdateStaffCommand request,
+        CancellationToken cancellationToken)
+    {
+        return await sender.Send(request with { StationId = stationId, StaffId = staffId }, cancellationToken);
     }
     #endregion
 
@@ -59,8 +80,8 @@ public class StationsController(ISender sender) : ControllerBase
     [Authorize]
     [HttpGet]
     public async Task<ActionResult<PaginatedResponse<StationResponse>>> GetAllStations(
-    [FromQuery] GetAllStationsQuery request,
-    CancellationToken cancellationToken)
+        [FromQuery] GetAllStationsQuery request,
+        CancellationToken cancellationToken)
     {
         return await sender.Send(request, cancellationToken);
     }
