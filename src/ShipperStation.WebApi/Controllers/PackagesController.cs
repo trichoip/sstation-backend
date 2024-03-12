@@ -38,6 +38,12 @@ public class PackagesController(ISender sender) : ControllerBase
         return await sender.Send(command, cancellationToken);
     }
 
+    [HttpPost("{id}/payment")]
+    public async Task<ActionResult<MessageResponse>> PaymentPackage(Guid id, CancellationToken cancellationToken)
+    {
+        return await sender.Send(new PaymentPackageCommand(id), cancellationToken);
+    }
+
     //[HttpPut("{id}")]
     //public async Task<ActionResult<MessageResponse>> UpdatePackage(int id, UpdatePackageCommand command, CancellationToken cancellationToken)
     //{
