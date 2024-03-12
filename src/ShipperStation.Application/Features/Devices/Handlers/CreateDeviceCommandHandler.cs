@@ -1,6 +1,5 @@
 ﻿using Mapster;
 using MediatR;
-using ShipperStation.Application.Common.Exceptions;
 using ShipperStation.Application.Common.Resources;
 using ShipperStation.Application.Contracts.Repositories;
 using ShipperStation.Application.Contracts.Services;
@@ -26,7 +25,8 @@ internal sealed class CreateDeviceCommandHandler(
 
         if (isConflict)
         {
-            throw new ConflictException(Resource.DeviceTokenAlreadyRegistered);
+            //throw new ConflictException(Resource.DeviceTokenAlreadyRegistered);
+            return new MessageResponse(Resource.DeviceCreatedSuccess);
         }
 
         var device = request.Adapt<Device>();
