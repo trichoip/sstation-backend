@@ -7,7 +7,6 @@ using ShipperStation.Application.Features.Pricings.Models;
 using ShipperStation.Application.Features.Pricings.Queries;
 using ShipperStation.Application.Features.Staffs.Commands;
 using ShipperStation.Application.Features.Staffs.Queries;
-using ShipperStation.Application.Features.Stations.Commands;
 using ShipperStation.Application.Features.Stations.Models;
 using ShipperStation.Application.Features.Stations.Queries;
 using ShipperStation.Application.Features.Users.Models;
@@ -56,26 +55,9 @@ public class StationsController(ISender sender) : ControllerBase
     #endregion
 
     #region Station
-    [Authorize(Roles = Policies.StationManager)]
-    [HttpPost]
-    public async Task<ActionResult<MessageResponse>> CreateStation(
-    CreateStationCommand command,
-    CancellationToken cancellationToken)
-    {
-        return await sender.Send(command, cancellationToken);
-    }
-
-    [Authorize(Roles = Policies.StationManager)]
-    [HttpGet]
-    public async Task<ActionResult<PaginatedResponse<StationResponse>>> GetStationsByStoreManager(
-    [FromQuery] GetStationsByStoreManagerQuery request,
-    CancellationToken cancellationToken)
-    {
-        return await sender.Send(request, cancellationToken);
-    }
 
     [Authorize]
-    [HttpGet("all")]
+    [HttpGet]
     public async Task<ActionResult<PaginatedResponse<StationResponse>>> GetAllStations(
     [FromQuery] GetAllStationsQuery request,
     CancellationToken cancellationToken)
