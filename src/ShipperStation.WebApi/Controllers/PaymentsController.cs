@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ShipperStation.Application.Features.Payments.Commands;
 using ShipperStation.Application.Features.Transactions.Models;
+using System.Web;
 
 namespace ShipperStation.WebApi.Controllers;
 [Route("api/[controller]")]
@@ -22,7 +23,7 @@ public class PaymentsController(ISender sender, IHttpContextAccessor _httpContex
         CancellationToken cancellationToken)
     {
         await sender.Send(callback, cancellationToken);
-        return Redirect($"{callback.returnUrl}{_httpContextAccessor?.HttpContext?.Request.QueryString}");
+        return Redirect(HttpUtility.UrlEncode($"{callback.returnUrl}{_httpContextAccessor?.HttpContext?.Request.QueryString}"));
     }
 
     [HttpGet("callback/vnpay")]
@@ -31,6 +32,6 @@ public class PaymentsController(ISender sender, IHttpContextAccessor _httpContex
         CancellationToken cancellationToken)
     {
         await sender.Send(callback, cancellationToken);
-        return Redirect($"{callback.returnUrl}{_httpContextAccessor?.HttpContext?.Request.QueryString}");
+        return Redirect(HttpUtility.UrlEncode($"{callback.returnUrl}{_httpContextAccessor?.HttpContext?.Request.QueryString}"));
     }
 }
