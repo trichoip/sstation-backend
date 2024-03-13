@@ -10,6 +10,8 @@ namespace ShipperStation.WebApi.Controllers;
 [ApiController]
 public class PaymentsController(ISender sender, IHttpContextAccessor _httpContextAccessor) : ControllerBase
 {
+
+    private readonly IHttpContextAccessor httpContextAccessor = _httpContextAccessor;
     [Authorize]
     [HttpPost("deposit")]
     public async Task<IActionResult> Deposit(DepositCommand command, string returnUrl, CancellationToken cancellationToken)
@@ -23,7 +25,7 @@ public class PaymentsController(ISender sender, IHttpContextAccessor _httpContex
         CancellationToken cancellationToken)
     {
         await sender.Send(callback, cancellationToken);
-        return Redirect(HttpUtility.UrlEncode($"{callback.returnUrl}{_httpContextAccessor?.HttpContext?.Request.QueryString}"));
+        return Redirect($"{callback.returnUrl}{HttpUtility.UrlEncode(_httpContextAccessor?.HttpContext?.Request.QueryString.Value)}");
     }
 
     [HttpGet("callback/vnpay")]
@@ -32,6 +34,6 @@ public class PaymentsController(ISender sender, IHttpContextAccessor _httpContex
         CancellationToken cancellationToken)
     {
         await sender.Send(callback, cancellationToken);
-        return Redirect(HttpUtility.UrlEncode($"{callback.returnUrl}{_httpContextAccessor?.HttpContext?.Request.QueryString}"));
+        return Redirect($"{callback.returnUrl}{HttpUtility.UrlEncode(_httpContextAccessor?.HttpContext?.Request.QueryString.Value)}");
     }
 }
