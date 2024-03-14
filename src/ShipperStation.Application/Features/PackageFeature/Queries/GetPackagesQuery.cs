@@ -14,7 +14,7 @@ public sealed record GetPackagesQuery : PaginationRequest<Package>, IRequest<Pag
 {
     public string? Name { get; set; }
     public PackageStatus? Status { get; set; }
-    public PackageType Type { get; set; }
+    public PackageType? Type { get; set; }
 
     [BindNever]
     public Guid UserId { get; set; }
@@ -32,6 +32,11 @@ public sealed record GetPackagesQuery : PaginationRequest<Package>, IRequest<Pag
         if (Type == PackageType.Receiver)
         {
             Expression = Expression.And(_ => _.ReceiverId == UserId);
+        }
+
+        if (!Type.HasValue)
+        {
+            Expression = Expression.And(_ => _.SenderId == UserId || _.ReceiverId == UserId);
         }
 
         return Expression;

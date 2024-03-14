@@ -14,10 +14,11 @@ namespace ShipperStation.WebApi.Controllers;
 [Authorize(Roles = Policies.Admin)]
 public class AdminController(ISender sender) : ControllerBase
 {
+    #region Stations
     [HttpPost("stations")]
     public async Task<ActionResult<MessageResponse>> CreateStation(
-        CreateStationCommand command,
-        CancellationToken cancellationToken)
+       CreateStationCommand command,
+       CancellationToken cancellationToken)
     {
         return await sender.Send(command, cancellationToken);
     }
@@ -54,5 +55,43 @@ public class AdminController(ISender sender) : ControllerBase
     {
         return await sender.Send(request with { Id = id }, cancellationToken);
     }
+
+    #endregion
+
+    #region Manager in stations
+
+    //[HttpGet("stations/{stationId}/managers")]
+    //public async Task<ActionResult<PaginatedResponse<UserResponse>>> GetManagersInStation(
+    //int stationId,
+    //CancellationToken cancellationToken)
+    //{
+    //    return await sender.Send(new GetManagersByStationQuery() with { }, cancellationToken);
+    //}
+
+    //[HttpGet("stations/{stationId}/managers/{id}")]
+    //public async Task<ActionResult<UserResponse>> GetManagerInStation(
+    //int stationId,
+    //CancellationToken cancellationToken)
+    //{
+    //    return await sender.Send(new GetManagerByStationIdQuery() with { }, cancellationToken);
+    //}
+
+    //[HttpDelete("stations/{stationId}/managers/{id}")]
+    //public async Task<ActionResult<MessageResponse>> DeleteManagerInStation(
+    //    int id,
+    //    CancellationToken cancellationToken)
+    //{
+    //    return await sender.Send(new DeleteStationByAdminCommand(id), cancellationToken);
+    //}
+
+    //[HttpPost("stations/{stationId}/managers")]
+    //public async Task<ActionResult<MessageResponse>> CreateManagerIntoStation(
+    //   CreateStationCommand command,
+    //   CancellationToken cancellationToken)
+    //{
+    //    return await sender.Send(command, cancellationToken);
+    //}
+
+    #endregion
 
 }

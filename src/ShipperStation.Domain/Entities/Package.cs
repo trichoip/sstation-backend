@@ -1,4 +1,5 @@
-﻿using ShipperStation.Domain.Common;
+﻿using EntityFrameworkCore.Projectables;
+using ShipperStation.Domain.Common;
 using ShipperStation.Domain.Entities.Identities;
 using ShipperStation.Domain.Enums;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -28,6 +29,9 @@ public class Package : BaseAuditableEntity<Guid>
 
     public Guid ReceiverId { get; set; }
     public virtual User Receiver { get; set; } = default!;
+
+    [Projectable]
+    public Station Station => Slot.Rack.Shelf.Zone.Station;
 
     public virtual ICollection<PackageImage> PackageImages { get; set; } = new HashSet<PackageImage>();
 
