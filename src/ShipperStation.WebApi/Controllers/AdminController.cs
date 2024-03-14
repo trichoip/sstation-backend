@@ -5,6 +5,9 @@ using ShipperStation.Application.Common.Constants;
 using ShipperStation.Application.Features.Stations.Commands;
 using ShipperStation.Application.Features.Stations.Models;
 using ShipperStation.Application.Features.Stations.Queries;
+using ShipperStation.Application.Features.Users.Models;
+using ShipperStation.Application.Features.UserStations.Commands;
+using ShipperStation.Application.Features.UserStations.Queries;
 using ShipperStation.Application.Models;
 using ShipperStation.Shared.Pages;
 
@@ -60,37 +63,41 @@ public class AdminController(ISender sender) : ControllerBase
 
     #region Manager in stations
 
-    //[HttpGet("stations/{stationId}/managers")]
-    //public async Task<ActionResult<PaginatedResponse<UserResponse>>> GetManagersInStation(
-    //int stationId,
-    //CancellationToken cancellationToken)
-    //{
-    //    return await sender.Send(new GetManagersByStationQuery() with { }, cancellationToken);
-    //}
+    [HttpGet("stations/{stationId}/managers")]
+    public async Task<ActionResult<PaginatedResponse<UserResponse>>> GetManagersInStation(
+        int stationId,
+        [FromQuery] GetManagersInStationQuery request,
+        CancellationToken cancellationToken)
+    {
+        return await sender.Send(request with { StationId = stationId }, cancellationToken);
+    }
 
-    //[HttpGet("stations/{stationId}/managers/{id}")]
-    //public async Task<ActionResult<UserResponse>> GetManagerInStation(
-    //int stationId,
-    //CancellationToken cancellationToken)
-    //{
-    //    return await sender.Send(new GetManagerByStationIdQuery() with { }, cancellationToken);
-    //}
+    [HttpGet("stations/{stationId}/managers/{managerId}")]
+    public async Task<ActionResult<UserResponse>> GetManagerInStation(
+        int stationId,
+        Guid managerId,
+        CancellationToken cancellationToken)
+    {
+        return await sender.Send(new GetManagerInStationQuery(managerId) with { StationId = stationId }, cancellationToken);
+    }
 
-    //[HttpDelete("stations/{stationId}/managers/{id}")]
-    //public async Task<ActionResult<MessageResponse>> DeleteManagerInStation(
-    //    int id,
-    //    CancellationToken cancellationToken)
-    //{
-    //    return await sender.Send(new DeleteStationByAdminCommand(id), cancellationToken);
-    //}
+    [HttpDelete("stations/{stationId}/managers/{managerId}")]
+    public async Task<ActionResult<MessageResponse>> DeleteManagerInStation(
+        int stationId,
+        Guid managerId,
+        CancellationToken cancellationToken)
+    {
+        return await sender.Send(new DeleteManagerInStationCommand(managerId) with { StationId = stationId }, cancellationToken);
+    }
 
-    //[HttpPost("stations/{stationId}/managers")]
-    //public async Task<ActionResult<MessageResponse>> CreateManagerIntoStation(
-    //   CreateStationCommand command,
-    //   CancellationToken cancellationToken)
-    //{
-    //    return await sender.Send(command, cancellationToken);
-    //}
+    [HttpPost("stations/{stationId}/managers")]
+    public async Task<ActionResult<MessageResponse>> CreateManagerIntoStation(
+       int stationId,
+       CreateManagerIntoStationCommand command,
+       CancellationToken cancellationToken)
+    {
+        return await sender.Send(command with { StationId = stationId }, cancellationToken);
+    }
 
     #endregion
 

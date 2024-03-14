@@ -30,7 +30,7 @@ public class Package : BaseAuditableEntity<Guid>
     public Guid ReceiverId { get; set; }
     public virtual User Receiver { get; set; } = default!;
 
-    [Projectable]
+    [Projectable]// không cần NotMapped (test chỉ cần migration mà không có thêm field của Station là oke, còn nếu ra field thì NotMapped)
     public Station Station => Slot.Rack.Shelf.Zone.Station;
 
     public virtual ICollection<PackageImage> PackageImages { get; set; } = new HashSet<PackageImage>();

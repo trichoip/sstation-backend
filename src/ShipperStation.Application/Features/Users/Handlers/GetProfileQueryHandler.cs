@@ -1,5 +1,4 @@
 ﻿using MediatR;
-using Microsoft.AspNetCore.Identity;
 using ShipperStation.Application.Common.Exceptions;
 using ShipperStation.Application.Contracts.Repositories;
 using ShipperStation.Application.Contracts.Services;
@@ -12,20 +11,19 @@ namespace ShipperStation.Application.Features.Users.Handlers;
 internal sealed class GetProfileQueryHandler(
     ICurrentUserService currentUserService,
     IUnitOfWork unitOfWork,
-    UserManager<User> userManager,
     IPublisher publisher) : IRequestHandler<GetProfileQuery, UserResponse>
 {
     private readonly IGenericRepository<User> _userRepository = unitOfWork.Repository<User>();
     public async Task<UserResponse> Handle(GetProfileQuery request, CancellationToken cancellationToken)
     {
-        var user = await currentUserService.FindCurrentUserAsync();
+        var userId = await currentUserService.FindCurrentUserIdAsync();
 
-        await publisher.Publish(new InitWalletEvent() with { UserId = user.Id }, cancellationToken);
+        await publisher.Publish(new InitWalletEvent() with { UserId = userId }, cancellationToken);
 
         if (await _userRepository
-            .FindByAsync<UserResponse>(_ => _.Id == user.Id, cancellationToken) is not { } userResponse)
+            .FindByAsync<UserResponse>(_ => _.Id == userId, cancellationToken) is not { } userResponse)
         {
-            throw new NotFoundException(nameof(User), user);
+            throw new NotFoundException(nameof(User), userId);
         }
 
         return userResponse;
