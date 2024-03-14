@@ -1,4 +1,5 @@
 ﻿using ShipperStation.Application.Features.Devices.Models;
+using ShipperStation.Application.Features.Roles.Models;
 using ShipperStation.Application.Features.Wallets.Models;
 using ShipperStation.Application.Models;
 
@@ -19,6 +20,5 @@ public sealed record UserResponse : BaseAuditableEntityResponse<Guid>
     public WalletResponse Wallet { get; set; } = default!;
 
     public ICollection<DeviceResponse> Devices { get; set; } = new HashSet<DeviceResponse>();
-
-    public ICollection<UserRoleResponse> UserRoles { get; set; } = new HashSet<UserRoleResponse>();
+    public ICollection<RoleResponse> Roles { get; set; } = new HashSet<RoleResponse>();
 }

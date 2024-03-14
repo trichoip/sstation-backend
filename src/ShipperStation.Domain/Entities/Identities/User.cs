@@ -35,4 +35,9 @@ public class User : IdentityUser<Guid>, IAuditableEntity
     public virtual ICollection<Device> Devices { get; set; } = new HashSet<Device>();
 
     public virtual ICollection<UserRole> UserRoles { get; set; } = new HashSet<UserRole>();
+
+    [Projectable]
+    [NotMapped]
+    public IEnumerable<Role> Roles => UserRoles.Select(ur => ur.Role);
+
 }

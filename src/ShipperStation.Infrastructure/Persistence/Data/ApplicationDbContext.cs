@@ -40,20 +40,15 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
             }
         }
 
-        modelBuilder.Entity<User>(b =>
-        {
-            b.HasMany(e => e.UserRoles)
-                .WithOne()
-                .HasForeignKey(ur => ur.UserId)
-                .IsRequired();
-        });
-
         modelBuilder.Entity<UserRole>(b =>
         {
             b.HasOne(e => e.Role)
-                .WithMany()
-                .HasForeignKey(ur => ur.RoleId)
-                .IsRequired();
+                .WithMany(e => e.UserRoles)
+                .HasForeignKey(ur => ur.RoleId);
+
+            b.HasOne(e => e.User)
+                .WithMany(e => e.UserRoles)
+                .HasForeignKey(ur => ur.UserId);
         });
     }
 }
