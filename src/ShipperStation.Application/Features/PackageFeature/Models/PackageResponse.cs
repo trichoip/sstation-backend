@@ -1,4 +1,5 @@
-﻿using ShipperStation.Application.Models;
+﻿using ShipperStation.Application.Features.Stations.Models;
+using ShipperStation.Application.Models;
 using ShipperStation.Domain.Enums;
 
 namespace ShipperStation.Application.Features.PackageFeature.Models;
@@ -27,4 +28,6 @@ public sealed record PackageResponse : BaseAuditableEntityResponse<Guid>
     //public  ICollection<PackageImage> PackageImages { get; set; } = new HashSet<PackageImage>();
 
     //public  ICollection<PackageStatusHistory> PackageStatusHistories { get; set; } = new HashSet<PackageStatusHistory>();
+
+    public StationResponse Station { get; set; } = default!;
 }
