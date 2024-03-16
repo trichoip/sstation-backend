@@ -1,4 +1,5 @@
 ﻿using ShipperStation.Application.Features.Stations.Models;
+using ShipperStation.Application.Features.Users.Models;
 using ShipperStation.Application.Models;
 using ShipperStation.Domain.Enums;
 
@@ -20,10 +21,10 @@ public sealed record PackageResponse : BaseAuditableEntityResponse<Guid>
     public int SlotId { get; set; }
 
     public Guid SenderId { get; set; }
-    //public User Sender { get; set; } = default!;
+    public UserResponse Sender { get; set; } = default!;
 
     public Guid ReceiverId { get; set; }
-    //public User Receiver { get; set; } = default!;
+    public UserResponse Receiver { get; set; } = default!;
 
     //public  ICollection<PackageImage> PackageImages { get; set; } = new HashSet<PackageImage>();
 

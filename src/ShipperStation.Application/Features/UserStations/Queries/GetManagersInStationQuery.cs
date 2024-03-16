@@ -1,7 +1,10 @@
-﻿using MediatR;
+﻿using LinqKit;
+using MediatR;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.EntityFrameworkCore;
 using ShipperStation.Application.Features.Users.Models;
 using ShipperStation.Application.Models.Pages;
+using ShipperStation.Domain.Constants;
 using ShipperStation.Domain.Entities.Identities;
 using ShipperStation.Shared.Pages;
 using System.Linq.Expressions;
@@ -16,6 +19,18 @@ public sealed record GetManagersInStationQuery : PaginationRequest<User>, IReque
 
     public override Expression<Func<User, bool>> GetExpressions()
     {
-        throw new NotImplementedException();
+        if (!string.IsNullOrWhiteSpace(Search))
+        {
+            Search = Search.Trim();
+            Expression = Expression
+                .And(u => EF.Functions.Like(u.PhoneNumber, $"%{Search}%"))
+                .Or(u => EF.Functions.Like(u.FullName, $"%{Search}%"))
+                .Or(u => EF.Functions.Like(u.UserName, $"%{Search}%"));
+        }
+
+        Expression = Expression.And(u => u.UserStations.Any(_ => _.StationId == StationId));
+        Expression = Expression.And(u => u.UserRoles.Any(_ => _.Role.Name == RoleName.StationManager));
+
+        return Expression;
     }
 }

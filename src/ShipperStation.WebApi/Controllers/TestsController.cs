@@ -21,7 +21,7 @@ public class TestsController(INotifier notifier, ICurrentUserService currentUser
             UserId = await currentUserService.FindCurrentUserIdAsync(),
         };
 
-        BackgroundJob.Enqueue(() => notifier.NotifyAsync(notificationMessage, false, cancellationToken));
+        BackgroundJob.Enqueue(() => notifier.NotifyAsync(notificationMessage, true, cancellationToken));
 
         return Ok("push success");
     }
