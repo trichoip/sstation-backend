@@ -1,9 +1,11 @@
-﻿using Mapster;
+﻿using Hangfire;
+using Mapster;
 using MediatR;
 using ShipperStation.Application.Common.Exceptions;
 using ShipperStation.Application.Contracts.Repositories;
 using ShipperStation.Application.Contracts.Services;
 using ShipperStation.Application.Features.PackageFeature.Commands;
+using ShipperStation.Application.Features.PackageFeature.Events;
 using ShipperStation.Application.Features.PackageFeature.Models;
 using ShipperStation.Domain.Entities;
 using ShipperStation.Domain.Entities.Identities;
@@ -62,6 +64,9 @@ internal sealed class CreatePackageCommandHandler(
 
         await _packageRepository.CreateAsync(package, cancellationToken);
         await unitOfWork.CommitAsync(cancellationToken);
+
+        var notify = new SendNotifyCreatePackageEvent() with { SenderId = request.SenderId, ReceiverId = request.ReceiverId };
+        BackgroundJob.Enqueue(() => publisher.Publish(notify, cancellationToken));
 
         return await _packageRepository
             .FindByAsync<PackageResponse>(_ =>
