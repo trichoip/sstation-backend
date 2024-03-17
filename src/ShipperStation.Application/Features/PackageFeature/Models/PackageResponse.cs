@@ -47,7 +47,10 @@ public sealed record PackageResponse : BaseAuditableEntityResponse<Guid>
     public int TotalDays { get; set; }
     public double TotalPrice => Pricing is null ? 0 : PackageExtensions.CalculateTotalPrice(PriceCod, Volume, TotalDays, Pricing.Price);
 
+    public double PriceService => TotalPrice - PriceCod;
+
     public string FormatTotalPrice => TotalPrice.FormatMoney();
+    public string FormatPriceService => PriceService.FormatMoney();
 
     public PricingResponse? Pricing => Pricings.Where(_ => _.ToDate >= TotalDays && _.FromDate <= TotalDays).FirstOrDefault();
 

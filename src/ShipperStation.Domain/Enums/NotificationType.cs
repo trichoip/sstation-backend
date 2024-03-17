@@ -4,58 +4,50 @@ namespace ShipperStation.Domain.Enums;
 
 public enum NotificationType
 {
-    /**
-     * COMMON NOTIFICATION TYPES
-     */
+
     [Description("OTP created")]
     VerificationCode,
 
-    /**
-     * SYSTEM NOTIFICATION TYPES
-     */
-    // Account
     [Description("[System] New staff account created")]
     SystemStaffCreated,
 
-    // Locker
-    [Description("[System] Locker connected to the system")]
-    SystemLockerConnected,
+    //[Description("[System] Locker connected to the system")]
+    //SystemLockerConnected,
 
-    [Description("[System] Locker disconnected to the system")]
-    SystemLockerDisconnected,
+    //[Description("[System] Locker disconnected to the system")]
+    //SystemLockerDisconnected,
 
-    [Description("[System] Locker is going to be overloaded")]
-    SystemLockerBoxWarning,
+    //[Description("[System] Locker is going to be overloaded")]
+    //SystemLockerBoxWarning,
 
-    [Description("[System] Locker is overloaded")]
-    SystemLockerBoxOverloaded,
+    //[Description("[System] Locker is overloaded")]
+    //SystemLockerBoxOverloaded,
 
-    // Delivery
-    [Description("[System] New order created")]
-    SystemOrderCreated,
+    //[Description("[System] New order created")]
+    //SystemOrderCreated,
 
-    [Description("[System] Delivery is overtime")]
-    SystemOrderOverTime,
+    //[Description("[System] Delivery is overtime")]
+    //SystemOrderOverTime,
 
-    /**
-     * CUSTOMER NOTIFICATION TYPES
-     */
+    [Description("[Customer] You has a new package")]
+    CustomerPackageCreatedReceiverSms,
 
-    // Delivery
-    [Description("[Customer] You has a new order created")]
-    CustomerOrderCreated,
+    [Description("[Customer] You has a new a package")]
+    CustomerPackageCreatedReceiverApp,
 
-    [Description("[Customer] Your order is returned to the locker")]
-    CustomerOrderReturned,
+    [Description("[Customer] You have sent a package")]
+    CustomerPackageCreatedSenderSms,
 
-    [Description("[Customer] Your order is canceled")]
-    CustomerOrderCanceled,
+    [Description("[Customer] You have sent a package")]
+    CustomerPackageCreatedSenderApp,
 
-    [Description("[Customer] Your order is completed")]
-    CustomerOrderCompleted,
+    //[Description("[Customer] Your package is returned to the sender")]
+    //CustomerPackageReturned,
 
-    [Description("[Customer] Your Delivery is overtime")]
-    CustomerOrderOverTime,
+    //[Description("[Customer] Your package is canceled")]
+    //CustomerPackageCanceled,
 
+    //[Description("[Customer] Your package is completed")]
+    //CustomerPackageCompleted,
 }
 
