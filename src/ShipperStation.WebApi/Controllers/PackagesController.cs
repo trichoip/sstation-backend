@@ -31,7 +31,7 @@ public class PackagesController(ISender sender) : ControllerBase
 
     [HttpPost]
     [Authorize(Roles = Policies.StationManager_Or_Staff)]
-    public async Task<ActionResult<MessageResponse>> CreatePackage(
+    public async Task<ActionResult<PackageResponse>> CreatePackage(
         CreatePackageCommand command,
         CancellationToken cancellationToken)
     {

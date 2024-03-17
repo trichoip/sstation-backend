@@ -1,9 +1,8 @@
 ﻿using MediatR;
 using ShipperStation.Application.Features.PackageFeature.Models;
-using ShipperStation.Application.Models;
 
 namespace ShipperStation.Application.Features.PackageFeature.Commands;
-public sealed record CreatePackageCommand : IRequest<MessageResponse>
+public sealed record CreatePackageCommand : IRequest<PackageResponse>
 {
     public string? Name { get; set; }
     public string? Description { get; set; }

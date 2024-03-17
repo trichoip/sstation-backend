@@ -1,4 +1,6 @@
-﻿using ShipperStation.Domain.Common;
+﻿using EntityFrameworkCore.Projectables;
+using ShipperStation.Domain.Common;
+using ShipperStation.Domain.Enums;
 
 namespace ShipperStation.Domain.Entities;
 public class Slot : BaseEntity<int>
@@ -11,7 +13,9 @@ public class Slot : BaseEntity<int>
     public double Height { get; set; }
     public double Length { get; set; }
     public double Volume { get; set; }
-    public int NumberOfPackages { get; set; }
+
+    [Projectable]
+    public int NumberOfPackages => Packages.Where(_ => _.Status != PackageStatus.Completed).Count();
 
     public int RackId { get; set; }
     public virtual Rack Rack { get; set; } = default!;

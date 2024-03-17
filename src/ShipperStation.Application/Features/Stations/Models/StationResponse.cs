@@ -1,4 +1,5 @@
-﻿using ShipperStation.Application.Features.Users.Models;
+﻿using ShipperStation.Application.Features.Pricings.Models;
+using ShipperStation.Application.Features.Users.Models;
 using ShipperStation.Application.Models;
 
 namespace ShipperStation.Application.Features.Stations.Models;
@@ -12,6 +13,6 @@ public sealed record StationResponse : BaseAuditableEntityResponse<int>
     public string? Longitude { get; set; }
     // TODO: them fiel rack,slot,..
     public ICollection<StationImageResponse> StationImages { get; set; } = new HashSet<StationImageResponse>();
-    public ICollection<StationPricingResponse> StationPricings { get; set; } = new HashSet<StationPricingResponse>();
+    public ICollection<PricingResponse> Pricings { get; set; } = new HashSet<PricingResponse>();
     public ICollection<UserResponse> Users { get; set; } = new HashSet<UserResponse>();
 }

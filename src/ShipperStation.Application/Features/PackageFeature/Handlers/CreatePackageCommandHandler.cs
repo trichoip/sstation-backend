@@ -1,11 +1,10 @@
 ﻿using Mapster;
 using MediatR;
 using ShipperStation.Application.Common.Exceptions;
-using ShipperStation.Application.Common.Resources;
 using ShipperStation.Application.Contracts.Repositories;
 using ShipperStation.Application.Contracts.Services;
 using ShipperStation.Application.Features.PackageFeature.Commands;
-using ShipperStation.Application.Models;
+using ShipperStation.Application.Features.PackageFeature.Models;
 using ShipperStation.Domain.Entities;
 using ShipperStation.Domain.Entities.Identities;
 using ShipperStation.Domain.Enums;
@@ -13,13 +12,14 @@ using ShipperStation.Domain.Enums;
 namespace ShipperStation.Application.Features.PackageFeature.Handlers;
 internal sealed class CreatePackageCommandHandler(
     IUnitOfWork unitOfWork,
-    ICurrentUserService currentUserService) : IRequestHandler<CreatePackageCommand, MessageResponse>
+    ICurrentUserService currentUserService,
+    IPublisher publisher) : IRequestHandler<CreatePackageCommand, PackageResponse>
 {
     private readonly IGenericRepository<Package> _packageRepository = unitOfWork.Repository<Package>();
     private readonly IGenericRepository<User> _userRepository = unitOfWork.Repository<User>();
     private readonly IGenericRepository<UserStation> _userStationRepository = unitOfWork.Repository<UserStation>();
     private readonly IGenericRepository<Slot> _slotRepository = unitOfWork.Repository<Slot>();
-    public async Task<MessageResponse> Handle(CreatePackageCommand request, CancellationToken cancellationToken)
+    public async Task<PackageResponse> Handle(CreatePackageCommand request, CancellationToken cancellationToken)
     {
         var userId = await currentUserService.FindCurrentUserIdAsync();
 
@@ -54,8 +54,17 @@ internal sealed class CreatePackageCommandHandler(
         package.Status = PackageStatus.Initialized;
         package.SlotId = slot.Id;
 
+        package.PackageStatusHistories.Add(new PackageStatusHistory
+        {
+            PackageId = package.Id,
+            Status = package.Status,
+        });
+
         await _packageRepository.CreateAsync(package, cancellationToken);
         await unitOfWork.CommitAsync(cancellationToken);
-        return new MessageResponse(Resource.CreatedSuccess);
+
+        return await _packageRepository
+            .FindByAsync<PackageResponse>(_ =>
+                _.Id == package.Id, cancellationToken) ?? throw new NotFoundException(nameof(Package), package.Id);
     }
 }

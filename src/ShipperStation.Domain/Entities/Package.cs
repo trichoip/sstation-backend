@@ -33,6 +33,24 @@ public class Package : BaseAuditableEntity<Guid>
     [Projectable]// không cần NotMapped (test chỉ cần migration mà không có thêm field của Station là oke, còn nếu ra field thì NotMapped)
     public Station Station => Slot.Rack.Shelf.Zone.Station;
 
+    public int? TotalDays => (int?)(DateTimeOffset.UtcNow - CreatedAt)?.TotalDays;
+
+    [Projectable]
+    [NotMapped]
+    public IEnumerable<Pricing> Pricings => Station.Pricings;
+
+    [Projectable]
+    public string Location => $"{Slot.Rack.Shelf.Name} - {Slot.Rack.Name} - {Slot.Name}";
+
+    [Projectable]
+    public Zone Zone => Slot.Rack.Shelf.Zone;
+
+    [Projectable]
+    public Rack Rack => Slot.Rack;
+
+    [Projectable]
+    public Shelf Shelf => Slot.Rack.Shelf;
+
     public virtual ICollection<PackageImage> PackageImages { get; set; } = new HashSet<PackageImage>();
 
     public virtual ICollection<PackageStatusHistory> PackageStatusHistories { get; set; } = new HashSet<PackageStatusHistory>();

@@ -6,30 +6,15 @@ public enum PackageStatus
     [Description("Mới khởi tạo")]
     Initialized,
 
-    [Description("Đang chờ")]
-    Waiting,
-
-    [Description("Đã đưa về cửa hàng")]
-    Collected,
-
-    [Description("Đang xử lý")]
-    Processing,
-
-    [Description("Đã xử lý")]
-    Processed,
-
-    [Description("Đã giao")]
+    [Description("Đã trả hàng")]
     Returned,
 
     [Description("Đã thanh toán")]
+    Paid,
+
+    [Description("Đã nhận")]
     Completed,
 
     [Description("Đã hủy")]
     Canceled,
-
-    [Description("Đã đặt chỗ")]
-    Reserved,
-
-    [Description("Quá hạn")]
-    Overtime
 }
