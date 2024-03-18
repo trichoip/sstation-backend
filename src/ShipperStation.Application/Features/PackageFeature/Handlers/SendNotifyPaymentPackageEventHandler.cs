@@ -5,18 +5,15 @@ using ShipperStation.Application.Models.Notifications;
 using ShipperStation.Domain.Enums;
 
 namespace ShipperStation.Application.Features.PackageFeature.Handlers;
-internal sealed class SendNotifyCreatePackageEventHandler(INotifier notifier) : INotificationHandler<SendNotifyCreatePackageEvent>
+internal sealed class SendNotifyPaymentPackageEventHandler(INotifier notifier) : INotificationHandler<SendNotifyPaymentPackageEvent>
 {
-    public async Task Handle(SendNotifyCreatePackageEvent notification, CancellationToken cancellationToken)
+    public async Task Handle(SendNotifyPaymentPackageEvent notification, CancellationToken cancellationToken)
     {
         var notificationMessage = new NotificationRequest
         {
-            Type = NotificationType.CustomerPackageCreated,
-            UserId = notification.ReceiverId,
+            Type = NotificationType.CustomerPaymentPackage,
+            UserId = notification.UserId,
         };
-        await notifier.NotifyAsync(notificationMessage, true, cancellationToken);
-
-        notificationMessage.UserId = notification.SenderId;
         await notifier.NotifyAsync(notificationMessage, true, cancellationToken);
     }
 }

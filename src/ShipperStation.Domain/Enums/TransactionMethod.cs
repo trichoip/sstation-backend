@@ -3,5 +3,6 @@ public enum TransactionMethod
 {
     VnPay,
     Momo,
-    Cash
+    Cash,
+    Wallet
 }

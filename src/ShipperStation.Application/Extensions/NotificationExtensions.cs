@@ -20,27 +20,15 @@ public static class NotificationExtensions
                 notification.Level = NotificationLevel.Information;
                 break;
 
-            case NotificationType.CustomerPackageCreatedReceiverApp:
-                notification.Title = NotificationType.CustomerPackageCreatedReceiverSms.GetDescription();
+            case NotificationType.CustomerPackageCreated:
+                notification.Title = NotificationType.CustomerPackageCreated.GetDescription();
                 notification.Content = "You have a new package";
                 notification.Level = NotificationLevel.Information;
                 break;
 
-            case NotificationType.CustomerPackageCreatedReceiverSms:
-                notification.Title = NotificationType.CustomerPackageCreatedReceiverSms.GetDescription();
-                notification.Content = "You have a new package, please go to the app to see it";
-                notification.Level = NotificationLevel.Information;
-                break;
-
-            case NotificationType.CustomerPackageCreatedSenderApp:
-                notification.Title = NotificationType.CustomerPackageCreatedSenderApp.GetDescription();
-                notification.Content = "You have sent a package";
-                notification.Level = NotificationLevel.Information;
-                break;
-
-            case NotificationType.CustomerPackageCreatedSenderSms:
-                notification.Title = NotificationType.CustomerPackageCreatedSenderSms.GetDescription();
-                notification.Content = "You have sent a package, please go to the app to see it";
+            case NotificationType.CustomerPaymentPackage:
+                notification.Title = NotificationType.CustomerPaymentPackage.GetDescription();
+                notification.Content = "The package you sent has been paid";
                 notification.Level = NotificationLevel.Information;
                 break;
 

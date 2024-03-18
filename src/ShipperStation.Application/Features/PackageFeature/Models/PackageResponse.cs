@@ -52,7 +52,7 @@ public sealed record PackageResponse : BaseAuditableEntityResponse<Guid>
     public string FormatTotalPrice => TotalPrice.FormatMoney();
     public string FormatPriceService => PriceService.FormatMoney();
 
-    public PricingResponse? Pricing => Pricings.Where(_ => _.ToDate >= TotalDays && _.FromDate <= TotalDays).FirstOrDefault();
+    public PricingResponse? Pricing => Pricings.Where(_ => _.FromDate <= TotalDays && _.ToDate >= TotalDays).FirstOrDefault();
 
     [JsonIgnore]
     public ICollection<PricingResponse> Pricings { get; set; } = new HashSet<PricingResponse>();

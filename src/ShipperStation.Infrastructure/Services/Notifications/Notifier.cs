@@ -39,25 +39,16 @@ public class Notifier : INotifier
             signalRNotificationService,
         });
 
-        _provider.Attach(NotificationType.CustomerPackageCreatedReceiverApp, new List<INotificationService>()
+        _provider.Attach(NotificationType.CustomerPackageCreated, new List<INotificationService>()
         {
             firebaseNotificationService,
         });
 
-        _provider.Attach(NotificationType.CustomerPackageCreatedReceiverSms, new List<INotificationService>()
-        {
-            smsNotificationService,
-        });
-
-        _provider.Attach(NotificationType.CustomerPackageCreatedSenderApp, new List<INotificationService>()
+        _provider.Attach(NotificationType.CustomerPaymentPackage, new List<INotificationService>()
         {
             firebaseNotificationService,
         });
 
-        _provider.Attach(NotificationType.CustomerPackageCreatedSenderSms, new List<INotificationService>()
-        {
-            smsNotificationService,
-        });
     }
 
     public async Task NotifyAsync(
