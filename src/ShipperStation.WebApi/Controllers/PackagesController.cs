@@ -39,9 +39,13 @@ public class PackagesController(ISender sender) : ControllerBase
     }
 
     [HttpPost("{id}/payment")]
-    public async Task<ActionResult<MessageResponse>> PaymentPackage(Guid id, CancellationToken cancellationToken)
+    [Authorize]
+    public async Task<ActionResult<MessageResponse>> PaymentPackage(
+        Guid id,
+        PaymentPackageCommand command,
+        CancellationToken cancellationToken)
     {
-        return await sender.Send(new PaymentPackageCommand(id), cancellationToken);
+        return await sender.Send(command with { Id = id }, cancellationToken);
     }
 
     //[HttpPut("{id}")]

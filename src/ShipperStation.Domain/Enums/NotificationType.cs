@@ -29,17 +29,11 @@ public enum NotificationType
     //[Description("[System] Delivery is overtime")]
     //SystemOrderOverTime,
 
-    [Description("[Customer] You has a new package")]
-    CustomerPackageCreatedReceiverSms,
-
     [Description("[Customer] You has a new a package")]
-    CustomerPackageCreatedReceiverApp,
+    CustomerPackageCreated,
 
-    [Description("[Customer] You have sent a package")]
-    CustomerPackageCreatedSenderSms,
-
-    [Description("[Customer] You have sent a package")]
-    CustomerPackageCreatedSenderApp,
+    [Description("[Customer] The package you sent has been paid")]
+    CustomerPaymentPackage,
 
     //[Description("[Customer] Your package is returned to the sender")]
     //CustomerPackageReturned,

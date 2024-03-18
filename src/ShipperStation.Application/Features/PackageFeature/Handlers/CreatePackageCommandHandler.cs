@@ -58,7 +58,6 @@ internal sealed class CreatePackageCommandHandler(
 
         package.PackageStatusHistories.Add(new PackageStatusHistory
         {
-            PackageId = package.Id,
             Status = package.Status,
         });
 
