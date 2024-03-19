@@ -4,12 +4,15 @@ using Microsoft.AspNetCore.Identity;
 using ShipperStation.Application.Common.Exceptions;
 using ShipperStation.Application.Common.Resources;
 using ShipperStation.Application.Features.Managers.Commands;
+using ShipperStation.Application.Features.Wallets.Events;
 using ShipperStation.Application.Models;
 using ShipperStation.Domain.Constants;
 using ShipperStation.Domain.Entities.Identities;
 
 namespace ShipperStation.Application.Features.Managers.Handlers;
-internal sealed class CreateStoreManagerCommandHandler(UserManager<User> userManager) : IRequestHandler<CreateStoreManagerCommand, MessageResponse>
+internal sealed class CreateStoreManagerCommandHandler(
+    UserManager<User> userManager,
+    IPublisher publisher) : IRequestHandler<CreateStoreManagerCommand, MessageResponse>
 {
     public async Task<MessageResponse> Handle(CreateStoreManagerCommand request, CancellationToken cancellationToken)
     {
@@ -28,6 +31,8 @@ internal sealed class CreateStoreManagerCommandHandler(UserManager<User> userMan
         {
             throw new ValidationBadRequestException(result.Errors);
         }
+
+        await publisher.Publish(new InitWalletEvent() with { UserId = user.Id }, cancellationToken);
 
         return new MessageResponse(Resource.StoreManagerCreatedSuccess);
     }

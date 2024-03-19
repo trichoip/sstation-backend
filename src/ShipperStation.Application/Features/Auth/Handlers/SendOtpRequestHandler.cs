@@ -6,6 +6,7 @@ using ShipperStation.Application.Common.Exceptions;
 using ShipperStation.Application.Common.Resources;
 using ShipperStation.Application.Features.Auth.Commands;
 using ShipperStation.Application.Features.Auth.Events;
+using ShipperStation.Application.Features.Wallets.Events;
 using ShipperStation.Application.Models;
 using ShipperStation.Domain.Constants;
 using ShipperStation.Domain.Entities.Identities;
@@ -42,6 +43,8 @@ internal sealed class SendOtpRequestHandler(
             {
                 throw new ValidationBadRequestException(result.Errors);
             }
+
+            await publisher.Publish(new InitWalletEvent() with { UserId = user.Id }, cancellationToken);
         }
 
         if (!await userManager.IsInRoleAsync(user, RoleName.User))

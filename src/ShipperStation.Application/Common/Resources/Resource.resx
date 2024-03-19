@@ -130,7 +130,7 @@
     <value>Deleted successfully</value>
   </data>
   <data name="DepositMessage" xml:space="preserve">
-    <value>Nạp tiền vào tài khoản</value>
+    <value>Deposit money into your account</value>
   </data>
   <data name="DeviceCreatedSuccess" xml:space="preserve">
     <value>Device created successfully</value>
@@ -293,5 +293,11 @@
   </data>
   <data name="ValidationBadRequest" xml:space="preserve">
     <value>Multiple errors occurred. See error details.</value>
+  </data>
+  <data name="WithdrawErrorMessage" xml:space="preserve">
+    <value>The withdrawal amount is greater than the wallet balance. Please re-enter</value>
+  </data>
+  <data name="WithdrawSuccessMessage" xml:space="preserve">
+    <value>Withdraw money to account</value>
   </data>
 </root>
