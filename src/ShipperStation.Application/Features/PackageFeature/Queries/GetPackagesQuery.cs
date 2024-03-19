@@ -16,6 +16,18 @@ public sealed record GetPackagesQuery : PaginationRequest<Package>, IRequest<Pag
     public PackageStatus? Status { get; set; }
     public PackageType? Type { get; set; }
 
+    /// <summary>
+    /// Format for From is "yyyy-MM-dd" or "MM/dd/yyyy"
+    /// </summary>
+    /// <example>2021-02-25</example>
+    public DateTimeOffset? From { get; set; }
+
+    /// <summary>
+    /// Format for To is "yyyy-MM-dd" or "MM/dd/yyyy"
+    /// </summary>
+    /// <example>2029-03-25</example>
+    public DateTimeOffset? To { get; set; }
+
     [BindNever]
     public Guid UserId { get; set; }
 
@@ -23,6 +35,8 @@ public sealed record GetPackagesQuery : PaginationRequest<Package>, IRequest<Pag
     {
         Expression = Expression.And(_ => string.IsNullOrWhiteSpace(Name) || EF.Functions.Like(_.Name, $"%{Name}%"));
         Expression = Expression.And(_ => !Status.HasValue || _.Status == Status);
+        Expression = Expression.And(_ => !From.HasValue || _.CreatedAt >= From);
+        Expression = Expression.And(_ => !To.HasValue || _.CreatedAt <= To);
 
         if (Type == PackageType.Sender)
         {
