@@ -32,6 +32,12 @@ public static class NotificationExtensions
                 notification.Level = NotificationLevel.Information;
                 break;
 
+            case NotificationType.CustomerPackageCanceled:
+                notification.Title = NotificationType.CustomerPackageCanceled.GetDescription();
+                notification.Content = "The package you sent has been canceled";
+                notification.Level = NotificationLevel.Information;
+                break;
+
             default:
                 throw new ApplicationException(Resource.NotificationNotSupported.Format(notification.Type));
         };

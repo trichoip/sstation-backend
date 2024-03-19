@@ -21,6 +21,8 @@ public class Package : BaseAuditableEntity<Guid>
     public double Length { get; set; }
     public double Volume { get; set; }
 
+    public string? Reason { get; set; }
+
     public int SlotId { get; set; }
     public virtual Slot Slot { get; set; } = default!;
 

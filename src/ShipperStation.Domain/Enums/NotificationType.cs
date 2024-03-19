@@ -35,10 +35,10 @@ public enum NotificationType
     [Description("[Customer] The package you sent has been paid")]
     CustomerPaymentPackage,
 
-    //[Description("[Customer] Your package is returned to the sender")]
-    //CustomerPackageReturned,
+    [Description("[Customer] Your have package is canceled")]
+    CustomerPackageCanceled,
 
-    //[Description("[Customer] Your package is canceled")]
+    //[Description("[Customer] Your have package is returned")]
     //CustomerPackageCanceled,
 
     //[Description("[Customer] Your package is completed")]

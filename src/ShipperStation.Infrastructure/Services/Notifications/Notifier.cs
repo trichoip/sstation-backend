@@ -39,15 +39,12 @@ public class Notifier : INotifier
             signalRNotificationService,
         });
 
-        _provider.Attach(NotificationType.CustomerPackageCreated, new List<INotificationService>()
+        _provider.Attach(new List<NotificationType>()
         {
-            firebaseNotificationService,
-        });
-
-        _provider.Attach(NotificationType.CustomerPaymentPackage, new List<INotificationService>()
-        {
-            firebaseNotificationService,
-        });
+            NotificationType.CustomerPackageCanceled,
+            NotificationType.CustomerPaymentPackage,
+            NotificationType.CustomerPackageCreated
+        }, firebaseNotificationService);
 
     }
 

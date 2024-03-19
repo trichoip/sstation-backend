@@ -49,6 +49,16 @@ public class PackagesController(ISender sender) : ControllerBase
         return await sender.Send(command with { Id = id }, cancellationToken);
     }
 
+    [HttpPost("{id}/cancel")]
+    [Authorize]
+    public async Task<ActionResult<MessageResponse>> CancelPackage(
+        Guid id,
+        CancelPackageCommand command,
+        CancellationToken cancellationToken)
+    {
+        return await sender.Send(command with { Id = id }, cancellationToken);
+    }
+
     //[HttpPut("{id}")]
     //public async Task<ActionResult<MessageResponse>> UpdatePackage(int id, UpdatePackageCommand command, CancellationToken cancellationToken)
     //{
