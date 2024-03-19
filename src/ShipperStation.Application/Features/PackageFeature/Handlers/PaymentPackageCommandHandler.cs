@@ -50,7 +50,7 @@ internal sealed class PaymentPackageCommandHandler(
             throw new NotFoundException("Not found pricing to pay");
         }
 
-        var totalPrice = PackageExtensions.CalculateTotalPrice(package.PriceCod, package.Volume, package.TotalDays, pricingStation.Price);
+        var totalPrice = package.PriceCod + PackageExtensions.CalculateServiceFee(package.Volume, package.TotalDays, pricingStation.Price);
 
         if (totalPrice != request.TotalPrice)
         {
@@ -68,8 +68,22 @@ internal sealed class PaymentPackageCommandHandler(
         if (package.IsCod)
         {
             package.Sender.Wallet.Balance += package.PriceCod;
-            var notifyCreatePackageEvent = new SendNotifyPaymentPackageEvent() with { UserId = package.SenderId };
-            BackgroundJob.Enqueue(() => publisher.Publish(notifyCreatePackageEvent, cancellationToken));
+
+            package.Sender.Transactions.Add(new Transaction
+            {
+                Description = "Receive cod for package",
+                Amount = package.PriceCod,
+                Type = TransactionType.Receive,
+                Status = TransactionStatus.Completed,
+                Method = TransactionMethod.Wallet,
+            });
+
+            var notifyPaymentPackageEvent = new SendNotifyPaymentPackageEvent() with
+            {
+                UserId = package.SenderId,
+                PackageId = package.Id
+            };
+            BackgroundJob.Enqueue(() => publisher.Publish(notifyPaymentPackageEvent, cancellationToken));
         }
 
         package.PackageStatusHistories.Add(new PackageStatusHistory

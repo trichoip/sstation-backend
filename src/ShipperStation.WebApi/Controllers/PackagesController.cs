@@ -23,11 +23,12 @@ public class PackagesController(ISender sender) : ControllerBase
         return await sender.Send(query, cancellationToken);
     }
 
-    //[HttpGet("{id}")]
-    //public async Task<ActionResult<PackageResponse>> GetPackageById(int id, CancellationToken cancellationToken)
-    //{
-    //    return await sender.Send(new GetPackageByIdQuery(id), cancellationToken);
-    //}
+    [HttpGet("{id}")]
+    [Authorize]
+    public async Task<ActionResult<PackageResponse>> GetPackageById(Guid id, CancellationToken cancellationToken)
+    {
+        return await sender.Send(new GetPackageByIdQuery(id), cancellationToken);
+    }
 
     [HttpPost]
     [Authorize(Roles = Policies.StationManager_Or_Staff)]

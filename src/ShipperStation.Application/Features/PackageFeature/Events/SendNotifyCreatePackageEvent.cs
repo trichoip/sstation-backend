@@ -5,4 +5,5 @@ internal sealed record SendNotifyCreatePackageEvent : BaseEvent
 {
     public Guid SenderId { get; set; }
     public Guid ReceiverId { get; set; }
+    public Guid PackageId { get; set; }
 }

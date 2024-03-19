@@ -19,8 +19,8 @@ public sealed record GetAllStationsQuery : PaginationRequest<Station>, IRequest<
             Search = Search.Trim();
             Expression = Expression
                 .And(sta => EF.Functions.Like(sta.Name, $"%{Search}%"))
-                .Or(sta => EF.Functions.Like(sta.Description, $"%{Search}%"))
-                .Or(sta => EF.Functions.Like(sta.ContactPhone, $"%{Search}%"))
+                //.Or(sta => EF.Functions.Like(sta.Description, $"%{Search}%"))
+                //.Or(sta => EF.Functions.Like(sta.ContactPhone, $"%{Search}%"))
                 .Or(sta => EF.Functions.Like(sta.Address, $"%{Search}%"));
         }
 
