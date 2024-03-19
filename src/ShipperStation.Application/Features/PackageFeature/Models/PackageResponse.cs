@@ -26,6 +26,8 @@ public sealed record PackageResponse : BaseAuditableEntityResponse<Guid>
     public double Length { get; set; }
     public double Volume { get; set; }
 
+    public string? Reason { get; set; }
+
     public int SlotId { get; set; }
 
     public SlotCreatePackageResponse Slot { get; set; } = default!;
