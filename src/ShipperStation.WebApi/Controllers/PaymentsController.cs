@@ -11,9 +11,21 @@ public class PaymentsController(ISender sender, IHttpContextAccessor _httpContex
 {
     [Authorize]
     [HttpPost("deposit")]
-    public async Task<IActionResult> Deposit(DepositCommand command, string returnUrl, CancellationToken cancellationToken)
+    public async Task<IActionResult> Deposit(
+        DepositCommand command,
+        string returnUrl,
+        CancellationToken cancellationToken)
     {
         return Ok(await sender.Send(command with { returnUrl = returnUrl }, cancellationToken));
+    }
+
+    [Authorize]
+    [HttpPost("withdraw")]
+    public async Task<IActionResult> Withdraw(
+        WithdrawCommand command,
+        CancellationToken cancellationToken)
+    {
+        return Ok(await sender.Send(command, cancellationToken));
     }
 
     [HttpGet("callback/momo")]

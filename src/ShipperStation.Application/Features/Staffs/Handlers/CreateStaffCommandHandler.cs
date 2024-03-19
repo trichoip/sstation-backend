@@ -5,6 +5,7 @@ using ShipperStation.Application.Common.Resources;
 using ShipperStation.Application.Contracts.Repositories;
 using ShipperStation.Application.Contracts.Services;
 using ShipperStation.Application.Features.Staffs.Commands;
+using ShipperStation.Application.Features.Wallets.Events;
 using ShipperStation.Application.Models;
 using ShipperStation.Domain.Constants;
 using ShipperStation.Domain.Entities;
@@ -14,7 +15,8 @@ namespace ShipperStation.Application.Features.Staffs.Handlers;
 internal sealed class CreateStaffCommandHandler(
     IUnitOfWork unitOfWork,
     ICurrentUserService currentUserService,
-    UserManager<User> userManager) : IRequestHandler<CreateStaffCommand, MessageResponse>
+    UserManager<User> userManager,
+    IPublisher publisher) : IRequestHandler<CreateStaffCommand, MessageResponse>
 {
     private readonly IGenericRepository<UserStation> _userStationRepository = unitOfWork.Repository<UserStation>();
     private readonly IGenericRepository<Station> _stationRepository = unitOfWork.Repository<Station>();
@@ -60,6 +62,8 @@ internal sealed class CreateStaffCommandHandler(
 
         await _userStationRepository.CreateAsync(stationUser, cancellationToken);
         await unitOfWork.CommitAsync(cancellationToken);
+
+        await publisher.Publish(new InitWalletEvent() with { UserId = staff.Id }, cancellationToken);
 
         return new MessageResponse(Resource.StaffCreatedSuccess);
     }

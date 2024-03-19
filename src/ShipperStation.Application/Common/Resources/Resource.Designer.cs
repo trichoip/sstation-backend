@@ -97,7 +97,7 @@ namespace ShipperStation.Application.Common.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Nạp tiền vào tài khoản.
+        ///   Looks up a localized string similar to Deposit money into your account.
         /// </summary>
         public static string DepositMessage {
             get {
@@ -588,6 +588,24 @@ namespace ShipperStation.Application.Common.Resources {
         public static string ValidationBadRequest {
             get {
                 return ResourceManager.GetString("ValidationBadRequest", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The withdrawal amount is greater than the wallet balance. Please re-enter.
+        /// </summary>
+        public static string WithdrawErrorMessage {
+            get {
+                return ResourceManager.GetString("WithdrawErrorMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Withdraw money to account.
+        /// </summary>
+        public static string WithdrawSuccessMessage {
+            get {
+                return ResourceManager.GetString("WithdrawSuccessMessage", resourceCulture);
             }
         }
     }
