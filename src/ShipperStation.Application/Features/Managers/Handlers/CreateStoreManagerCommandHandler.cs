@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using Mapster;
+using MediatR;
 using Microsoft.AspNetCore.Identity;
 using ShipperStation.Application.Common.Exceptions;
 using ShipperStation.Application.Common.Resources;
@@ -12,12 +13,7 @@ internal sealed class CreateStoreManagerCommandHandler(UserManager<User> userMan
 {
     public async Task<MessageResponse> Handle(CreateStoreManagerCommand request, CancellationToken cancellationToken)
     {
-        var user = new User
-        {
-            UserName = request.UserName,
-            FullName = request.FullName,
-            IsActive = true,
-        };
+        var user = request.Adapt<User>();
 
         var result = await userManager.CreateAsync(user, request.Password);
 

@@ -27,6 +27,16 @@ public class ManagersController(ISender sender) : ControllerBase
     }
 
     [Authorize(Roles = Policies.Admin)]
+    [HttpPut("{id}")]
+    public async Task<ActionResult<MessageResponse>> UpdateStoreManager(
+       Guid id,
+       UpdateStoreManagerCommand request,
+       CancellationToken cancellationToken)
+    {
+        return await sender.Send(request with { Id = id }, cancellationToken);
+    }
+
+    [Authorize(Roles = Policies.Admin)]
     [HttpGet]
     public async Task<ActionResult<PaginatedResponse<UserResponse>>> GetStoreManagers(
         [FromQuery] GetStoreManagersQuery request,
