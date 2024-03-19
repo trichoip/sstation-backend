@@ -33,8 +33,8 @@ public sealed record GetStationsByStoreManagerQuery : PaginationRequest<Station>
                 // ví dụ: PredicateBuilder.New<Station>(false) thì cái đầu tiên là Or
                 // còn PredicateBuilder.New<Station>(true) thì cái đầu tiên là And
                 .And(sta => EF.Functions.Like(sta.Name, $"%{Search}%"))
-                .Or(sta => EF.Functions.Like(sta.Description, $"%{Search}%"))
-                .Or(sta => EF.Functions.Like(sta.ContactPhone, $"%{Search}%"))
+                //.Or(sta => EF.Functions.Like(sta.Description, $"%{Search}%"))
+                //.Or(sta => EF.Functions.Like(sta.ContactPhone, $"%{Search}%"))
                 .Or(sta => EF.Functions.Like(sta.Address, $"%{Search}%"));
         }
 

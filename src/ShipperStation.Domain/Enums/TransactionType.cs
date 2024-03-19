@@ -3,5 +3,6 @@ public enum TransactionType
 {
     Deposit,
     Withdraw,
-    Pay
+    Pay,
+    Receive
 }

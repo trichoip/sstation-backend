@@ -7,6 +7,7 @@ using ShipperStation.Application.Models.Notifications;
 using ShipperStation.Domain.Entities;
 using ShipperStation.Infrastructure.Settings;
 using ShipperStation.Shared.Extensions;
+using System.Text.Json;
 
 namespace ShipperStation.Infrastructure.Services.Notifications;
 
@@ -44,11 +45,11 @@ public class FirebaseNotificationService : IFirebaseNotificationService
                 Body = notification.Content
             }
         };
-
+        _logger.LogInformation($"[MOBILE NOTIFICATION] Data: {JsonSerializer.Serialize(messages.Data)}");
         try
         {
             var response = await FirebaseMessaging.DefaultInstance.SendMulticastAsync(messages, cancellationToken);
-            _logger.LogInformation($"[MOBILE NOTIFICATION] Success push notification: {response}");
+            _logger.LogInformation($"[MOBILE NOTIFICATION] Success push notification: {JsonSerializer.Serialize(response)}");
         }
         catch (Exception ex)
         {

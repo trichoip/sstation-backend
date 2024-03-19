@@ -12,9 +12,11 @@ public class TransactionsController(ISender sender) : ControllerBase
 {
 
     [HttpGet]
-    public async Task<IActionResult> GetTransactions(CancellationToken cancellationToken)
+    public async Task<IActionResult> GetTransactions(
+        [FromQuery] GetTransactionsQuery query,
+        CancellationToken cancellationToken)
     {
-        return Ok(await sender.Send(new GetTransactionsQuery(), cancellationToken));
+        return Ok(await sender.Send(query, cancellationToken));
     }
 
     [HttpGet("{id}")]

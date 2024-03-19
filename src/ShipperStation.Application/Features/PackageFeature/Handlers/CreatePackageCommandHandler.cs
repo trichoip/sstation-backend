@@ -64,7 +64,12 @@ internal sealed class CreatePackageCommandHandler(
         await _packageRepository.CreateAsync(package, cancellationToken);
         await unitOfWork.CommitAsync(cancellationToken);
 
-        var notify = new SendNotifyCreatePackageEvent() with { SenderId = request.SenderId, ReceiverId = request.ReceiverId };
+        var notify = new SendNotifyCreatePackageEvent() with
+        {
+            SenderId = package.SenderId,
+            ReceiverId = package.ReceiverId,
+            PackageId = package.Id,
+        };
         BackgroundJob.Enqueue(() => publisher.Publish(notify, cancellationToken));
 
         return await _packageRepository
