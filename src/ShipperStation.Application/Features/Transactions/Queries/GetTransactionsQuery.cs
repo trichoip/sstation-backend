@@ -32,7 +32,7 @@ public sealed record GetTransactionsQuery : PaginationRequest<Transaction>, IReq
     {
         Expression = Expression.And(_ => _.UserId == UserId);
         Expression = Expression.And(_ => !From.HasValue || _.CreatedAt >= From);
-        Expression = Expression.And(_ => !To.HasValue || _.CreatedAt <= To);
+        Expression = Expression.And(_ => !To.HasValue || _.CreatedAt <= To.Value.AddDays(1));
         Expression = Expression.And(_ => !Type.HasValue || _.Type == Type);
         return Expression;
     }
