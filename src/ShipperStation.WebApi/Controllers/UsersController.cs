@@ -51,7 +51,7 @@ public class UsersController(ISender sender) : ControllerBase
     [HttpGet("packages")]
     [Authorize]
     public async Task<ActionResult<PaginatedResponse<PackageResponse>>> GetPackages(
-       [FromQuery] GetPackagesQuery query,
+       [FromQuery] GetPackagesForUserQuery query,
        CancellationToken cancellationToken)
     {
         return await sender.Send(query, cancellationToken);
@@ -61,7 +61,7 @@ public class UsersController(ISender sender) : ControllerBase
     [Authorize]
     public async Task<ActionResult<PackageResponse>> GetPackageById(Guid id, CancellationToken cancellationToken)
     {
-        return await sender.Send(new GetPackageByIdQuery(id), cancellationToken);
+        return await sender.Send(new GetPackageByIdForUserQuery(id), cancellationToken);
     }
 
     [HttpPost("packages/{id}/payment")]
