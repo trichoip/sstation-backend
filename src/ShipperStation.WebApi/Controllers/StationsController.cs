@@ -89,7 +89,7 @@ public class StationsController(ISender sender) : ControllerBase
 
     #region Zones
 
-    [Authorize(Roles = Policies.StationManager)]
+    [Authorize(Roles = Policies.StationManager_Or_Staff)]
     [HttpGet("{stationId}/zones")]
     public async Task<IActionResult> GetZones(
         int stationId,
@@ -99,7 +99,7 @@ public class StationsController(ISender sender) : ControllerBase
         return Ok(await sender.Send(query with { StationId = stationId }, cancellationToken));
     }
 
-    [Authorize(Roles = Policies.StationManager)]
+    [Authorize(Roles = Policies.StationManager_Or_Staff)]
     [HttpGet("{stationId}/zones/{zoneId}")]
     public async Task<ActionResult<ZoneResponse>> GetZoneById(
         int stationId,
@@ -144,7 +144,7 @@ public class StationsController(ISender sender) : ControllerBase
 
     #region Pricing
 
-    [Authorize(Roles = Policies.StationManager)]
+    [Authorize(Roles = Policies.StationManager_Or_Staff)]
     [HttpGet("{stationId}/pricings")]
     public async Task<IActionResult> GetPricings(
         int stationId,
@@ -153,7 +153,7 @@ public class StationsController(ISender sender) : ControllerBase
         return Ok(await sender.Send(new GetPricingsQuery() with { StationId = stationId }, cancellationToken));
     }
 
-    [Authorize(Roles = Policies.StationManager)]
+    [Authorize(Roles = Policies.StationManager_Or_Staff)]
     [HttpGet("{stationId}/pricings/{pricingId}")]
     public async Task<ActionResult<PricingResponse>> GetPricingById(
         int stationId,
