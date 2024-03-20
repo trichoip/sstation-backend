@@ -4,9 +4,6 @@ using Microsoft.AspNetCore.Mvc;
 using ShipperStation.Application.Common.Constants;
 using ShipperStation.Application.Features.PackageFeature.Commands;
 using ShipperStation.Application.Features.PackageFeature.Models;
-using ShipperStation.Application.Features.PackageFeature.Queries;
-using ShipperStation.Application.Models;
-using ShipperStation.Shared.Pages;
 
 namespace ShipperStation.WebApi.Controllers;
 
@@ -14,21 +11,6 @@ namespace ShipperStation.WebApi.Controllers;
 [ApiController]
 public class PackagesController(ISender sender) : ControllerBase
 {
-    [HttpGet]
-    [Authorize]
-    public async Task<ActionResult<PaginatedResponse<PackageResponse>>> GetPackages(
-        [FromQuery] GetPackagesQuery query,
-        CancellationToken cancellationToken)
-    {
-        return await sender.Send(query, cancellationToken);
-    }
-
-    [HttpGet("{id}")]
-    [Authorize]
-    public async Task<ActionResult<PackageResponse>> GetPackageById(Guid id, CancellationToken cancellationToken)
-    {
-        return await sender.Send(new GetPackageByIdQuery(id), cancellationToken);
-    }
 
     [HttpPost]
     [Authorize(Roles = Policies.StationManager_Or_Staff)]
@@ -39,25 +21,25 @@ public class PackagesController(ISender sender) : ControllerBase
         return await sender.Send(command, cancellationToken);
     }
 
-    [HttpPost("{id}/payment")]
-    [Authorize]
-    public async Task<ActionResult<MessageResponse>> PaymentPackage(
-        Guid id,
-        PaymentPackageCommand command,
-        CancellationToken cancellationToken)
-    {
-        return await sender.Send(command with { Id = id }, cancellationToken);
-    }
+    //[HttpPost("{id}/return")]
+    //[Authorize]
+    //public async Task<ActionResult<MessageResponse>> ReturnPackage(
+    //    Guid id,
+    //    ReturnPackageCommand command,
+    //    CancellationToken cancellationToken)
+    //{
+    //    return await sender.Send(command with { Id = id }, cancellationToken);
+    //}
 
-    [HttpPost("{id}/cancel")]
-    [Authorize]
-    public async Task<ActionResult<MessageResponse>> CancelPackage(
-        Guid id,
-        CancelPackageCommand command,
-        CancellationToken cancellationToken)
-    {
-        return await sender.Send(command with { Id = id }, cancellationToken);
-    }
+    //[HttpPost("{id}/confirm")]
+    //[Authorize]
+    //public async Task<ActionResult<MessageResponse>> ConfirmPackage(
+    //    Guid id,
+    //    ConfirmPackageCommand command,
+    //    CancellationToken cancellationToken)
+    //{
+    //    return await sender.Send(command with { Id = id }, cancellationToken);
+    //}
 
     //[HttpPut("{id}")]
     //public async Task<ActionResult<MessageResponse>> UpdatePackage(int id, UpdatePackageCommand command, CancellationToken cancellationToken)

@@ -1,7 +1,9 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using ShipperStation.Application.Common.Constants;
+using ShipperStation.Application.Features.PackageFeature.Commands;
+using ShipperStation.Application.Features.PackageFeature.Models;
+using ShipperStation.Application.Features.PackageFeature.Queries;
 using ShipperStation.Application.Features.Users.Commands;
 using ShipperStation.Application.Features.Users.Models;
 using ShipperStation.Application.Features.Users.Queries;
@@ -46,24 +48,40 @@ public class UsersController(ISender sender) : ControllerBase
         return await sender.Send(request, cancellationToken);
     }
 
-    [Authorize(Roles = Policies.StationManager_Or_Staff)]
-    [HttpGet]
-    public async Task<ActionResult<PaginatedResponse<UserResponse>>> GetUsers([FromQuery] GetUsersQuery query, CancellationToken cancellationToken)
+    [HttpGet("packages")]
+    [Authorize]
+    public async Task<ActionResult<PaginatedResponse<PackageResponse>>> GetPackages(
+       [FromQuery] GetPackagesQuery query,
+       CancellationToken cancellationToken)
     {
         return await sender.Send(query, cancellationToken);
     }
 
-    [Authorize(Roles = Policies.StationManager_Or_Staff)]
-    [HttpGet("phone/{number}")]
-    public async Task<ActionResult<UserResponse>> GetUserByPhone(string number, CancellationToken cancellationToken)
+    [HttpGet("packages/{id}")]
+    [Authorize]
+    public async Task<ActionResult<PackageResponse>> GetPackageById(Guid id, CancellationToken cancellationToken)
     {
-        return await sender.Send(new GetUserByPhoneQuery(number), cancellationToken);
+        return await sender.Send(new GetPackageByIdQuery(id), cancellationToken);
     }
 
-    [Authorize(Roles = Policies.StationManager_Or_Staff)]
-    [HttpPost]
-    public async Task<ActionResult<MessageResponse>> CreateUser(CreateUserCommand command, CancellationToken cancellationToken)
+    [HttpPost("packages/{id}/payment")]
+    [Authorize]
+    public async Task<ActionResult<MessageResponse>> PaymentPackage(
+       Guid id,
+       PaymentPackageCommand command,
+       CancellationToken cancellationToken)
     {
-        return await sender.Send(command, cancellationToken);
+        return await sender.Send(command with { Id = id }, cancellationToken);
     }
+
+    [HttpPost("packages/{id}/cancel")]
+    [Authorize]
+    public async Task<ActionResult<MessageResponse>> CancelPackage(
+        Guid id,
+        CancelPackageCommand command,
+        CancellationToken cancellationToken)
+    {
+        return await sender.Send(command with { Id = id }, cancellationToken);
+    }
+
 }
