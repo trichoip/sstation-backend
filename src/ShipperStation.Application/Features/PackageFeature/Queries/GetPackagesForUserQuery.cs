@@ -19,13 +19,13 @@ public sealed record GetPackagesForUserQuery : PaginationRequest<Package>, IRequ
     /// <summary>
     /// Format for From is "yyyy-MM-dd" or "MM/dd/yyyy"
     /// </summary>
-    /// <example>2021-02-25</example>
+    /// <example>2021-02-25T00:00:00.000000+00:00</example>
     public DateTimeOffset? From { get; set; }
 
     /// <summary>
     /// Format for To is "yyyy-MM-dd" or "MM/dd/yyyy"
     /// </summary>
-    /// <example>2029-03-25</example>
+    /// <example>2029-03-25T00:00:00.000000+00:00</example>
     public DateTimeOffset? To { get; set; }
 
     [BindNever]
