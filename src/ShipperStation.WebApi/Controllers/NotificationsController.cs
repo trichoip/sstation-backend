@@ -38,6 +38,13 @@ public class NotificationsController(ISender sender) : ControllerBase
         return await sender.Send(command with { Id = id }, cancellationToken);
     }
 
+    [HttpPatch("readAll")]
+    public async Task<ActionResult<MessageResponse>> ReadAllNotification(
+        CancellationToken cancellationToken)
+    {
+        return await sender.Send(new ReadAllNotificationCommand(), cancellationToken);
+    }
+
     [HttpDelete("{id}")]
     public async Task<ActionResult<MessageResponse>> DeleteNotification(int id, CancellationToken cancellationToken)
     {
