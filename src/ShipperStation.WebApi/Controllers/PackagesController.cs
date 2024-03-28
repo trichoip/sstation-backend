@@ -5,6 +5,7 @@ using ShipperStation.Application.Common.Constants;
 using ShipperStation.Application.Features.PackageFeature.Commands;
 using ShipperStation.Application.Features.PackageFeature.Models;
 using ShipperStation.Application.Features.PackageFeature.Queries;
+using ShipperStation.Application.Models;
 using ShipperStation.Shared.Pages;
 
 namespace ShipperStation.WebApi.Controllers;
@@ -37,25 +38,23 @@ public class PackagesController(ISender sender) : ControllerBase
         return await sender.Send(new GetPackageByIdQuery(id), cancellationToken);
     }
 
-    //[HttpPost("{id}/return")]
-    //[Authorize]
-    //public async Task<ActionResult<MessageResponse>> ReturnPackage(
-    //    Guid id,
-    //    ReturnPackageCommand command,
-    //    CancellationToken cancellationToken)
-    //{
-    //    return await sender.Send(command with { Id = id }, cancellationToken);
-    //}
+    [HttpPost("{id}/return")]
+    public async Task<ActionResult<MessageResponse>> ReturnPackage(
+        Guid id,
+        ReturnPackageCommand command,
+        CancellationToken cancellationToken)
+    {
+        return await sender.Send(command with { Id = id }, cancellationToken);
+    }
 
-    //[HttpPost("{id}/confirm")]
-    //[Authorize]
-    //public async Task<ActionResult<MessageResponse>> ConfirmPackage(
-    //    Guid id,
-    //    ConfirmPackageCommand command,
-    //    CancellationToken cancellationToken)
-    //{
-    //    return await sender.Send(command with { Id = id }, cancellationToken);
-    //}
+    [HttpPost("{id}/confirm")]
+    public async Task<ActionResult<MessageResponse>> ConfirmPackage(
+        Guid id,
+        ConfirmPackageCommand command,
+        CancellationToken cancellationToken)
+    {
+        return await sender.Send(command with { Id = id }, cancellationToken);
+    }
 
     //[HttpPut("{id}")]
     //public async Task<ActionResult<MessageResponse>> UpdatePackage(int id, UpdatePackageCommand command, CancellationToken cancellationToken)

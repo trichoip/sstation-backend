@@ -51,4 +51,12 @@ public class NotificationsController(ISender sender) : ControllerBase
         return await sender.Send(new DeleteNotificationCommand(id), cancellationToken);
     }
 
+    [HttpDelete]
+    public async Task<ActionResult<MessageResponse>> DeleteListNotification(
+        DeleteListNotificationCommand command,
+        CancellationToken cancellationToken)
+    {
+        return await sender.Send(command, cancellationToken);
+    }
+
 }

@@ -28,6 +28,8 @@ public sealed record PackageResponse : BaseAuditableEntityResponse<Guid>
 
     public string? Reason { get; set; }
 
+    public DateTimeOffset? ExprireReceiveGoods { get; set; } = DateTimeOffset.Now.AddDays(1);
+
     public int SlotId { get; set; }
 
     public SlotCreatePackageResponse Slot { get; set; } = default!;

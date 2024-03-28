@@ -1,6 +1,4 @@
-﻿using ShipperStation.Application.Features.PackageFeature.Models;
-
-namespace ShipperStation.Application.Features.Slots.Models;
+﻿namespace ShipperStation.Application.Features.Slots.Models;
 public sealed record SlotResponse
 {
     public int Id { get; set; }
@@ -15,5 +13,5 @@ public sealed record SlotResponse
     public int NumberOfPackages { get; set; }
 
     public int RackId { get; set; }
-    public ICollection<PackageResponse> Packages { get; set; } = new HashSet<PackageResponse>();
+    //public ICollection<PackageResponse> Packages { get; set; } = new HashSet<PackageResponse>();
 }
