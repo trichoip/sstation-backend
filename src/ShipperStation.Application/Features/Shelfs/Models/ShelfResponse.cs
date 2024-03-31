@@ -13,6 +13,10 @@ public sealed record ShelfResponse
     public double Length { get; set; }
     public double Volume { get; set; }
 
+    public int Capacity { get; set; }
+
+    public double VolumeUsed { get; set; }
+
     public int ZoneId { get; set; }
     public ZoneResponse Zone { get; set; } = default!;
     public ICollection<RackResponse> Racks { get; set; } = new HashSet<RackResponse>();

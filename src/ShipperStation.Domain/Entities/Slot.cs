@@ -15,7 +15,15 @@ public class Slot : BaseEntity<int>
     public double Volume { get; set; }
 
     [Projectable]
-    public int NumberOfPackages => Packages.Where(_ => _.Status != PackageStatus.Completed).Count();
+    public int NumberOfPackages => Packages.Where(_ =>
+        _.Status != PackageStatus.Returned && _.Status != PackageStatus.Completed).Count();
+
+    [Projectable]
+    public double VolumeUsed => Packages.Where(_ =>
+        _.Status != PackageStatus.Returned && _.Status != PackageStatus.Completed).Sum(_ => _.Volume);
+
+    [Projectable]
+    public int Capacity => (int)(100 - (VolumeUsed / Volume) * 100);
 
     public int RackId { get; set; }
     public virtual Rack Rack { get; set; } = default!;

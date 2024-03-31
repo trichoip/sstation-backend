@@ -100,6 +100,9 @@ internal sealed class PaymentPackageCommandHandler(
             Method = TransactionMethod.Wallet,
         });
 
+        package.ExprireReceiveGoods = DateTimeOffset.UtcNow.AddDays(1);
+        //package.IsCod = false;
+
         await unitOfWork.CommitAsync(cancellationToken);
         return new MessageResponse("Payment Success");
     }

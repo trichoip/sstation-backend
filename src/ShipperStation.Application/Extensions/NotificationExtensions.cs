@@ -38,6 +38,18 @@ public static class NotificationExtensions
                 notification.Level = NotificationLevel.Information;
                 break;
 
+            case NotificationType.CustomerPackageCompleted:
+                notification.Title = NotificationType.CustomerPackageCompleted.GetDescription();
+                notification.Content = "The package has been completed";
+                notification.Level = NotificationLevel.Information;
+                break;
+
+            case NotificationType.CustomerPackageReturned:
+                notification.Title = NotificationType.CustomerPackageReturned.GetDescription();
+                notification.Content = "The package has been returned";
+                notification.Level = NotificationLevel.Information;
+                break;
+
             default:
                 throw new ApplicationException(Resource.NotificationNotSupported.Format(notification.Type));
         };
