@@ -1,9 +1,12 @@
-﻿using MediatR;
+﻿using Hangfire;
+using MediatR;
 using ShipperStation.Application.Common.Exceptions;
 using ShipperStation.Application.Contracts.Repositories;
 using ShipperStation.Application.Features.PackageFeature.Commands;
+using ShipperStation.Application.Features.PackageFeature.Events;
 using ShipperStation.Application.Models;
 using ShipperStation.Domain.Entities;
+using ShipperStation.Domain.Enums;
 
 namespace ShipperStation.Application.Features.PackageFeature.Handlers;
 internal sealed class ReturnPackageCommandHandler(
@@ -21,10 +24,27 @@ internal sealed class ReturnPackageCommandHandler(
             throw new NotFoundException(nameof(Package), request.Id);
         }
 
-        //if (package.Status != PackageStatus.Paid)
-        //{
-        //    throw new BadRequestException("Package is not paid");
-        //}
+        if (package.Status != PackageStatus.Canceled)
+        {
+            throw new BadRequestException("Package is not Canceled");
+        }
+
+        package.Status = PackageStatus.Returned;
+
+        package.PackageStatusHistories.Add(new PackageStatusHistory
+        {
+            Status = package.Status
+        });
+
+        await unitOfWork.CommitAsync(cancellationToken);
+
+        var notifyReturnPackageEvent = new SendNotifyReturnPackageEvent() with
+        {
+            SenderId = package.SenderId,
+            ReceiverId = package.ReceiverId,
+            PackageId = package.Id
+        };
+        BackgroundJob.Enqueue(() => publisher.Publish(notifyReturnPackageEvent, cancellationToken));
 
         return new MessageResponse("return Success");
     }

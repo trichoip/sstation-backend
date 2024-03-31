@@ -12,6 +12,10 @@ public sealed record SlotResponse
     public double Volume { get; set; }
     public int NumberOfPackages { get; set; }
 
+    public int Capacity { get; set; }
+
+    public double VolumeUsed { get; set; }
+
     public int RackId { get; set; }
     //public ICollection<PackageResponse> Packages { get; set; } = new HashSet<PackageResponse>();
 }

@@ -23,6 +23,8 @@ public class Package : BaseAuditableEntity<Guid>
 
     public string? Reason { get; set; }
 
+    public DateTimeOffset? ExprireReceiveGoods { get; set; }
+
     public int SlotId { get; set; }
     public virtual Slot Slot { get; set; } = default!;
 

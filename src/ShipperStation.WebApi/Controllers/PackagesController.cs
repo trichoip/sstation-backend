@@ -41,19 +41,17 @@ public class PackagesController(ISender sender) : ControllerBase
     [HttpPost("{id}/return")]
     public async Task<ActionResult<MessageResponse>> ReturnPackage(
         Guid id,
-        ReturnPackageCommand command,
         CancellationToken cancellationToken)
     {
-        return await sender.Send(command with { Id = id }, cancellationToken);
+        return await sender.Send(new ReturnPackageCommand() with { Id = id }, cancellationToken);
     }
 
     [HttpPost("{id}/confirm")]
     public async Task<ActionResult<MessageResponse>> ConfirmPackage(
         Guid id,
-        ConfirmPackageCommand command,
         CancellationToken cancellationToken)
     {
-        return await sender.Send(command with { Id = id }, cancellationToken);
+        return await sender.Send(new ConfirmPackageCommand() with { Id = id }, cancellationToken);
     }
 
     //[HttpPut("{id}")]

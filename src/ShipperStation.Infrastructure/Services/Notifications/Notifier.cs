@@ -43,7 +43,9 @@ public class Notifier : INotifier
         {
             NotificationType.CustomerPackageCanceled,
             NotificationType.CustomerPaymentPackage,
-            NotificationType.CustomerPackageCreated
+            NotificationType.CustomerPackageCreated,
+            NotificationType.CustomerPackageCompleted,
+            NotificationType.CustomerPackageReturned,
         }, firebaseNotificationService);
 
     }
