@@ -8,16 +8,14 @@ public class Shelf : BaseEntity<int>
     public string? Description { get; set; }
     public int Index { get; set; }
 
-    public double Width { get; set; }
-    public double Height { get; set; }
-    public double Length { get; set; }
-    public double Volume { get; set; }
+    [Projectable]
+    public double Volume => Racks.SelectMany(_ => _.Slots).Sum(_ => _.Volume);
 
     [Projectable]
     public double VolumeUsed => Racks.SelectMany(_ => _.Slots).Sum(_ => _.VolumeUsed);
 
     [Projectable]
-    public int Capacity => (int)(100 - (VolumeUsed / Volume) * 100);
+    public int Capacity => (int)Math.Floor((100 - (VolumeUsed / Volume) * 100));
 
     public int ZoneId { get; set; }
     public virtual Zone Zone { get; set; } = default!;

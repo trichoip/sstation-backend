@@ -1,6 +1,5 @@
 ﻿using MediatR;
 using ShipperStation.Application.Common.Exceptions;
-using ShipperStation.Application.Common.Resources;
 using ShipperStation.Application.Contracts.Repositories;
 using ShipperStation.Application.Features.Payments.Commands;
 using ShipperStation.Application.Features.Wallets.Events;
@@ -26,10 +25,10 @@ internal sealed class MomoPaymentCallbackCommandHandler(
             throw new NotFoundException(nameof(Transaction), transId);
         }
 
-        if (transaction.Status != TransactionStatus.Processing)
-        {
-            throw new BadRequestException(Resource.PaymentAlreadySuccess);
-        }
+        //if (transaction.Status != TransactionStatus.Processing)
+        //{
+        //    throw new BadRequestException(Resource.PaymentAlreadySuccess);
+        //}
 
         if (request.IsSuccess)
         {

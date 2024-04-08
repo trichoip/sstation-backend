@@ -6,6 +6,7 @@ using ShipperStation.Application.Features.Shelfs.Commands;
 using ShipperStation.Application.Features.Shelfs.Models;
 using ShipperStation.Application.Features.Shelfs.Queries;
 using ShipperStation.Application.Models;
+using ShipperStation.Shared.Pages;
 
 namespace ShipperStation.WebApi.Controllers;
 
@@ -16,9 +17,12 @@ public class ShelfsController(ISender sender) : ControllerBase
 {
     [Authorize(Roles = Policies.StationManager_Or_Staff)]
     [HttpGet]
-    public async Task<IActionResult> GetShelfs(int zoneId, CancellationToken cancellationToken)
+    public async Task<ActionResult<PaginatedResponse<ShelfResponse>>> GetShelfs(
+        [FromQuery] GetShelfsQuery query,
+        int zoneId,
+        CancellationToken cancellationToken)
     {
-        return Ok(await sender.Send(new GetShelfsQuery() with { ZoneId = zoneId }, cancellationToken));
+        return await sender.Send(query with { ZoneId = zoneId }, cancellationToken);
     }
 
     [Authorize(Roles = Policies.StationManager_Or_Staff)]

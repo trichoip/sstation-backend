@@ -41,15 +41,21 @@ internal sealed class CreatePackageCommandHandler(
         }
 
         var slot = await _slotRepository
-            .FindByAsync(_ =>
+            .FindOrderByAsync(_ =>
                 request.Volume <= _.Volume &&
                 _.Rack.Shelf.Zone.StationId == request.StationId &&
-                request.Volume <= (_.Volume - _.Packages.Where(_ => _.Status != PackageStatus.Completed).Sum(_ => _.Volume)),
+                request.Volume <= (_.Volume - _.Packages.Where(_ => _.Status != PackageStatus.Completed && _.Status != PackageStatus.Returned).Sum(_ => _.Volume)) &&
+                _.Rack.Shelf.ZoneId == request.ZoneId &&
+                (!request.ShelfId.HasValue || _.Rack.Shelf.Id == request.ShelfId) &&
+                (!request.RackId.HasValue || _.Rack.Id == request.RackId) &&
+                (!request.SlotId.HasValue || _.Id == request.SlotId) &&
+                _.IsActive == true,
+            orderBy: _ => _.OrderBy(_ => _.Rack.Shelf.Index).ThenBy(_ => _.Rack.Index).ThenBy(_ => _.Index),
             cancellationToken: cancellationToken);
 
         if (slot == null)
         {
-            throw new NotFoundException(nameof(Slot), "");
+            throw new NotFoundException(nameof(Slot), "slot are full");
         }
 
         var package = request.Adapt<Package>();

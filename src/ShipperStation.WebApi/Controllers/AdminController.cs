@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ShipperStation.Application.Common.Constants;
+using ShipperStation.Application.Features.Dashboards.Queries;
 using ShipperStation.Application.Features.Stations.Commands;
 using ShipperStation.Application.Features.Stations.Models;
 using ShipperStation.Application.Features.Stations.Queries;
@@ -19,7 +20,7 @@ public class AdminController(ISender sender) : ControllerBase
 {
     #region Stations
     [HttpPost("stations")]
-    public async Task<ActionResult<MessageResponse>> CreateStation(
+    public async Task<ActionResult<StationResponse>> CreateStation(
        CreateStationCommand command,
        CancellationToken cancellationToken)
     {
@@ -101,4 +102,11 @@ public class AdminController(ISender sender) : ControllerBase
 
     #endregion
 
+    [HttpGet("user-count-by-month")]
+    public async Task<IActionResult> GetUserCountByMonth(
+        [FromQuery] GetUserCountByMonthQuery request,
+        CancellationToken cancellationToken)
+    {
+        return Ok(await sender.Send(request, cancellationToken));
+    }
 }

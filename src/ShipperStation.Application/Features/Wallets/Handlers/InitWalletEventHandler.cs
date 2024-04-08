@@ -15,7 +15,7 @@ internal sealed class InitWalletEventHandler(IUnitOfWork unitOfWork) : INotifica
             await _walletRepository.CreateAsync(new Wallet
             {
                 UserId = notification.UserId,
-                Balance = 112500,
+                Balance = 0,
             }, cancellationToken);
 
             await unitOfWork.CommitAsync();
