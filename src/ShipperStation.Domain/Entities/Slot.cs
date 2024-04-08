@@ -14,6 +14,8 @@ public class Slot : BaseEntity<int>
     public double Length { get; set; }
     public double Volume { get; set; }
 
+    public bool? IsActive { get; set; }
+
     [Projectable]
     public int NumberOfPackages => Packages.Where(_ =>
         _.Status != PackageStatus.Returned && _.Status != PackageStatus.Completed).Count();
@@ -23,7 +25,7 @@ public class Slot : BaseEntity<int>
         _.Status != PackageStatus.Returned && _.Status != PackageStatus.Completed).Sum(_ => _.Volume);
 
     [Projectable]
-    public int Capacity => (int)(100 - (VolumeUsed / Volume) * 100);
+    public int Capacity => (int)Math.Floor((100 - (VolumeUsed / Volume) * 100));
 
     public int RackId { get; set; }
     public virtual Rack Rack { get; set; } = default!;

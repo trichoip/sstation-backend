@@ -1,27 +1,37 @@
 ﻿using MediatR;
+using ShipperStation.Application.Common.Enums;
 using ShipperStation.Application.Contracts.Repositories;
 using ShipperStation.Application.Contracts.Services;
 using ShipperStation.Application.Features.Shelfs.Models;
 using ShipperStation.Application.Features.Shelfs.Queries;
 using ShipperStation.Domain.Entities;
+using ShipperStation.Shared.Pages;
 
 namespace ShipperStation.Application.Features.Shelfs.Handlers;
 internal sealed class GetShelfsQueryHandler(
     IUnitOfWork unitOfWork,
-    ICurrentUserService currentUserService) : IRequestHandler<GetShelfsQuery, IList<ShelfResponse>>
+    ICurrentUserService currentUserService) : IRequestHandler<GetShelfsQuery, PaginatedResponse<ShelfResponse>>
 {
     private readonly IGenericRepository<Shelf> _shelfRepository = unitOfWork.Repository<Shelf>();
 
-    public async Task<IList<ShelfResponse>> Handle(GetShelfsQuery request, CancellationToken cancellationToken)
+    public async Task<PaginatedResponse<ShelfResponse>> Handle(GetShelfsQuery request, CancellationToken cancellationToken)
     {
         var userId = await currentUserService.FindCurrentUserIdAsync();
+        request = request with
+        {
+            SortDir = SortDirection.Asc,
+            SortColumn = nameof(Shelf.Index),
+            UserId = userId
+        };
 
         var shelfs = await _shelfRepository
             .FindAsync<ShelfResponse>(
-            x => x.ZoneId == request.ZoneId &&
-                 x.Zone.Station.UserStations.Any(_ => _.UserId == userId),
-            cancellationToken: cancellationToken);
+                request.PageIndex,
+                request.PageSize,
+                request.GetExpressions(),
+                request.GetOrder(),
+                cancellationToken);
 
-        return shelfs;
+        return await shelfs.ToPaginatedResponseAsync();
     }
 }

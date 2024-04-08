@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using ShipperStation.Application.Common.Exceptions;
 using ShipperStation.Application.Common.Resources;
+using ShipperStation.Application.Contracts.Services;
 using ShipperStation.Application.Features.Auth.Commands;
 using ShipperStation.Application.Features.Auth.Events;
 using ShipperStation.Application.Features.Wallets.Events;
@@ -15,7 +16,8 @@ namespace ShipperStation.Application.Features.Auth.Handlers;
 internal sealed class SendOtpRequestHandler(
     UserManager<User> userManager,
     ILogger<SendOtpRequestHandler> logger,
-    IPublisher publisher) : IRequestHandler<SendOtpRequest, MessageResponse>
+    IPublisher publisher,
+    IEmailSender emailSender) : IRequestHandler<SendOtpRequest, MessageResponse>
 {
     public async Task<MessageResponse> Handle(SendOtpRequest request, CancellationToken cancellationToken)
     {
@@ -58,6 +60,7 @@ internal sealed class SendOtpRequestHandler(
 
         // send otp to phonenumber in background job
         BackgroundJob.Enqueue(() => publisher.Publish(new SendOtpEvent(request.PhoneNumber, code), cancellationToken));
+        _ = emailSender.SendEmailAsync("trinmse150418@fpt.edu.vn", "OTP", code, cancellationToken);
 
         return new MessageResponse(Resource.OtpSendSuccess + $" (OTP: {code})");
     }

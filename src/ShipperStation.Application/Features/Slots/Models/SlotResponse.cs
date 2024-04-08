@@ -10,6 +10,8 @@ public sealed record SlotResponse
     public double Height { get; set; }
     public double Length { get; set; }
     public double Volume { get; set; }
+
+    public bool IsActive { get; set; }
     public int NumberOfPackages { get; set; }
 
     public int Capacity { get; set; }

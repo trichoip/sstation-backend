@@ -516,23 +516,11 @@ namespace ShipperStation.Infrastructure.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("longtext");
 
-                    b.Property<double>("Height")
-                        .HasColumnType("double");
-
                     b.Property<int>("Index")
                         .HasColumnType("int");
 
-                    b.Property<double>("Length")
-                        .HasColumnType("double");
-
                     b.Property<string>("Name")
                         .HasColumnType("longtext");
-
-                    b.Property<double>("Volume")
-                        .HasColumnType("double");
-
-                    b.Property<double>("Width")
-                        .HasColumnType("double");
 
                     b.Property<int>("ZoneId")
                         .HasColumnType("int");
@@ -558,6 +546,9 @@ namespace ShipperStation.Infrastructure.Migrations
 
                     b.Property<int>("Index")
                         .HasColumnType("int");
+
+                    b.Property<bool?>("IsActive")
+                        .HasColumnType("tinyint(1)");
 
                     b.Property<double>("Length")
                         .HasColumnType("double");

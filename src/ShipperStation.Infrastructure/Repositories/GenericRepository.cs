@@ -18,6 +18,8 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class
         dbSet = context.Set<T>();
     }
 
+    public IQueryable<T> Entities => context.Set<T>();
+
     public virtual async Task CreateAsync(
         T entity,
         CancellationToken cancellationToken = default)
@@ -49,6 +51,27 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class
         if (includeFunc != null)
         {
             query = includeFunc(query);
+        }
+
+        return await query.FirstOrDefaultAsync(expression, cancellationToken);
+    }
+
+    public async Task<T?> FindOrderByAsync(
+        Expression<Func<T, bool>> expression,
+        Func<IQueryable<T>, IQueryable<T>>? includeFunc = null,
+        Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null,
+        CancellationToken cancellationToken = default)
+    {
+        IQueryable<T> query = dbSet;
+
+        if (includeFunc != null)
+        {
+            query = includeFunc(query);
+        }
+
+        if (orderBy != null)
+        {
+            query = orderBy(query);
         }
 
         return await query.FirstOrDefaultAsync(expression, cancellationToken);
@@ -179,4 +202,5 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class
         }
         return await query.CountAsync(cancellationToken);
     }
+
 }

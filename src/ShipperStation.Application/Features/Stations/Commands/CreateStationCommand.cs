@@ -1,9 +1,8 @@
 ﻿using MediatR;
 using ShipperStation.Application.Features.Stations.Models;
-using ShipperStation.Application.Models;
 
 namespace ShipperStation.Application.Features.Stations.Commands;
-public sealed record CreateStationCommand : IRequest<MessageResponse>
+public sealed record CreateStationCommand : IRequest<StationResponse>
 {
     public string Name { get; set; } = default!;
     public string Description { get; set; } = default!;

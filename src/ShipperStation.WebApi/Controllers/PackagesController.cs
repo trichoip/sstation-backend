@@ -54,15 +54,28 @@ public class PackagesController(ISender sender) : ControllerBase
         return await sender.Send(new ConfirmPackageCommand() with { Id = id }, cancellationToken);
     }
 
-    //[HttpPut("{id}")]
-    //public async Task<ActionResult<MessageResponse>> UpdatePackage(int id, UpdatePackageCommand command, CancellationToken cancellationToken)
-    //{
-    //    return await sender.Send(command with { Id = id }, cancellationToken);
-    //}
+    [HttpPut("{id}")]
+    public async Task<ActionResult<MessageResponse>> UpdatePackage(
+        Guid id,
+        UpdatePackageCommand command,
+        CancellationToken cancellationToken)
+    {
+        return await sender.Send(command with { Id = id }, cancellationToken);
+    }
 
-    //[HttpDelete("{id}")]
-    //public async Task<ActionResult<MessageResponse>> DeletePackage(int id, CancellationToken cancellationToken)
-    //{
-    //    return await sender.Send(new DeletePackageCommand(id), cancellationToken);
-    //}
+    [HttpDelete("{id}")]
+    public async Task<ActionResult<MessageResponse>> DeletePackage(
+        Guid id,
+        CancellationToken cancellationToken)
+    {
+        return await sender.Send(new DeletePackageCommand(id), cancellationToken);
+    }
+
+    [HttpPost("force")]
+    public async Task<ActionResult<PackageResponse>> ForceCreatePackage(
+        ForceCreatePackageCommand command,
+        CancellationToken cancellationToken)
+    {
+        return await sender.Send(command, cancellationToken);
+    }
 }

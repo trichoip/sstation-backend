@@ -12,9 +12,17 @@ namespace ShipperStation.Application.Contracts.Repositories
 
         Task<T?> FindByIdAsync(object id, CancellationToken cancellationToken = default);
 
+        IQueryable<T> Entities { get; }
+
         Task<T?> FindByAsync(
             Expression<Func<T, bool>> expression,
             Func<IQueryable<T>, IQueryable<T>>? includeFunc = null,
+            CancellationToken cancellationToken = default);
+
+        Task<T?> FindOrderByAsync(
+            Expression<Func<T, bool>> expression,
+            Func<IQueryable<T>, IQueryable<T>>? includeFunc = null,
+            Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null,
             CancellationToken cancellationToken = default);
 
         Task<IList<T>> FindAsync(

@@ -24,7 +24,7 @@ internal sealed class DepositCommandHandler(
             Amount = request.Amount,
             Method = request.Method,
             UserId = await currentUserService.FindCurrentUserIdAsync(),
-            Status = TransactionStatus.Processing,
+            Status = TransactionStatus.Completed,
             Type = TransactionType.Deposit,
             Description = Resource.DepositMessage
         };

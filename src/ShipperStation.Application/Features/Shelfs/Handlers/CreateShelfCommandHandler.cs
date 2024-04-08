@@ -18,7 +18,6 @@ internal sealed class CreateShelfCommandHandler(
     private readonly IGenericRepository<Zone> _zoneRepository = unitOfWork.Repository<Zone>();
     public async Task<MessageResponse> Handle(CreateShelfCommand request, CancellationToken cancellationToken)
     {
-
         var userId = await currentUserService.FindCurrentUserIdAsync();
 
         if (!await _zoneRepository
@@ -30,9 +29,18 @@ internal sealed class CreateShelfCommandHandler(
             throw new NotFoundException(nameof(Zone), request.ZoneId);
         }
 
+        var lastIndex = (await _shelfRepository
+            .FindAsync(_ => _.ZoneId == request.ZoneId, cancellationToken: cancellationToken)).MaxBy(_ => _.Index)?.Index;
+
+        if (lastIndex is null)
+        {
+            lastIndex = 0;
+        }
+
         var shelf = request.Adapt<Shelf>();
 
         shelf.Racks = GenerateRacks(request);
+        shelf.Index = lastIndex.Value + 1;
 
         await _shelfRepository.CreateAsync(shelf, cancellationToken);
         await unitOfWork.CommitAsync(cancellationToken);
