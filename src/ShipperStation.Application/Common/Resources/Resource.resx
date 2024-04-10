@@ -181,7 +181,7 @@
     <value>We couldn't find what you were looking for.</value>
   </data>
   <data name="NotificationContentOtpMessage" xml:space="preserve">
-    <value>Mã xác thực của bạn là {0}</value>
+    <value>C: {0}</value>
   </data>
   <data name="NotificationDeletedSuccess" xml:space="preserve">
     <value>Notification deleted successfully</value>
