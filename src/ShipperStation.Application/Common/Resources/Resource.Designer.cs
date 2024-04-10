@@ -250,7 +250,7 @@ namespace ShipperStation.Application.Common.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Mã xác thực của bạn là {0}.
+        ///   Looks up a localized string similar to C: {0}.
         /// </summary>
         public static string NotificationContentOtpMessage {
             get {
