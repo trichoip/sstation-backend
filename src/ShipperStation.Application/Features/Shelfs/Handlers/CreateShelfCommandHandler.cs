@@ -74,6 +74,7 @@ internal sealed class CreateShelfCommandHandler(
         slot.Index = (rackIndex - 1) * numberOfSlotsPerRack + slotIndex;
         slot.Name = slot.Index.GenerateNameIndex("S");
         slot.Description = $"Slot {slot.Index.GenerateNameIndex("S")}";
+        slot.IsActive = true;
         return slot;
     }
 }
