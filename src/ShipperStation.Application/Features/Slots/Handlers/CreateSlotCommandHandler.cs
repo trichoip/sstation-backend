@@ -6,6 +6,7 @@ using ShipperStation.Application.Contracts.Repositories;
 using ShipperStation.Application.Features.Slots.Commands;
 using ShipperStation.Application.Models;
 using ShipperStation.Domain.Entities;
+using ShipperStation.Shared.Extensions;
 
 namespace ShipperStation.Application.Features.Slots.Handlers;
 internal sealed class CreateSlotCommandHandler(IUnitOfWork unitOfWork) : IRequestHandler<CreateSlotCommand, MessageResponse>
@@ -29,6 +30,8 @@ internal sealed class CreateSlotCommandHandler(IUnitOfWork unitOfWork) : IReques
 
         var slot = request.Adapt<Slot>();
         slot.Index = lastIndex.Value + 1;
+        slot.Name = slot.Index.GenerateNameIndex("S");
+        slot.Description = $"Slot {slot.Index.GenerateNameIndex("S")}";
 
         await _slotRepository.CreateAsync(slot, cancellationToken);
         await unitOfWork.CommitAsync(cancellationToken);

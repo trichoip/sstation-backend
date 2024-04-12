@@ -59,4 +59,6 @@ public class Package : BaseAuditableEntity<Guid>
 
     public virtual ICollection<PackageStatusHistory> PackageStatusHistories { get; set; } = new HashSet<PackageStatusHistory>();
 
+    public virtual ICollection<Payment> Payments { get; set; } = new HashSet<Payment>();
+
 }

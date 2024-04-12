@@ -6,6 +6,7 @@ using ShipperStation.Application.Contracts.Repositories;
 using ShipperStation.Application.Features.Racks.Commands;
 using ShipperStation.Application.Models;
 using ShipperStation.Domain.Entities;
+using ShipperStation.Shared.Extensions;
 
 namespace ShipperStation.Application.Features.Racks.Handlers;
 internal sealed class CreateRackCommandHandler(IUnitOfWork unitOfWork) : IRequestHandler<CreateRackCommand, MessageResponse>
@@ -29,6 +30,8 @@ internal sealed class CreateRackCommandHandler(IUnitOfWork unitOfWork) : IReques
 
         var rack = request.Adapt<Rack>();
         rack.Index = lastIndex.Value + 1;
+        rack.Name = rack.Index.GenerateNameIndex("R");
+        rack.Description = $"Rack {rack.Index.GenerateNameIndex("R")}";
 
         await _rackRepository.CreateAsync(rack, cancellationToken);
         await unitOfWork.CommitAsync(cancellationToken);

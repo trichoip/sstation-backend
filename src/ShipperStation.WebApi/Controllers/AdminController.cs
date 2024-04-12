@@ -109,4 +109,5 @@ public class AdminController(ISender sender) : ControllerBase
     {
         return Ok(await sender.Send(request, cancellationToken));
     }
+
 }

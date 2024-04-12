@@ -25,6 +25,8 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
     public DbSet<PackageStatusHistory> PackageStatusHistories { get; set; }
     public DbSet<Pricing> Pricings { get; set; }
     public DbSet<Zone> Zones { get; set; }
+    public DbSet<DefaultPricing> DefaultPricings { get; set; }
+    public DbSet<Payment> Payments { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

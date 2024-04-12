@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ShipperStation.Infrastructure.Persistence.Data;
 
@@ -10,34 +11,16 @@ using ShipperStation.Infrastructure.Persistence.Data;
 namespace ShipperStation.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240412021601_Add-Balance-Station")]
+    partial class AddBalanceStation
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("ProductVersion", "8.0.0")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
-
-            modelBuilder.Entity("ShipperStation.Domain.Entities.DefaultPricing", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<int>("FromDate")
-                        .HasColumnType("int");
-
-                    b.Property<double>("Price")
-                        .HasColumnType("double");
-
-                    b.Property<int>("ToDate")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("DefaultPricings");
-                });
 
             modelBuilder.Entity("ShipperStation.Domain.Entities.Device", b =>
                 {
@@ -475,58 +458,6 @@ namespace ShipperStation.Infrastructure.Migrations
                     b.HasIndex("PackageId");
 
                     b.ToTable("PackageStatusHistories");
-                });
-
-            modelBuilder.Entity("ShipperStation.Domain.Entities.Payment", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<DateTimeOffset?>("CreatedAt")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("longtext");
-
-                    b.Property<DateTimeOffset?>("DeletedAt")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("DeletedBy")
-                        .HasColumnType("longtext");
-
-                    b.Property<DateTimeOffset?>("ModifiedAt")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("ModifiedBy")
-                        .HasColumnType("longtext");
-
-                    b.Property<Guid>("PackageId")
-                        .HasColumnType("char(36)");
-
-                    b.Property<double>("PriceCod")
-                        .HasColumnType("double");
-
-                    b.Property<double>("ServiceFee")
-                        .HasColumnType("double");
-
-                    b.Property<int>("StationId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(24)");
-
-                    b.Property<double>("TotalPrice")
-                        .HasColumnType("double");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("PackageId");
-
-                    b.HasIndex("StationId");
-
-                    b.ToTable("Payments");
                 });
 
             modelBuilder.Entity("ShipperStation.Domain.Entities.Pricing", b =>
@@ -974,25 +905,6 @@ namespace ShipperStation.Infrastructure.Migrations
                     b.Navigation("Package");
                 });
 
-            modelBuilder.Entity("ShipperStation.Domain.Entities.Payment", b =>
-                {
-                    b.HasOne("ShipperStation.Domain.Entities.Package", "Package")
-                        .WithMany("Payments")
-                        .HasForeignKey("PackageId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("ShipperStation.Domain.Entities.Station", "Station")
-                        .WithMany("Payments")
-                        .HasForeignKey("StationId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Package");
-
-                    b.Navigation("Station");
-                });
-
             modelBuilder.Entity("ShipperStation.Domain.Entities.Pricing", b =>
                 {
                     b.HasOne("ShipperStation.Domain.Entities.Station", "Station")
@@ -1130,8 +1042,6 @@ namespace ShipperStation.Infrastructure.Migrations
                     b.Navigation("PackageImages");
 
                     b.Navigation("PackageStatusHistories");
-
-                    b.Navigation("Payments");
                 });
 
             modelBuilder.Entity("ShipperStation.Domain.Entities.Rack", b =>
@@ -1151,8 +1061,6 @@ namespace ShipperStation.Infrastructure.Migrations
 
             modelBuilder.Entity("ShipperStation.Domain.Entities.Station", b =>
                 {
-                    b.Navigation("Payments");
-
                     b.Navigation("Pricings");
 
                     b.Navigation("StationImages");
