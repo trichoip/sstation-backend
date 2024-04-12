@@ -12,7 +12,7 @@ namespace ShipperStation.WebApi.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-[Authorize(Roles = Policies.StationManager_Or_Staff)]
+[Authorize(Roles = Policies.StationManager_Or_Staff_Or_Admin)]
 public class PackagesController(ISender sender) : ControllerBase
 {
 
