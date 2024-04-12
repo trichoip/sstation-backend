@@ -50,6 +50,12 @@ public static class NotificationExtensions
                 notification.Level = NotificationLevel.Information;
                 break;
 
+            case NotificationType.CustomerPackageExprireReceive:
+                notification.Title = NotificationType.CustomerPackageExprireReceive.GetDescription();
+                notification.Content = "You have been refunded 50% of the service fee for not receiving the goods";
+                notification.Level = NotificationLevel.Information;
+                break;
+
             default:
                 throw new ApplicationException(Resource.NotificationNotSupported.Format(notification.Type));
         };

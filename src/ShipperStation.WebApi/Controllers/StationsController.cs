@@ -174,6 +174,15 @@ public class StationsController(ISender sender) : ControllerBase
     }
 
     [Authorize(Roles = Policies.StationManager)]
+    [HttpPost("{stationId}/pricings/default")]
+    public async Task<ActionResult<MessageResponse>> CreatePricingDefault(
+        int stationId,
+        CancellationToken cancellationToken)
+    {
+        return await sender.Send(new CreatePricingDefaultCommand() with { StationId = stationId }, cancellationToken);
+    }
+
+    [Authorize(Roles = Policies.StationManager)]
     [HttpPut("{stationId}/pricings/{pricingId}")]
     public async Task<ActionResult<MessageResponse>> UpdatePricing(
         int stationId,

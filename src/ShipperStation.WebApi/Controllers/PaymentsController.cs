@@ -2,7 +2,10 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ShipperStation.Application.Features.Payments.Commands;
+using ShipperStation.Application.Features.Payments.Models;
+using ShipperStation.Application.Features.Payments.Queries;
 using ShipperStation.Application.Features.Transactions.Models;
+using ShipperStation.Shared.Pages;
 
 namespace ShipperStation.WebApi.Controllers;
 [Route("api/[controller]")]
@@ -48,5 +51,13 @@ public class PaymentsController(ISender sender, IHttpContextAccessor _httpContex
         //return Redirect($"{callback.returnUrl}{HttpUtility.UrlEncode(_httpContextAccessor?.HttpContext?.Request.QueryString.Value)}");
         //return Redirect($"{callback.returnUrl}{HttpUtility.UrlEncode($"?isSuccess={callback.IsSuccess}")}");
         return Redirect($"{callback.returnUrl}?isSuccess={callback.IsSuccess}");
+    }
+
+    [HttpGet]
+    public async Task<ActionResult<PaginatedResponse<PaymentResponse>>> GetPayment(
+        [FromQuery] GetPaymentQuery query,
+        CancellationToken cancellationToken)
+    {
+        return await sender.Send(query, cancellationToken);
     }
 }

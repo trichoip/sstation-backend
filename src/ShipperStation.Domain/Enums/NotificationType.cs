@@ -25,5 +25,8 @@ public enum NotificationType
 
     [Description("Your have package is completed")]
     CustomerPackageCompleted,
+
+    [Description("You have been refunded 50% of the service fee")]
+    CustomerPackageExprireReceive,
 }
 

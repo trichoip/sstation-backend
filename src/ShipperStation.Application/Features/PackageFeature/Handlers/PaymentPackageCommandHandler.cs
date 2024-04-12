@@ -50,7 +50,10 @@ internal sealed class PaymentPackageCommandHandler(
             throw new NotFoundException("Not found pricing to pay");
         }
 
-        var totalPrice = package.PriceCod + PackageExtensions.CalculateServiceFee(package.Volume, package.TotalDays, pricingStation.Price);
+        var serviceFee = PackageExtensions.CalculateServiceFee(package.Volume, package.TotalDays, pricingStation.Price);
+        var priceCod = package.PriceCod;
+
+        var totalPrice = priceCod + serviceFee;
 
         if (totalPrice != request.TotalPrice)
         {
@@ -101,9 +104,24 @@ internal sealed class PaymentPackageCommandHandler(
         });
 
         package.ExprireReceiveGoods = DateTimeOffset.UtcNow.AddDays(1);
-        //package.IsCod = false;
+
+        package.Payments.Add(new Payment
+        {
+            ServiceFee = serviceFee,
+            PriceCod = priceCod,
+            Status = PaymentStatus.Success,
+            TotalPrice = totalPrice,
+            StationId = package.Slot.Rack.Shelf.Zone.StationId
+        });
+
+        package.IsCod = false;
+        package.PriceCod = 0;
+
+        package.Rack.Shelf.Zone.Station.Balance += serviceFee;
 
         await unitOfWork.CommitAsync(cancellationToken);
+
+        BackgroundJob.Schedule<IPackageService>(_ => _.CheckReceivePackageAsync(package.Id), package.ExprireReceiveGoods.Value);
         return new MessageResponse("Payment Success");
     }
 }
