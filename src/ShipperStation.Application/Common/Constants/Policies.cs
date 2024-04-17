@@ -9,6 +9,6 @@ public abstract class Policies
     public const string StationManager = $"{RoleName.StationManager}";
     public const string User = $"{RoleName.User}";
     public const string StationManager_Or_Staff = $"{RoleName.StationManager},{RoleName.Staff}";
-    public const string Admin_Or_StationManager = nameof(Admin_Or_StationManager);
+    public const string Admin_Or_StationManager = $"{RoleName.StationManager},{RoleName.Admin}";
     public const string StationManager_Or_Staff_Or_Admin = $"{RoleName.StationManager},{RoleName.Staff},{RoleName.Admin}";
 }

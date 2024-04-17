@@ -17,7 +17,7 @@ public sealed class SendNotifyPackageExprireReceiveEventHandler(INotifier notifi
             UserId = notification.UserId,
             Data = JsonSerializer.Serialize(new
             {
-                notification.PackageId,
+                Id = notification.PackageId,
                 Entity = nameof(Package)
             })
         };

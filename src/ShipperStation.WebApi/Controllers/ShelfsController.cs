@@ -15,7 +15,7 @@ namespace ShipperStation.WebApi.Controllers;
 
 public class ShelfsController(ISender sender) : ControllerBase
 {
-    [Authorize(Roles = Policies.StationManager_Or_Staff)]
+    [Authorize(Roles = Policies.StationManager_Or_Staff_Or_Admin)]
     [HttpGet]
     public async Task<ActionResult<PaginatedResponse<ShelfResponse>>> GetShelfs(
         [FromQuery] GetShelfsQuery query,
@@ -25,28 +25,28 @@ public class ShelfsController(ISender sender) : ControllerBase
         return await sender.Send(query with { ZoneId = zoneId }, cancellationToken);
     }
 
-    [Authorize(Roles = Policies.StationManager_Or_Staff)]
+    [Authorize(Roles = Policies.StationManager_Or_Staff_Or_Admin)]
     [HttpGet("{id}")]
     public async Task<ActionResult<ShelfResponse>> GetShelfById(int id, CancellationToken cancellationToken)
     {
         return await sender.Send(new GetShelfByIdQuery(id), cancellationToken);
     }
 
-    [Authorize(Roles = Policies.StationManager)]
+    [Authorize(Roles = Policies.Admin_Or_StationManager)]
     [HttpPost]
     public async Task<ActionResult<MessageResponse>> CreateShelf(CreateShelfCommand command, CancellationToken cancellationToken)
     {
         return await sender.Send(command, cancellationToken);
     }
 
-    [Authorize(Roles = Policies.StationManager)]
+    [Authorize(Roles = Policies.Admin_Or_StationManager)]
     [HttpPut("{id}")]
     public async Task<ActionResult<MessageResponse>> UpdateShelf(int id, UpdateShelfCommand command, CancellationToken cancellationToken)
     {
         return await sender.Send(command with { Id = id }, cancellationToken);
     }
 
-    [Authorize(Roles = Policies.StationManager)]
+    [Authorize(Roles = Policies.Admin_Or_StationManager)]
     [HttpDelete("{id}")]
     public async Task<ActionResult<MessageResponse>> DeleteShelf(int id, CancellationToken cancellationToken)
     {

@@ -17,7 +17,7 @@ internal sealed class SendNotifyCreatePackageEventHandler(INotifier notifier) : 
             UserId = notification.ReceiverId,
             Data = JsonSerializer.Serialize(new
             {
-                notification.PackageId,
+                Id = notification.PackageId,
                 Entity = nameof(Package)
             })
         };

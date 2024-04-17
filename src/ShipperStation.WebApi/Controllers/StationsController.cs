@@ -23,7 +23,7 @@ public class StationsController(ISender sender) : ControllerBase
 {
 
     #region Staff
-    [Authorize(Roles = Policies.StationManager)]
+    [Authorize(Roles = Policies.Admin_Or_StationManager)]
     [HttpPost("{stationId}/staffs")]
     public async Task<ActionResult<MessageResponse>> CreateStaff(
        int stationId,
@@ -33,7 +33,7 @@ public class StationsController(ISender sender) : ControllerBase
         return await sender.Send(request with { StationId = stationId }, cancellationToken);
     }
 
-    [Authorize(Roles = Policies.StationManager)]
+    [Authorize(Roles = Policies.StationManager_Or_Staff_Or_Admin)]
     [HttpGet("{stationId}/staffs")]
     public async Task<ActionResult<PaginatedResponse<UserResponse>>> GetStaffs(
         int stationId,
@@ -43,7 +43,7 @@ public class StationsController(ISender sender) : ControllerBase
         return await sender.Send(request with { StationId = stationId }, cancellationToken);
     }
 
-    [Authorize(Roles = Policies.StationManager)]
+    [Authorize(Roles = Policies.StationManager_Or_Staff_Or_Admin)]
     [HttpGet("{stationId}/staffs/{staffId}")]
     public async Task<ActionResult<UserResponse>> GetStaffById(
         int stationId,
@@ -53,7 +53,7 @@ public class StationsController(ISender sender) : ControllerBase
         return await sender.Send(new GetStaffByIdQuery(staffId) with { StationId = stationId }, cancellationToken);
     }
 
-    [Authorize(Roles = Policies.StationManager)]
+    [Authorize(Roles = Policies.Admin_Or_StationManager)]
     [HttpDelete("{stationId}/staffs/{staffId}")]
     public async Task<ActionResult<MessageResponse>> DeleteStaff(
         int stationId,
@@ -63,7 +63,7 @@ public class StationsController(ISender sender) : ControllerBase
         return await sender.Send(new DeleteStaffCommand(staffId) with { StationId = stationId }, cancellationToken);
     }
 
-    [Authorize(Roles = Policies.StationManager)]
+    [Authorize(Roles = Policies.Admin_Or_StationManager)]
     [HttpPut("{stationId}/staffs/{staffId}")]
     public async Task<ActionResult<MessageResponse>> UpdateStaff(
         int stationId,
@@ -89,7 +89,7 @@ public class StationsController(ISender sender) : ControllerBase
 
     #region Zones
 
-    [Authorize(Roles = Policies.StationManager_Or_Staff)]
+    [Authorize(Roles = Policies.StationManager_Or_Staff_Or_Admin)]
     [HttpGet("{stationId}/zones")]
     public async Task<IActionResult> GetZones(
         int stationId,
@@ -99,7 +99,7 @@ public class StationsController(ISender sender) : ControllerBase
         return Ok(await sender.Send(query with { StationId = stationId }, cancellationToken));
     }
 
-    [Authorize(Roles = Policies.StationManager_Or_Staff)]
+    [Authorize(Roles = Policies.StationManager_Or_Staff_Or_Admin)]
     [HttpGet("{stationId}/zones/{zoneId}")]
     public async Task<ActionResult<ZoneResponse>> GetZoneById(
         int stationId,
@@ -109,7 +109,7 @@ public class StationsController(ISender sender) : ControllerBase
         return await sender.Send(new GetZoneByIdQuery(zoneId) with { StationId = stationId }, cancellationToken);
     }
 
-    [Authorize(Roles = Policies.StationManager)]
+    [Authorize(Roles = Policies.Admin_Or_StationManager)]
     [HttpPost("{stationId}/zones")]
     public async Task<ActionResult<MessageResponse>> CreateZone(
         int stationId,
@@ -119,7 +119,7 @@ public class StationsController(ISender sender) : ControllerBase
         return await sender.Send(command with { StationId = stationId }, cancellationToken);
     }
 
-    [Authorize(Roles = Policies.StationManager)]
+    [Authorize(Roles = Policies.Admin_Or_StationManager)]
     [HttpPut("{stationId}/zones/{zoneId}")]
     public async Task<ActionResult<MessageResponse>> UpdateZone(
         int stationId,
@@ -130,7 +130,7 @@ public class StationsController(ISender sender) : ControllerBase
         return await sender.Send(command with { Id = zoneId, StationId = stationId }, cancellationToken);
     }
 
-    [Authorize(Roles = Policies.StationManager)]
+    [Authorize(Roles = Policies.Admin_Or_StationManager)]
     [HttpDelete("{stationId}/zones/{zoneId}")]
     public async Task<ActionResult<MessageResponse>> DeleteZone(
         int stationId,
@@ -144,7 +144,7 @@ public class StationsController(ISender sender) : ControllerBase
 
     #region Pricing
 
-    [Authorize(Roles = Policies.StationManager_Or_Staff)]
+    [Authorize(Roles = Policies.StationManager_Or_Staff_Or_Admin)]
     [HttpGet("{stationId}/pricings")]
     public async Task<IActionResult> GetPricings(
         int stationId,
@@ -153,7 +153,7 @@ public class StationsController(ISender sender) : ControllerBase
         return Ok(await sender.Send(new GetPricingsQuery() with { StationId = stationId }, cancellationToken));
     }
 
-    [Authorize(Roles = Policies.StationManager_Or_Staff)]
+    [Authorize(Roles = Policies.StationManager_Or_Staff_Or_Admin)]
     [HttpGet("{stationId}/pricings/{pricingId}")]
     public async Task<ActionResult<PricingResponse>> GetPricingById(
         int stationId,
@@ -163,7 +163,7 @@ public class StationsController(ISender sender) : ControllerBase
         return await sender.Send(new GetPricingByIdQuery(pricingId) with { StationId = stationId }, cancellationToken);
     }
 
-    [Authorize(Roles = Policies.StationManager)]
+    [Authorize(Roles = Policies.Admin_Or_StationManager)]
     [HttpPost("{stationId}/pricings")]
     public async Task<ActionResult<MessageResponse>> CreatePricing(
         int stationId,
@@ -173,7 +173,7 @@ public class StationsController(ISender sender) : ControllerBase
         return await sender.Send(command with { StationId = stationId }, cancellationToken);
     }
 
-    [Authorize(Roles = Policies.StationManager)]
+    [Authorize(Roles = Policies.Admin_Or_StationManager)]
     [HttpPost("{stationId}/pricings/default")]
     public async Task<ActionResult<MessageResponse>> CreatePricingDefault(
         int stationId,
@@ -182,7 +182,7 @@ public class StationsController(ISender sender) : ControllerBase
         return await sender.Send(new CreatePricingDefaultCommand() with { StationId = stationId }, cancellationToken);
     }
 
-    [Authorize(Roles = Policies.StationManager)]
+    [Authorize(Roles = Policies.Admin_Or_StationManager)]
     [HttpPut("{stationId}/pricings/{pricingId}")]
     public async Task<ActionResult<MessageResponse>> UpdatePricing(
         int stationId,
@@ -193,7 +193,7 @@ public class StationsController(ISender sender) : ControllerBase
         return await sender.Send(command with { Id = pricingId, StationId = stationId }, cancellationToken);
     }
 
-    [Authorize(Roles = Policies.StationManager)]
+    [Authorize(Roles = Policies.Admin_Or_StationManager)]
     [HttpDelete("{stationId}/pricings/{pricingId}")]
     public async Task<ActionResult<MessageResponse>> DeletePricing(
         int stationId,

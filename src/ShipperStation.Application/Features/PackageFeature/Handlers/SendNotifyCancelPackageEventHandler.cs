@@ -14,13 +14,16 @@ internal sealed class SendNotifyCancelPackageEventHandler(INotifier notifier) : 
         var notificationMessage = new NotificationRequest
         {
             Type = NotificationType.CustomerPackageCanceled,
-            UserId = notification.UserId,
+            UserId = notification.ReceiverId,
             Data = JsonSerializer.Serialize(new
             {
-                notification.PackageId,
+                Id = notification.PackageId,
                 Entity = nameof(Package)
             })
         };
+        await notifier.NotifyAsync(notificationMessage, true, cancellationToken);
+
+        notificationMessage = notificationMessage with { UserId = notification.SenderId, Id = 0 };
         await notifier.NotifyAsync(notificationMessage, true, cancellationToken);
     }
 }

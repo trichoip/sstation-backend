@@ -3,7 +3,6 @@ using Mapster;
 using MediatR;
 using ShipperStation.Application.Common.Exceptions;
 using ShipperStation.Application.Contracts.Repositories;
-using ShipperStation.Application.Contracts.Services;
 using ShipperStation.Application.Features.PackageFeature.Commands;
 using ShipperStation.Application.Features.PackageFeature.Events;
 using ShipperStation.Application.Models;
@@ -13,18 +12,14 @@ using ShipperStation.Domain.Enums;
 namespace ShipperStation.Application.Features.PackageFeature.Handlers;
 internal sealed class CancelPackageCommandHandler(
     IUnitOfWork unitOfWork,
-    ICurrentUserService currentUserService,
     IPublisher publisher) : IRequestHandler<CancelPackageCommand, MessageResponse>
 {
     private readonly IGenericRepository<Package> _packageRepository = unitOfWork.Repository<Package>();
     public async Task<MessageResponse> Handle(CancelPackageCommand request, CancellationToken cancellationToken)
     {
-        var userId = await currentUserService.FindCurrentUserIdAsync();
-
         var package = await _packageRepository
             .FindByAsync(_ =>
-                _.Id == request.Id &&
-                _.ReceiverId == userId,
+                _.Id == request.Id,
             cancellationToken: cancellationToken);
 
         if (package == null)
@@ -32,14 +27,9 @@ internal sealed class CancelPackageCommandHandler(
             throw new NotFoundException(nameof(Package), request.Id);
         }
 
-        if (package.Status != PackageStatus.Initialized)
+        if (package.Status != PackageStatus.Initialized && package.Status != PackageStatus.Expired)
         {
-            throw new BadRequestException("Package is not ready to return");
-        }
-
-        if (!package.IsCod)
-        {
-            throw new BadRequestException("Package is not COD");
+            throw new BadRequestException("Package is not ready to cancel");
         }
 
         request.Adapt(package);
@@ -54,7 +44,8 @@ internal sealed class CancelPackageCommandHandler(
 
         var notifyCancelPackageEvent = new SendNotifyCancelPackageEvent() with
         {
-            UserId = package.SenderId,
+            SenderId = package.SenderId,
+            ReceiverId = package.ReceiverId,
             PackageId = package.Id
         };
         BackgroundJob.Enqueue(() => publisher.Publish(notifyCancelPackageEvent, cancellationToken));

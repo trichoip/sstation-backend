@@ -46,7 +46,8 @@ public class Notifier : INotifier
             NotificationType.CustomerPackageCreated,
             NotificationType.CustomerPackageCompleted,
             NotificationType.CustomerPackageReturned,
-            NotificationType.CustomerPackageExprireReceive,
+            NotificationType.PackageExprire,
+            NotificationType.PackageReceive,
         }, firebaseNotificationService);
 
     }

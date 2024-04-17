@@ -6,7 +6,11 @@ using ShipperStation.Application.Features.Dashboards.Queries;
 using ShipperStation.Application.Features.Stations.Commands;
 using ShipperStation.Application.Features.Stations.Models;
 using ShipperStation.Application.Features.Stations.Queries;
+using ShipperStation.Application.Features.Transactions.Models;
+using ShipperStation.Application.Features.Transactions.Queries;
+using ShipperStation.Application.Features.Users.Commands;
 using ShipperStation.Application.Features.Users.Models;
+using ShipperStation.Application.Features.Users.Queries;
 using ShipperStation.Application.Features.UserStations.Commands;
 using ShipperStation.Application.Features.UserStations.Queries;
 using ShipperStation.Application.Models;
@@ -109,5 +113,50 @@ public class AdminController(ISender sender) : ControllerBase
     {
         return Ok(await sender.Send(request, cancellationToken));
     }
+    #region User
+
+    [HttpGet("users")]
+    public async Task<ActionResult<PaginatedResponse<UserResponse>>> GetUsers(
+         [FromQuery] GetUsersForAdminQuery query,
+         CancellationToken cancellationToken)
+    {
+        return await sender.Send(query, cancellationToken);
+    }
+
+    [HttpGet("users/{id}")]
+    public async Task<ActionResult<UserResponse>> GetUserById(Guid id, CancellationToken cancellationToken)
+    {
+        return await sender.Send(new GetUserByIdForAdminQuery(id), cancellationToken);
+    }
+
+    [HttpPut("users/{id}")]
+    public async Task<ActionResult<MessageResponse>> UpdateUser(Guid id, UpdateUserForAdminCommand command, CancellationToken cancellationToken)
+    {
+        return await sender.Send(command with { Id = id }, cancellationToken);
+    }
+
+    [HttpDelete("users/{id}")]
+    public async Task<ActionResult<MessageResponse>> DeleteUser(Guid id, CancellationToken cancellationToken)
+    {
+        return await sender.Send(new DeleteUserForAdminCommand(id), cancellationToken);
+    }
+
+    #endregion
+
+    #region Transactions
+    [HttpGet("transactions")]
+    public async Task<ActionResult<PaginatedResponse<TransactionResponse>>> GetTransactions(
+        [FromQuery] GetTransactionsForAdminQuery query,
+        CancellationToken cancellationToken)
+    {
+        return await sender.Send(query, cancellationToken);
+    }
+
+    [HttpGet("transactions/{id}")]
+    public async Task<ActionResult<TransactionResponse>> GetTransactionById(Guid id, CancellationToken cancellationToken)
+    {
+        return await sender.Send(new GetTransactionByIdForAdminQuery(id), cancellationToken);
+    }
+    #endregion
 
 }

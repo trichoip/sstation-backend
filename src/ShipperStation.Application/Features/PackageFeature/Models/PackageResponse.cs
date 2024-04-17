@@ -1,4 +1,5 @@
 ﻿using ShipperStation.Application.Extensions;
+using ShipperStation.Application.Features.PackageStatusHistories.Models;
 using ShipperStation.Application.Features.Payments.Models;
 using ShipperStation.Application.Features.Pricings.Models;
 using ShipperStation.Application.Features.Racks.Models;
@@ -29,8 +30,6 @@ public sealed record PackageResponse : BaseAuditableEntityResponse<Guid>
 
     public string? Reason { get; set; }
 
-    public DateTimeOffset? ExprireReceiveGoods { get; set; }
-
     public int CheckinDays => DateTimeOffset.UtcNow.Subtract(CreatedAt.Value).Days;
 
     public int SlotId { get; set; }
@@ -51,15 +50,15 @@ public sealed record PackageResponse : BaseAuditableEntityResponse<Guid>
 
     public string Location { get; set; } = default!;
 
-    public int TotalDays { get; set; }
+    public double TotalHours { get; set; }
     public double TotalPrice => PriceCod + ServiceFee;
 
-    public double ServiceFee => Pricing is null ? 0 : PackageExtensions.CalculateServiceFee(Volume, TotalDays, Pricing.Price);
+    public double ServiceFee => Pricing is null ? 0 : PackageExtensions.CalculateServiceFee(Volume, TotalHours, Pricing.PricePerUnit, Pricing.UnitDuration);
 
     public string FormatTotalPrice => TotalPrice.FormatMoney();
     public string FormatServiceFee => ServiceFee.FormatMoney();
 
-    public PricingResponse? Pricing => Pricings.Where(_ => _.FromDate <= TotalDays && _.ToDate >= TotalDays).FirstOrDefault();
+    public PricingResponse? Pricing => Pricings.Where(_ => _.StartTime <= TotalHours && _.EndTime >= TotalHours).FirstOrDefault();
 
     [JsonIgnore]
     public ICollection<PricingResponse> Pricings { get; set; } = new HashSet<PricingResponse>();

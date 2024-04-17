@@ -3,7 +3,6 @@ using MediatR;
 using ShipperStation.Application.Common.Exceptions;
 using ShipperStation.Application.Common.Resources;
 using ShipperStation.Application.Contracts.Repositories;
-using ShipperStation.Application.Contracts.Services;
 using ShipperStation.Application.Features.Shelfs.Commands;
 using ShipperStation.Application.Models;
 using ShipperStation.Domain.Entities;
@@ -11,19 +10,15 @@ using ShipperStation.Shared.Extensions;
 
 namespace ShipperStation.Application.Features.Shelfs.Handlers;
 internal sealed class CreateShelfCommandHandler(
-    IUnitOfWork unitOfWork,
-    ICurrentUserService currentUserService) : IRequestHandler<CreateShelfCommand, MessageResponse>
+    IUnitOfWork unitOfWork) : IRequestHandler<CreateShelfCommand, MessageResponse>
 {
     private readonly IGenericRepository<Shelf> _shelfRepository = unitOfWork.Repository<Shelf>();
     private readonly IGenericRepository<Zone> _zoneRepository = unitOfWork.Repository<Zone>();
     public async Task<MessageResponse> Handle(CreateShelfCommand request, CancellationToken cancellationToken)
     {
-        var userId = await currentUserService.FindCurrentUserIdAsync();
-
         if (!await _zoneRepository
             .ExistsByAsync(_ =>
-                _.Id == request.ZoneId &&
-                _.Station.UserStations.Any(_ => _.UserId == userId),
+                _.Id == request.ZoneId,
             cancellationToken))
         {
             throw new NotFoundException(nameof(Zone), request.ZoneId);

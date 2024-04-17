@@ -1,7 +1,6 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using ShipperStation.Application.Features.PackageFeature.Commands;
 using ShipperStation.Application.Features.PackageFeature.Models;
 using ShipperStation.Application.Features.PackageFeature.Queries;
 using ShipperStation.Application.Features.Users.Commands;
@@ -62,26 +61,6 @@ public class UsersController(ISender sender) : ControllerBase
     public async Task<ActionResult<PackageResponse>> GetPackageById(Guid id, CancellationToken cancellationToken)
     {
         return await sender.Send(new GetPackageByIdForUserQuery(id), cancellationToken);
-    }
-
-    [HttpPost("packages/{id}/payment")]
-    [Authorize]
-    public async Task<ActionResult<MessageResponse>> PaymentPackage(
-       Guid id,
-       PaymentPackageCommand command,
-       CancellationToken cancellationToken)
-    {
-        return await sender.Send(command with { Id = id }, cancellationToken);
-    }
-
-    [HttpPost("packages/{id}/cancel")]
-    [Authorize]
-    public async Task<ActionResult<MessageResponse>> CancelPackage(
-        Guid id,
-        CancelPackageCommand command,
-        CancellationToken cancellationToken)
-    {
-        return await sender.Send(command with { Id = id }, cancellationToken);
     }
 
 }

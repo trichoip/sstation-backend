@@ -13,15 +13,18 @@ internal sealed class CreateSlotCommandHandler(IUnitOfWork unitOfWork) : IReques
 {
     private readonly IGenericRepository<Rack> _rackRepository = unitOfWork.Repository<Rack>();
     private readonly IGenericRepository<Slot> _slotRepository = unitOfWork.Repository<Slot>();
+    private readonly IGenericRepository<Shelf> _shelfRepository = unitOfWork.Repository<Shelf>();
     public async Task<MessageResponse> Handle(CreateSlotCommand request, CancellationToken cancellationToken)
     {
-        if (!await _rackRepository.ExistsByAsync(_ => _.Id == request.RackId, cancellationToken))
+        var rack = await _rackRepository.FindByAsync(_ => _.Id == request.RackId, cancellationToken: cancellationToken);
+
+        if (rack == null)
         {
             throw new NotFoundException(nameof(Rack), request.RackId);
         }
 
         var lastIndex = (await _slotRepository
-            .FindAsync(_ => _.RackId == request.RackId, cancellationToken: cancellationToken)).MaxBy(_ => _.Index)?.Index;
+            .FindAsync(_ => _.Rack.ShelfId == rack.ShelfId, cancellationToken: cancellationToken)).MaxBy(_ => _.Index)?.Index;
 
         if (lastIndex is null)
         {

@@ -25,14 +25,17 @@ namespace ShipperStation.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<int>("FromDate")
+                    b.Property<int>("EndTime")
                         .HasColumnType("int");
 
-                    b.Property<double>("Price")
+                    b.Property<double>("PricePerUnit")
                         .HasColumnType("double");
 
-                    b.Property<int>("ToDate")
+                    b.Property<int>("StartTime")
                         .HasColumnType("int");
+
+                    b.Property<double>("UnitDuration")
+                        .HasColumnType("double");
 
                     b.HasKey("Id");
 
@@ -293,6 +296,9 @@ namespace ShipperStation.Infrastructure.Migrations
                     b.Property<string>("CreatedBy")
                         .HasColumnType("longtext");
 
+                    b.Property<string>("Data")
+                        .HasColumnType("longtext");
+
                     b.Property<DateTimeOffset?>("DeletedAt")
                         .HasColumnType("datetime(6)");
 
@@ -352,9 +358,6 @@ namespace ShipperStation.Infrastructure.Migrations
 
                     b.Property<string>("Description")
                         .HasColumnType("longtext");
-
-                    b.Property<DateTimeOffset?>("ExprireReceiveGoods")
-                        .HasColumnType("datetime(6)");
 
                     b.Property<double>("Height")
                         .HasColumnType("double");
@@ -535,17 +538,20 @@ namespace ShipperStation.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<int>("FromDate")
+                    b.Property<int>("EndTime")
                         .HasColumnType("int");
 
-                    b.Property<double>("Price")
+                    b.Property<double>("PricePerUnit")
                         .HasColumnType("double");
+
+                    b.Property<int>("StartTime")
+                        .HasColumnType("int");
 
                     b.Property<int>("StationId")
                         .HasColumnType("int");
 
-                    b.Property<int>("ToDate")
-                        .HasColumnType("int");
+                    b.Property<double>("UnitDuration")
+                        .HasColumnType("double");
 
                     b.HasKey("Id");
 
@@ -619,7 +625,7 @@ namespace ShipperStation.Infrastructure.Migrations
                     b.Property<int>("Index")
                         .HasColumnType("int");
 
-                    b.Property<bool?>("IsActive")
+                    b.Property<bool>("IsActive")
                         .HasColumnType("tinyint(1)");
 
                     b.Property<double>("Length")
@@ -654,7 +660,7 @@ namespace ShipperStation.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.Property<double?>("Balance")
+                    b.Property<double>("Balance")
                         .HasColumnType("double");
 
                     b.Property<string>("ContactPhone")

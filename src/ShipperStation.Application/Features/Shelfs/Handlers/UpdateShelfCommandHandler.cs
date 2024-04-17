@@ -10,20 +10,16 @@ using ShipperStation.Domain.Entities;
 
 namespace ShipperStation.Application.Features.Shelfs.Handlers;
 internal sealed class UpdateShelfCommandHandler(
-    IUnitOfWork unitOfWork,
-    ICurrentUserService currentUserService) : IRequestHandler<UpdateShelfCommand, MessageResponse>
+    IUnitOfWork unitOfWork) : IRequestHandler<UpdateShelfCommand, MessageResponse>
 {
     private readonly IGenericRepository<Shelf> _shelfRepository = unitOfWork.Repository<Shelf>();
     private readonly IGenericRepository<Zone> _zoneRepository = unitOfWork.Repository<Zone>();
 
     public async Task<MessageResponse> Handle(UpdateShelfCommand request, CancellationToken cancellationToken)
     {
-        var userId = await currentUserService.FindCurrentUserIdAsync();
-
         if (!await _zoneRepository
             .ExistsByAsync(_ =>
-                _.Id == request.ZoneId &&
-                _.Station.UserStations.Any(_ => _.UserId == userId),
+                _.Id == request.ZoneId,
             cancellationToken))
         {
             throw new NotFoundException(nameof(Zone), request.ZoneId);
@@ -31,8 +27,7 @@ internal sealed class UpdateShelfCommandHandler(
 
         var shelf = await _shelfRepository
             .FindByAsync(x =>
-                x.Id == request.Id &&
-                x.Zone.Station.UserStations.Any(_ => _.UserId == userId),
+                x.Id == request.Id,
              cancellationToken: cancellationToken);
 
         if (shelf is null)

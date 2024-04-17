@@ -41,7 +41,6 @@ public static class DependencyInjection
             .AddScoped<ICurrentUserService, CurrentUserService>()
             .AddScoped<IStorageService, StorageService>()
             .AddScoped<IJwtService, JwtService>()
-            .AddScoped<IPackageService, PackageService>()
             .AddScoped<IMomoPaymentService, MomoPaymentService>()
             .AddScoped<IVnPayPaymentService, VnPayPaymentService>()
             .AddScoped<INotifier, Notifier>()

@@ -14,7 +14,6 @@ using ShipperStation.Domain.Entities.Identities;
 namespace ShipperStation.Application.Features.Staffs.Handlers;
 internal sealed class CreateStaffCommandHandler(
     IUnitOfWork unitOfWork,
-    ICurrentUserService currentUserService,
     UserManager<User> userManager,
     IPublisher publisher) : IRequestHandler<CreateStaffCommand, MessageResponse>
 {
@@ -23,12 +22,8 @@ internal sealed class CreateStaffCommandHandler(
 
     public async Task<MessageResponse> Handle(CreateStaffCommand request, CancellationToken cancellationToken)
     {
-        var storeManagerId = await currentUserService.FindCurrentUserIdAsync();
-
         if (!await _stationRepository.ExistsByAsync(
-            _ => _.Id == request.StationId &&
-                 _.UserStations.Any(_ => _.UserId == storeManagerId),
-            cancellationToken))
+            _ => _.Id == request.StationId, cancellationToken))
         {
             throw new NotFoundException(nameof(Station), request.StationId);
         }

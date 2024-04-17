@@ -13,7 +13,7 @@ public class Station : BaseAuditableEntity<int>
     public string? Latitude { get; set; }
     public string? Longitude { get; set; }
 
-    public double? Balance { get; set; }
+    public double Balance { get; set; }
 
     [Projectable]
     [NotMapped]// phai NotMapped nếu không thì EF sẽ tưỡng là station có nhiều user và tạo cột stationId trong bảng user, lúc query sẽ bị lỗi

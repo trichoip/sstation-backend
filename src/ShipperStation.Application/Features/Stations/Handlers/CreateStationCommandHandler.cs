@@ -14,7 +14,6 @@ internal sealed class CreateStationCommandHandler(
     public async Task<StationResponse> Handle(CreateStationCommand request, CancellationToken cancellationToken)
     {
         var station = request.Adapt<Station>();
-        station.Balance = 0;
         await _stationRepository.CreateAsync(station, cancellationToken);
         await unitOfWork.CommitAsync(cancellationToken);
 

@@ -1,9 +1,11 @@
 ﻿namespace ShipperStation.Application.Extensions;
 public static class PackageExtensions
 {
-    public static double CalculateServiceFee(double volume, int totalDays, double pricing)
+    public static double CalculateServiceFee(double volume, double totalHours, double pricePerUnit, double unitDuration)
     {
-        var serviceFee = (volume * pricing * totalDays) / 1000;
+        var pricing = (pricePerUnit * totalHours) / unitDuration;
+
+        var serviceFee = (volume * pricing) / 1000;
 
         if (serviceFee < 1000)
         {
