@@ -6,13 +6,15 @@ public sealed class CreatePricingCommandValidator : AbstractValidator<CreatePric
     public CreatePricingCommandValidator()
     {
 
-        RuleFor(p => p.FromDate)
-            .GreaterThanOrEqualTo(0).WithMessage("{PropertyName} must be greater than 0.");
+        RuleFor(x => x.StartTime)
+            .GreaterThanOrEqualTo(0).WithMessage("StartTime must be greater than 0")
+            .LessThan(_ => _.EndTime).WithMessage("StartTime must be less than EndTime");
 
-        RuleFor(p => p.ToDate)
-            .GreaterThanOrEqualTo(0).WithMessage("{PropertyName} must be greater than 0.");
+        RuleFor(x => x.EndTime).GreaterThan(0);
 
-        RuleFor(p => p.Price)
-            .GreaterThanOrEqualTo(0).WithMessage("{PropertyName} must be greater than 0.");
+        RuleFor(x => x.PricePerUnit).GreaterThanOrEqualTo(500);
+
+        RuleFor(x => x.UnitDuration).GreaterThan(0)
+            .LessThan(_ => _.EndTime - _.StartTime).WithMessage("UnitDuration must be less than the duration time");
     }
 }

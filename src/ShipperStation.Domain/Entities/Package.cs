@@ -23,8 +23,6 @@ public class Package : BaseAuditableEntity<Guid>
 
     public string? Reason { get; set; }
 
-    public DateTimeOffset? ExprireReceiveGoods { get; set; }
-
     public int SlotId { get; set; }
     public virtual Slot Slot { get; set; } = default!;
 
@@ -37,7 +35,7 @@ public class Package : BaseAuditableEntity<Guid>
     [Projectable]// không cần NotMapped (test chỉ cần migration mà không có thêm field của Station là oke, còn nếu ra field thì NotMapped)
     public Station Station => Slot.Rack.Shelf.Zone.Station;
 
-    public int TotalDays => (int)Math.Ceiling((DateTimeOffset.UtcNow - CreatedAt!.Value).TotalDays);
+    public double TotalHours => Math.Round((DateTimeOffset.UtcNow - CreatedAt!.Value).TotalHours, 1);
 
     [Projectable]
     [NotMapped]

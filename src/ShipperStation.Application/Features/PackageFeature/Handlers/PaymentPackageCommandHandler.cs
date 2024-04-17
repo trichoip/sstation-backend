@@ -3,7 +3,6 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using ShipperStation.Application.Common.Exceptions;
 using ShipperStation.Application.Contracts.Repositories;
-using ShipperStation.Application.Contracts.Services;
 using ShipperStation.Application.Extensions;
 using ShipperStation.Application.Features.PackageFeature.Commands;
 using ShipperStation.Application.Features.PackageFeature.Events;
@@ -14,18 +13,13 @@ using ShipperStation.Domain.Enums;
 namespace ShipperStation.Application.Features.PackageFeature.Handlers;
 internal sealed class PaymentPackageCommandHandler(
     IUnitOfWork unitOfWork,
-    ICurrentUserService currentUserService,
     IPublisher publisher) : IRequestHandler<PaymentPackageCommand, MessageResponse>
 {
     private readonly IGenericRepository<Package> _packageRepository = unitOfWork.Repository<Package>();
     public async Task<MessageResponse> Handle(PaymentPackageCommand request, CancellationToken cancellationToken)
     {
-        var userId = await currentUserService.FindCurrentUserIdAsync();
-
         var package = await _packageRepository
-            .FindByAsync(_ =>
-                _.Id == request.Id &&
-                _.ReceiverId == userId,
+            .FindByAsync(_ => _.Id == request.Id,
             _ => _.Include(_ => _.Slot.Rack.Shelf.Zone.Station.Pricings)
                   .Include(_ => _.Receiver.Wallet)
                   .Include(_ => _.Sender.Wallet),
@@ -42,7 +36,7 @@ internal sealed class PaymentPackageCommandHandler(
         }
 
         var pricingStation = package.Pricings
-            .Where(_ => _.FromDate <= package.TotalDays && _.ToDate >= package.TotalDays)
+            .Where(_ => _.StartTime <= package.TotalHours && _.EndTime >= package.TotalHours)
             .FirstOrDefault();
 
         if (pricingStation == null)
@@ -50,9 +44,8 @@ internal sealed class PaymentPackageCommandHandler(
             throw new NotFoundException("Not found pricing to pay");
         }
 
-        var serviceFee = PackageExtensions.CalculateServiceFee(package.Volume, package.TotalDays, pricingStation.Price);
+        var serviceFee = PackageExtensions.CalculateServiceFee(package.Volume, package.TotalHours, pricingStation.PricePerUnit, pricingStation.UnitDuration);
         var priceCod = package.PriceCod;
-
         var totalPrice = priceCod + serviceFee;
 
         if (totalPrice != request.TotalPrice)
@@ -103,8 +96,6 @@ internal sealed class PaymentPackageCommandHandler(
             Method = TransactionMethod.Wallet,
         });
 
-        package.ExprireReceiveGoods = DateTimeOffset.UtcNow.AddDays(1);
-
         package.Payments.Add(new Payment
         {
             ServiceFee = serviceFee,
@@ -114,14 +105,10 @@ internal sealed class PaymentPackageCommandHandler(
             StationId = package.Slot.Rack.Shelf.Zone.StationId
         });
 
-        package.IsCod = false;
-        package.PriceCod = 0;
-
         package.Rack.Shelf.Zone.Station.Balance += serviceFee;
 
         await unitOfWork.CommitAsync(cancellationToken);
 
-        BackgroundJob.Schedule<IPackageService>(_ => _.CheckReceivePackageAsync(package.Id), package.ExprireReceiveGoods.Value);
         return new MessageResponse("Payment Success");
     }
 }

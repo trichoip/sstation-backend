@@ -34,7 +34,7 @@ public static class NotificationExtensions
 
             case NotificationType.CustomerPackageCanceled:
                 notification.Title = NotificationType.CustomerPackageCanceled.GetDescription();
-                notification.Content = "The package you sent has been canceled";
+                notification.Content = "The package you have has been canceled";
                 notification.Level = NotificationLevel.Information;
                 break;
 
@@ -50,9 +50,15 @@ public static class NotificationExtensions
                 notification.Level = NotificationLevel.Information;
                 break;
 
-            case NotificationType.CustomerPackageExprireReceive:
-                notification.Title = NotificationType.CustomerPackageExprireReceive.GetDescription();
-                notification.Content = "You have been refunded 50% of the service fee for not receiving the goods";
+            case NotificationType.PackageExprire:
+                notification.Title = NotificationType.PackageExprire.GetDescription();
+                notification.Content = "The package has been expired";
+                notification.Level = NotificationLevel.Information;
+                break;
+
+            case NotificationType.PackageReceive:
+                notification.Title = NotificationType.PackageReceive.GetDescription();
+                notification.Content = "Package needs to be received";
                 notification.Level = NotificationLevel.Information;
                 break;
 

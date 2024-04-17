@@ -3,21 +3,18 @@ using MediatR;
 using ShipperStation.Application.Common.Exceptions;
 using ShipperStation.Application.Common.Resources;
 using ShipperStation.Application.Contracts.Repositories;
-using ShipperStation.Application.Contracts.Services;
 using ShipperStation.Application.Features.Pricings.Commands;
 using ShipperStation.Application.Models;
 using ShipperStation.Domain.Entities;
 
 namespace ShipperStation.Application.Features.Pricings.Handlers;
 internal sealed class UpdatePricingCommandHandler(
-    IUnitOfWork unitOfWork,
-    ICurrentUserService currentUserService) : IRequestHandler<UpdatePricingCommand, MessageResponse>
+    IUnitOfWork unitOfWork) : IRequestHandler<UpdatePricingCommand, MessageResponse>
 {
     private readonly IGenericRepository<Pricing> _pricingRepository = unitOfWork.Repository<Pricing>();
     private readonly IGenericRepository<Station> _stationRepository = unitOfWork.Repository<Station>();
     public async Task<MessageResponse> Handle(UpdatePricingCommand request, CancellationToken cancellationToken)
     {
-        var userId = await currentUserService.FindCurrentUserIdAsync();
 
         // TODO: lưu ý khi update object có child
         // trường hợp 1: không cho update child -> không có check exist child 
@@ -28,8 +25,7 @@ internal sealed class UpdatePricingCommandHandler(
         var pricing = await _pricingRepository
             .FindByAsync(x =>
                 x.Id == request.Id &&
-                x.StationId == request.StationId &&
-                x.Station.UserStations.Any(_ => _.UserId == userId),
+                x.StationId == request.StationId,
             cancellationToken: cancellationToken);
 
         if (pricing == null)

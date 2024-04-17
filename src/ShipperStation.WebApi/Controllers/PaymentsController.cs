@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using ShipperStation.Application.Common.Constants;
 using ShipperStation.Application.Features.Payments.Commands;
 using ShipperStation.Application.Features.Payments.Models;
 using ShipperStation.Application.Features.Payments.Queries;
@@ -54,10 +55,18 @@ public class PaymentsController(ISender sender, IHttpContextAccessor _httpContex
     }
 
     [HttpGet]
+    [Authorize(Roles = Policies.Admin_Or_StationManager)]
     public async Task<ActionResult<PaginatedResponse<PaymentResponse>>> GetPayment(
         [FromQuery] GetPaymentQuery query,
         CancellationToken cancellationToken)
     {
         return await sender.Send(query, cancellationToken);
+    }
+
+    [HttpGet("{id}")]
+    [Authorize(Roles = Policies.Admin_Or_StationManager)]
+    public async Task<ActionResult<PaymentResponse>> GetPaymentById(int id, CancellationToken cancellationToken)
+    {
+        return await sender.Send(new GetPaymentByIdQuery(id), cancellationToken);
     }
 }

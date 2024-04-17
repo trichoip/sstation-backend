@@ -14,9 +14,6 @@ public sealed record GetShelfsQuery : PaginationRequest<Shelf>, IRequest<Paginat
     [BindNever]
     public int ZoneId { get; init; }
 
-    [BindNever]
-    public Guid UserId { get; set; }
-
     public string? Search { get; set; }
 
     public override Expression<Func<Shelf, bool>> GetExpressions()
@@ -27,9 +24,7 @@ public sealed record GetShelfsQuery : PaginationRequest<Shelf>, IRequest<Paginat
             Expression = Expression.And(sta => EF.Functions.Like(sta.Name, $"%{Search}%"));
         }
 
-        Expression = Expression.And(x =>
-           x.ZoneId == ZoneId &&
-           x.Zone.Station.UserStations.Any(_ => _.UserId == UserId));
+        Expression = Expression.And(x => x.ZoneId == ZoneId);
 
         return Expression;
     }

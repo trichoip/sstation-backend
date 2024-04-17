@@ -14,7 +14,7 @@ public class Slot : BaseEntity<int>
     public double Length { get; set; }
     public double Volume { get; set; }
 
-    public bool? IsActive { get; set; }
+    public bool IsActive { get; set; }
 
     [Projectable]
     public int NumberOfPackages => Packages.Where(_ =>

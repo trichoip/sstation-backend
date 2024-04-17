@@ -17,4 +17,7 @@ public enum PackageStatus
 
     [Description("Đã hủy")]
     Canceled,
+
+    [Description("Đã hết hạn")]
+    Expired
 }

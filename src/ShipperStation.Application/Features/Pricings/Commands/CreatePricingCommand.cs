@@ -5,9 +5,10 @@ using System.Text.Json.Serialization;
 namespace ShipperStation.Application.Features.Pricings.Commands;
 public sealed record CreatePricingCommand : IRequest<MessageResponse>
 {
-    public int FromDate { get; set; }
-    public int ToDate { get; set; }
-    public double Price { get; set; }
+    public int StartTime { get; set; }
+    public int EndTime { get; set; }
+    public double PricePerUnit { get; set; }
+    public double UnitDuration { get; set; }
 
     [JsonIgnore]
     public int StationId { get; set; }

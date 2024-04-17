@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using ShipperStation.Application.Features.Users.Models;
 using ShipperStation.Application.Models.Pages;
 using ShipperStation.Domain.Entities.Identities;
+using ShipperStation.Domain.Enums;
 using ShipperStation.Shared.Pages;
 using System.Linq.Expressions;
 
@@ -19,8 +20,7 @@ public sealed record GetStaffsQuery : PaginationRequest<User>, IRequest<Paginate
     [BindNever]
     public int StationId { get; set; }
 
-    [BindNever]
-    public Guid UserId { get; set; }
+    public RoleEnums? Role { get; set; }
 
     public override Expression<Func<User, bool>> GetExpressions()
     {
@@ -34,10 +34,8 @@ public sealed record GetStaffsQuery : PaginationRequest<User>, IRequest<Paginate
                 .Or(u => EF.Functions.Like(u.PhoneNumber, $"%{Search}%"));
         }
 
-        Expression = Expression.And(u =>
-            u.UserStations.Any(_ =>
-                _.StationId == StationId &&
-                _.Station.UserStations.Any(_ => _.UserId == UserId)));
+        Expression = Expression.And(u => u.UserStations.Any(_ => _.StationId == StationId));
+        Expression = Expression.And(u => !Role.HasValue || u.UserRoles.Any(ur => ur.Role.Name == Role.ToString()));
 
         return Expression;
     }

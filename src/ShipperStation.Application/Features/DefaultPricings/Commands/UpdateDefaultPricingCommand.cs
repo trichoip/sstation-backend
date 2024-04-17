@@ -7,7 +7,8 @@ public sealed record UpdateDefaultPricingCommand : IRequest<MessageResponse>
 {
     [JsonIgnore]
     public int Id { get; set; }
-    public int FromDate { get; set; }
-    public int ToDate { get; set; }
-    public double Price { get; set; }
+    public int StartTime { get; set; }
+    public int EndTime { get; set; }
+    public double PricePerUnit { get; set; }
+    public double UnitDuration { get; set; }
 }

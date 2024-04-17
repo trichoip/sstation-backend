@@ -16,9 +16,6 @@ public sealed record GetZonesQuery : PaginationRequest<Zone>, IRequest<Paginated
     [BindNever]
     public int StationId { get; set; }
 
-    [BindNever]
-    public Guid UserId { get; set; }
-
     public override Expression<Func<Zone, bool>> GetExpressions()
     {
         if (!string.IsNullOrWhiteSpace(Search))
@@ -29,8 +26,7 @@ public sealed record GetZonesQuery : PaginationRequest<Zone>, IRequest<Paginated
                 .Or(sta => EF.Functions.Like(sta.Description, $"%{Search}%"));
         }
 
-        Expression = Expression.And(_ => _.StationId == StationId)
-                               .And(_ => _.Station.UserStations.Any(_ => _.UserId == UserId));
+        Expression = Expression.And(_ => _.StationId == StationId);
         return Expression;
     }
 }

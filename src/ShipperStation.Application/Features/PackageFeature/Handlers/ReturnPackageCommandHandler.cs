@@ -24,7 +24,7 @@ internal sealed class ReturnPackageCommandHandler(
             throw new NotFoundException(nameof(Package), request.Id);
         }
 
-        if (package.Status != PackageStatus.Canceled)
+        if (package.Status != PackageStatus.Canceled && package.Status != PackageStatus.Expired)
         {
             throw new BadRequestException("Package is not Canceled");
         }
