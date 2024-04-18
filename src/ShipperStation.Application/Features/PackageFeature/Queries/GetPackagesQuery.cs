@@ -16,6 +16,7 @@ public sealed record GetPackagesQuery : PaginationRequest<Package>, IRequest<Pag
     public string? Name { get; set; }
     public PackageStatus? Status { get; set; }
     public List<PackageStatus> Statuses { get; set; } = new List<PackageStatus>();
+    public List<int> StationIds { get; set; } = new List<int>();
 
     /// <summary>
     /// Format for From is "yyyy-MM-dd" or "MM/dd/yyyy"
@@ -42,6 +43,9 @@ public sealed record GetPackagesQuery : PaginationRequest<Package>, IRequest<Pag
     public double? CheckinFromDays { get; set; }
     public double? CheckinToDays { get; set; }
 
+    public double? CheckinFromHours { get; set; }
+    public double? CheckinToHours { get; set; }
+
     public override Expression<Func<Package, bool>> GetExpressions()
     {
         Expression = Expression.And(_ => string.IsNullOrWhiteSpace(Name) || EF.Functions.Like(_.Name, $"%{Name}%"));
@@ -62,6 +66,10 @@ public sealed record GetPackagesQuery : PaginationRequest<Package>, IRequest<Pag
         Expression = Expression.And(_ => !CheckinToDays.HasValue || _.CreatedAt >= DateTimeOffset.UtcNow.AddDays(-CheckinToDays.Value));
 
         Expression = Expression.And(_ => !Statuses.Any() || Statuses.Contains(_.Status));
+        Expression = Expression.And(_ => !StationIds.Any() || StationIds.Contains(_.Station.Id));
+
+        Expression = Expression.And(_ => !CheckinFromHours.HasValue || _.CreatedAt <= DateTimeOffset.UtcNow.AddHours(-CheckinFromHours.Value));
+        Expression = Expression.And(_ => !CheckinToHours.HasValue || _.CreatedAt >= DateTimeOffset.UtcNow.AddHours(-CheckinToHours.Value));
 
         return Expression;
     }

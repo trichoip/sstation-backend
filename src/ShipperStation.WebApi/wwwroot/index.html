@@ -21,7 +21,7 @@
         };
 
         const connection = new signalR.HubConnectionBuilder()
-            .withUrl("https://localhost:7248/notification-hub")
+            .withUrl("/notification-hub", options)
             .configureLogging(signalR.LogLevel.Debug)
             .withAutomaticReconnect([0, 2000, 10000, 30000])
             .build();
@@ -35,7 +35,7 @@
         connection.start();
 
         function getToken() {
-            return "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IjA4ZGMwNWQ5LWFkNTUtNDY0Zi04NjE1LTI2NWQyNThlY2RiNyIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL25hbWUiOiJ0ZXMyMjIydCIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL2VtYWlsYWRkcmVzcyI6InRlczIyMjJ0QGFhZCIsIkFzcE5ldC5JZGVudGl0eS5TZWN1cml0eVN0YW1wIjoiWVdLSzJWVUNKNjNDNlZPT1FOUlpRU1BFNlJSU1FJWkciLCJleHAiOjE3MDM2NTk0OTl9.W3zyfxM0oCjtwfsXhS1uM8sydfWPINWZVN9KqTK3_vjmiQMI1RqYSP5i62lbCdOoZfZEzRX4l85_nRevpAiR7g";
+            return "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IjA4ZGM0NDBlLTEzMDAtNGE5MS04ZjljLWM1ZTg4YzhlNTg5OCIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL25hbWUiOiJhZG1pbiIsIkFzcE5ldC5JZGVudGl0eS5TZWN1cml0eVN0YW1wIjoiRTRBTEdSTTdGQzVITEZBT1Y0Q0I0SVFHUjRaWlVYQ1MiLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJBZG1pbiIsImF2YXRhcl91cmwiOiIiLCJmdWxsX25hbWUiOiIiLCJwaG9uZV9udW1iZXIiOiIiLCJ1c2VyX25hbWUiOiJhZG1pbiIsImlkIjoiMDhkYzQ0MGUtMTMwMC00YTkxLThmOWMtYzVlODhjOGU1ODk4IiwiZW1haWwiOiIiLCJleHAiOjE3MTM2NDA2NDR9.TAX2NXn3Ql41NGTYdkwvXH6szpR-Al8erSX4gurlnX3V8Cbb3PEBAYPmVjV0Je_DP0wd6zE78nq5-78tpQJGnw";
         }
 
     </script>

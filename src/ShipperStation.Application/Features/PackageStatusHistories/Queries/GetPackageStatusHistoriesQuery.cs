@@ -28,6 +28,7 @@ public sealed record GetPackageStatusHistoriesQuery : PaginationRequest<PackageS
     public int? StationId { get; set; }
     public Guid? PackageId { get; set; }
 
+    public List<int> StationIds { get; set; } = new List<int>();
     public override Expression<Func<PackageStatusHistory, bool>> GetExpressions()
     {
         Expression = Expression.And(_ => !Status.HasValue || _.Status == Status);
@@ -37,6 +38,8 @@ public sealed record GetPackageStatusHistoriesQuery : PaginationRequest<PackageS
 
         Expression = Expression.And(_ => !StationId.HasValue || _.Package.Station.Id == StationId);
         Expression = Expression.And(_ => !PackageId.HasValue || _.PackageId == PackageId);
+
+        Expression = Expression.And(_ => !StationIds.Any() || StationIds.Contains(_.Package.Station.Id));
 
         return Expression;
     }

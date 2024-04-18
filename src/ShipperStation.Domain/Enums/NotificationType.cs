@@ -31,5 +31,8 @@ public enum NotificationType
 
     [Description("You need receive package")]
     PackageReceive,
+
+    [Description("package payment success")]
+    NotiPackagePaymentSuccessForStaff,
 }
 

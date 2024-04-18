@@ -17,27 +17,32 @@ internal sealed class PushNoticationReceivePackageCommandHandler(
     private readonly IGenericRepository<Package> _packageRepository = unitOfWork.Repository<Package>();
     public async Task<MessageResponse> Handle(PushNoticationReceivePackageCommand request, CancellationToken cancellationToken)
     {
-        var package = await _packageRepository
-            .FindByAsync(_ =>
-                _.Id == request.Id,
-            cancellationToken: cancellationToken);
-
-        if (package == null)
+        foreach (var item in request.Ids)
         {
-            throw new NotFoundException(nameof(Package), request.Id);
+            var package = await _packageRepository
+                .FindByAsync(_ => _.Id == item, cancellationToken: cancellationToken);
+
+            if (package == null)
+            {
+                throw new NotFoundException(nameof(Package), item);
+            }
+
+            var notify = new SendNotifyPackageEvent() with
+            {
+                UserId = package.ReceiverId,
+                Type = NotificationType.PackageReceive,
+                Data = JsonSerializer.Serialize(new
+                {
+                    Id = package.Id,
+                    Entity = nameof(Package)
+                })
+            };
+            BackgroundJob.Enqueue(() => publisher.Publish(notify, cancellationToken));
+
+            package.NotificationCount += 1;
+            await unitOfWork.CommitAsync(cancellationToken);
         }
 
-        var notify = new SendNotifyPackageEvent() with
-        {
-            UserId = package.ReceiverId,
-            Type = NotificationType.PackageReceive,
-            Data = JsonSerializer.Serialize(new
-            {
-                Id = package.Id,
-                Entity = nameof(Package)
-            })
-        };
-        BackgroundJob.Enqueue(() => publisher.Publish(notify, cancellationToken));
         return new MessageResponse("Success");
     }
 }

@@ -62,6 +62,12 @@ public static class NotificationExtensions
                 notification.Level = NotificationLevel.Information;
                 break;
 
+            case NotificationType.NotiPackagePaymentSuccessForStaff:
+                notification.Title = NotificationType.NotiPackagePaymentSuccessForStaff.GetDescription();
+                notification.Content = "Package success payment";
+                notification.Level = NotificationLevel.Information;
+                break;
+
             default:
                 throw new ApplicationException(Resource.NotificationNotSupported.Format(notification.Type));
         };

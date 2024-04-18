@@ -38,6 +38,7 @@ public static class DependencyInjection
     private static void AddServices(this IServiceCollection services)
     {
         services
+            .AddSingleton<ICacheService, CacheService>()
             .AddScoped<ICurrentUserService, CurrentUserService>()
             .AddScoped<IStorageService, StorageService>()
             .AddScoped<IJwtService, JwtService>()
