@@ -43,6 +43,7 @@ public static class DependencyInjection
         services.AddSignalRServices();
         services.AddHangfireServices(configuration);
         services.AddFirebaseServices();
+        services.AddDistributedMemoryCache();
 
     }
 

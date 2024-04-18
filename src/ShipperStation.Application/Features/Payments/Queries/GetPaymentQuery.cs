@@ -26,6 +26,8 @@ public sealed record GetPaymentQuery : PaginationRequest<Payment>, IRequest<Pagi
     /// <example>2029-03-25T00:00:00.000000+00:00</example>
     public DateTimeOffset? To { get; set; }
 
+    public List<int> StationIds { get; set; } = new List<int>();
+
     public override Expression<Func<Payment, bool>> GetExpressions()
     {
         Expression = Expression.And(_ => !Status.HasValue || _.Status == Status);
@@ -34,6 +36,8 @@ public sealed record GetPaymentQuery : PaginationRequest<Payment>, IRequest<Pagi
 
         Expression = Expression.And(_ => !PackageId.HasValue || _.PackageId == PackageId);
         Expression = Expression.And(_ => !StationId.HasValue || _.StationId == StationId);
+
+        Expression = Expression.And(_ => !StationIds.Any() || StationIds.Contains(_.StationId));
 
         return Expression;
     }

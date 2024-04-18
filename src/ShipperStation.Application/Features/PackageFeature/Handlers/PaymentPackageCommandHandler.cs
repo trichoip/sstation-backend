@@ -3,17 +3,21 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using ShipperStation.Application.Common.Exceptions;
 using ShipperStation.Application.Contracts.Repositories;
+using ShipperStation.Application.Contracts.Services;
 using ShipperStation.Application.Extensions;
 using ShipperStation.Application.Features.PackageFeature.Commands;
 using ShipperStation.Application.Features.PackageFeature.Events;
+using ShipperStation.Application.Features.PackageFeature.Models;
 using ShipperStation.Application.Models;
 using ShipperStation.Domain.Entities;
 using ShipperStation.Domain.Enums;
+using System.Text.Json;
 
 namespace ShipperStation.Application.Features.PackageFeature.Handlers;
 internal sealed class PaymentPackageCommandHandler(
     IUnitOfWork unitOfWork,
-    IPublisher publisher) : IRequestHandler<PaymentPackageCommand, MessageResponse>
+    IPublisher publisher,
+    ICacheService cacheService) : IRequestHandler<PaymentPackageCommand, MessageResponse>
 {
     private readonly IGenericRepository<Package> _packageRepository = unitOfWork.Repository<Package>();
     public async Task<MessageResponse> Handle(PaymentPackageCommand request, CancellationToken cancellationToken)
@@ -108,6 +112,26 @@ internal sealed class PaymentPackageCommandHandler(
         package.Rack.Shelf.Zone.Station.Balance += serviceFee;
 
         await unitOfWork.CommitAsync(cancellationToken);
+
+        var staffGenQr = await cacheService
+            .GetAsync<InfoStaffGennerateQrPaymentModel>(package.Id.ToString(), cancellationToken);
+
+        if (staffGenQr != null)
+        {
+            var notify = new SendNotifyPackageEvent() with
+            {
+                UserId = staffGenQr.StaffId,
+                Type = NotificationType.NotiPackagePaymentSuccessForStaff,
+                Data = JsonSerializer.Serialize(new
+                {
+                    Id = package.Id,
+                    Entity = nameof(Package)
+                })
+            };
+            BackgroundJob.Enqueue(() => publisher.Publish(notify, cancellationToken));
+
+            await cacheService.RemoveAsync(package.Id.ToString(), cancellationToken);
+        }
 
         return new MessageResponse("Payment Success");
     }

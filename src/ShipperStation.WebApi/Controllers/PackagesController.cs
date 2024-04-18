@@ -105,23 +105,21 @@ public class PackagesController(ISender sender) : ControllerBase
     }
 
     [Authorize(Roles = Policies.StationManager_Or_Staff_Or_Admin)]
-    [HttpPost("{id}/expire")]
+    [HttpPost("expire")]
     public async Task<ActionResult<MessageResponse>> ExpirePackage(
-        Guid id,
         ExpirePackageCommand command,
         CancellationToken cancellationToken)
     {
-        return await sender.Send(command with { Id = id }, cancellationToken);
+        return await sender.Send(command, cancellationToken);
     }
 
     [Authorize(Roles = Policies.StationManager_Or_Staff_Or_Admin)]
-    [HttpPost("{id}/push-notication/receive")]
+    [HttpPost("push-notication/receive")]
     public async Task<ActionResult<MessageResponse>> PushNoticationReceivePackage(
-        Guid id,
         PushNoticationReceivePackageCommand command,
         CancellationToken cancellationToken)
     {
-        return await sender.Send(command with { Id = id }, cancellationToken);
+        return await sender.Send(command, cancellationToken);
     }
 
     [Authorize]

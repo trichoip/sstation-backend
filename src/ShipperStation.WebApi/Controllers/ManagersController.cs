@@ -92,6 +92,15 @@ public class ManagersController(ISender sender) : ControllerBase
     {
         return await sender.Send(new GetStationByIdForStoreManagerQuery(id), cancellationToken);
     }
+
+    [Authorize(Roles = Policies.StationManager)]
+    [HttpPost("stations")]
+    public async Task<ActionResult<MessageResponse>> CreateStationByStoreManager(
+       CreateStationByStoreManagerCommand command,
+       CancellationToken cancellationToken)
+    {
+        return await sender.Send(command, cancellationToken);
+    }
     #endregion
 
 }

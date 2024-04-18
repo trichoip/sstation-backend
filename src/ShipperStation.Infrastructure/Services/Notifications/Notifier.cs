@@ -50,6 +50,11 @@ public class Notifier : INotifier
             NotificationType.PackageReceive,
         }, firebaseNotificationService);
 
+        _provider.Attach(new List<NotificationType>()
+        {
+            NotificationType.NotiPackagePaymentSuccessForStaff,
+        }, signalRNotificationService);
+
     }
 
     public async Task NotifyAsync(

@@ -4,6 +4,7 @@ using ShipperStation.Application.Contracts.Hubs;
 using ShipperStation.Application.Contracts.Services.Notifications;
 using ShipperStation.Application.Models.Notifications;
 using ShipperStation.Infrastructure.Hubs;
+using System.Text.Json;
 
 namespace ShipperStation.Infrastructure.Services.Notifications;
 
@@ -25,6 +26,6 @@ public class SignalRNotificationService : ISignalRNotificationService
         await _notificationHubContext.Clients.User(notification.UserId.ToString())
             .ReceiveNotification(notification);
 
-        _logger.LogInformation($"[WEB NOTIFICATION] Send notification: {0}", notification.Id);
+        _logger.LogInformation($"[WEB NOTIFICATION] Send notification: {JsonSerializer.Serialize(notification)}");
     }
 }

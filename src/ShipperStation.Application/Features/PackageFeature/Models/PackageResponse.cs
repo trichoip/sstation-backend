@@ -28,6 +28,7 @@ public sealed record PackageResponse : BaseAuditableEntityResponse<Guid>
     public double Length { get; set; }
     public double Volume { get; set; }
 
+    public int NotificationCount { get; set; }
     public string? Reason { get; set; }
 
     public int CheckinDays => DateTimeOffset.UtcNow.Subtract(CreatedAt.Value).Days;
