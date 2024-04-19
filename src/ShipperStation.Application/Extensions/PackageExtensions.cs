@@ -7,10 +7,10 @@ public static class PackageExtensions
 
         var serviceFee = (volume * pricing) / 1000;
 
-        if (serviceFee < 1000)
-        {
-            return 1000;
-        }
+        //if (serviceFee < 1000)
+        //{
+        //    return 1000;
+        //}
 
         return serviceFee;
     }
