@@ -54,7 +54,7 @@ public sealed record PackageResponse : BaseAuditableEntityResponse<Guid>
     public double TotalHours { get; set; }
     public double TotalPrice => PriceCod + ServiceFee;
 
-    public double ServiceFee => Pricing is null ? 0 : PackageExtensions.CalculateServiceFee(Volume, TotalHours, Pricing.PricePerUnit, Pricing.UnitDuration);
+    public double ServiceFee => Pricing is null ? 1000 : PackageExtensions.CalculateServiceFee(Volume, TotalHours, Pricing.PricePerUnit, Pricing.UnitDuration);
 
     public string FormatTotalPrice => TotalPrice.FormatMoney();
     public string FormatServiceFee => ServiceFee.FormatMoney();

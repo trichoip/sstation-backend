@@ -33,7 +33,9 @@ internal sealed class ConfirmPackageCommandHandler(
 
         package.PackageStatusHistories.Add(new PackageStatusHistory
         {
-            Status = package.Status
+            Status = package.Status,
+            Name = package.Status.ToString(),
+            Description = $"Package '{package.Name}' is completed"
         });
 
         await unitOfWork.CommitAsync(cancellationToken);

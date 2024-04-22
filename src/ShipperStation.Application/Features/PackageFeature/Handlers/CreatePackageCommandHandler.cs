@@ -3,7 +3,6 @@ using Mapster;
 using MediatR;
 using ShipperStation.Application.Common.Exceptions;
 using ShipperStation.Application.Contracts.Repositories;
-using ShipperStation.Application.Contracts.Services;
 using ShipperStation.Application.Features.PackageFeature.Commands;
 using ShipperStation.Application.Features.PackageFeature.Events;
 using ShipperStation.Application.Features.PackageFeature.Models;
@@ -14,17 +13,14 @@ using ShipperStation.Domain.Enums;
 namespace ShipperStation.Application.Features.PackageFeature.Handlers;
 internal sealed class CreatePackageCommandHandler(
     IUnitOfWork unitOfWork,
-    ICurrentUserService currentUserService,
     IPublisher publisher) : IRequestHandler<CreatePackageCommand, PackageResponse>
 {
     private readonly IGenericRepository<Package> _packageRepository = unitOfWork.Repository<Package>();
     private readonly IGenericRepository<User> _userRepository = unitOfWork.Repository<User>();
-    private readonly IGenericRepository<UserStation> _userStationRepository = unitOfWork.Repository<UserStation>();
+    private readonly IGenericRepository<Station> _stationRepository = unitOfWork.Repository<Station>();
     private readonly IGenericRepository<Slot> _slotRepository = unitOfWork.Repository<Slot>();
     public async Task<PackageResponse> Handle(CreatePackageCommand request, CancellationToken cancellationToken)
     {
-        var userId = await currentUserService.FindCurrentUserIdAsync();
-
         if (!await _userRepository.ExistsByAsync(_ => _.Id == request.ReceiverId, cancellationToken))
         {
             throw new NotFoundException(nameof(User), request.ReceiverId);
@@ -35,7 +31,7 @@ internal sealed class CreatePackageCommandHandler(
             throw new NotFoundException(nameof(User), request.SenderId);
         }
 
-        if (!await _userStationRepository.ExistsByAsync(_ => _.UserId == userId && _.StationId == request.StationId))
+        if (!await _stationRepository.ExistsByAsync(_ => _.Id == request.StationId))
         {
             throw new NotFoundException(nameof(Station), request.StationId);
         }
@@ -65,6 +61,8 @@ internal sealed class CreatePackageCommandHandler(
         package.PackageStatusHistories.Add(new PackageStatusHistory
         {
             Status = package.Status,
+            Name = package.Status.ToString(),
+            Description = $"Package '{package.Name}' is initialized"
         });
 
         await _packageRepository.CreateAsync(package, cancellationToken);
