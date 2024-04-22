@@ -31,7 +31,9 @@ internal sealed class ExpirePackageCommandHandler(
 
             package.PackageStatusHistories.Add(new PackageStatusHistory
             {
-                Status = package.Status
+                Status = package.Status,
+                Name = package.Status.ToString(),
+                Description = $"Package '{package.Name}' is expired"
             });
 
             await unitOfWork.CommitAsync(cancellationToken);

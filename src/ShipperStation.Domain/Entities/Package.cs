@@ -37,7 +37,7 @@ public class Package : BaseAuditableEntity<Guid>
     [Projectable]// không cần NotMapped (test chỉ cần migration mà không có thêm field của Station là oke, còn nếu ra field thì NotMapped)
     public Station Station => Slot.Rack.Shelf.Zone.Station;
 
-    public double TotalHours => Math.Round((DateTimeOffset.UtcNow - CreatedAt!.Value).TotalHours, 1);
+    public double TotalHours => Math.Ceiling((DateTimeOffset.UtcNow - CreatedAt!.Value).TotalHours);
 
     [Projectable]
     [NotMapped]

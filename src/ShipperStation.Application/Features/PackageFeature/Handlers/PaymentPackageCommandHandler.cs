@@ -39,16 +39,17 @@ internal sealed class PaymentPackageCommandHandler(
             throw new BadRequestException("Package is not ready to pay");
         }
 
+        var serviceFee = 1000.0;
+
         var pricingStation = package.Pricings
             .Where(_ => _.StartTime <= package.TotalHours && _.EndTime >= package.TotalHours)
             .FirstOrDefault();
 
-        if (pricingStation == null)
+        if (pricingStation != null)
         {
-            throw new NotFoundException("Not found pricing to pay");
+            serviceFee = PackageExtensions.CalculateServiceFee(package.Volume, package.TotalHours, pricingStation.PricePerUnit, pricingStation.UnitDuration);
         }
 
-        var serviceFee = PackageExtensions.CalculateServiceFee(package.Volume, package.TotalHours, pricingStation.PricePerUnit, pricingStation.UnitDuration);
         var priceCod = package.PriceCod;
         var totalPrice = priceCod + serviceFee;
 
@@ -88,7 +89,9 @@ internal sealed class PaymentPackageCommandHandler(
 
         package.PackageStatusHistories.Add(new PackageStatusHistory
         {
-            Status = package.Status
+            Status = package.Status,
+            Name = package.Status.ToString(),
+            Description = $"Package '{package.Name}' is paid"
         });
 
         package.Receiver.Transactions.Add(new Transaction
@@ -102,6 +105,7 @@ internal sealed class PaymentPackageCommandHandler(
 
         package.Payments.Add(new Payment
         {
+            Description = $"Payment for package '{package.Name}' success",
             ServiceFee = serviceFee,
             PriceCod = priceCod,
             Status = PaymentStatus.Success,
