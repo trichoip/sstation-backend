@@ -10,4 +10,6 @@ public sealed record PaymentPackageCommand : IRequest<MessageResponse>
 
     public double TotalPrice { get; set; }
 
+    public bool IsCash { get; set; }
+
 }

@@ -58,13 +58,27 @@ internal sealed class PaymentPackageCommandHandler(
             throw new BadRequestException("Total price is not correct");
         }
 
-        if (package.Receiver.Wallet.Balance < totalPrice)
+        if (!request.IsCash)
         {
-            throw new BadRequestException("Not enough money to pay");
+            if (package.Receiver.Wallet.Balance < totalPrice)
+            {
+                throw new BadRequestException("Not enough money to pay");
+            }
+
+            package.Receiver.Wallet.Balance -= totalPrice;
+
         }
 
         package.Status = PackageStatus.Paid;
-        package.Receiver.Wallet.Balance -= totalPrice;
+
+        package.Receiver.Transactions.Add(new Transaction
+        {
+            Description = "Payment for package",
+            Amount = totalPrice,
+            Type = TransactionType.Pay,
+            Status = TransactionStatus.Completed,
+            Method = TransactionMethod.Wallet,
+        });
 
         if (package.IsCod)
         {
@@ -92,15 +106,6 @@ internal sealed class PaymentPackageCommandHandler(
             Status = package.Status,
             Name = package.Status.ToString(),
             Description = $"Package '{package.Name}' is paid"
-        });
-
-        package.Receiver.Transactions.Add(new Transaction
-        {
-            Description = "Payment for package",
-            Amount = totalPrice,
-            Type = TransactionType.Pay,
-            Status = TransactionStatus.Completed,
-            Method = TransactionMethod.Wallet,
         });
 
         package.Payments.Add(new Payment

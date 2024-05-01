@@ -1,5 +1,4 @@
-﻿using ShipperStation.Application.Features.PackageFeature.Models;
-using ShipperStation.Application.Models;
+﻿using ShipperStation.Application.Models;
 using ShipperStation.Domain.Enums;
 
 namespace ShipperStation.Application.Features.PackageStatusHistories.Models;
@@ -10,5 +9,5 @@ public sealed record PackageStatusHistoryResponse : BaseAuditableEntityResponse<
     public PackageStatus Status { get; set; }
     public Guid PackageId { get; set; }
 
-    public PackageResponseOfStatusHistory Package { get; set; } = default!;
+    //public PackageResponseOfStatusHistory Package { get; set; } = default!;
 }
