@@ -52,28 +52,25 @@ public class DashboardsController(ISender sender, IUnitOfWork unitOfWork) : Cont
     }
 
     [HttpGet("statistical-revenue")]
-    public async Task<IActionResult> StatisticalRevenue(int? stationId, int month, CancellationToken cancellationToken)
+    public async Task<IActionResult> StatisticalRevenue(int? stationId, int year, CancellationToken cancellationToken)
     {
-        var year = DateTime.Now.Year;
-        var daysInMonth = Enumerable.Range(1, 30);
+        var monthsInYear = Enumerable.Range(1, 12);
 
         var number = await _paymentRepository.Entities
-            .Where(x => (!stationId.HasValue || x.Station.Id == stationId) && x.CreatedAt.Value.Year == year && x.CreatedAt.Value.Month == month)
-            .GroupBy(u => new { Year = u.CreatedAt.Value.Year, Month = u.CreatedAt.Value.Month, Day = u.CreatedAt.Value.Day })
+            .Where(x => (!stationId.HasValue || x.Station.Id == stationId) && x.CreatedAt.Value.Year == year)
+            .GroupBy(u => new { Year = u.CreatedAt.Value.Year, Month = u.CreatedAt.Value.Month })
             .Select(g => new
             {
-                Day = g.Key.Day,
                 Revenue = g.Sum(_ => _.ServiceFee),
                 Year = g.Key.Year,
                 Month = g.Key.Month
             })
-            .OrderBy(x => x.Day)
+            .OrderBy(x => x.Month)
             .ToListAsync(cancellationToken);
 
-        var result = daysInMonth.Select(day => new
+        var result = monthsInYear.Select(month => new
         {
-            Day = day,
-            Revenue = number.FirstOrDefault(x => x.Day == day)?.Revenue ?? 0,
+            Revenue = number.FirstOrDefault(x => x.Month == month)?.Revenue ?? 0,
             Year = year,
             Month = month
         }).ToList();
@@ -82,28 +79,25 @@ public class DashboardsController(ISender sender, IUnitOfWork unitOfWork) : Cont
     }
 
     [HttpGet("statistical-package")]
-    public async Task<IActionResult> StatisticalPackage(int? stationId, int month, CancellationToken cancellationToken)
+    public async Task<IActionResult> StatisticalPackage(int? stationId, int year, CancellationToken cancellationToken)
     {
-        var year = DateTime.Now.Year;
-        var daysInMonth = Enumerable.Range(1, 30);
+        var monthsInYear = Enumerable.Range(1, 12);
 
         var number = await _packageRepository.Entities
-            .Where(x => (!stationId.HasValue || x.Station.Id == stationId) && x.CreatedAt.Value.Year == year && x.CreatedAt.Value.Month == month)
-            .GroupBy(u => new { Year = u.CreatedAt.Value.Year, Month = u.CreatedAt.Value.Month, Day = u.CreatedAt.Value.Day })
+            .Where(x => (!stationId.HasValue || x.Station.Id == stationId) && x.CreatedAt.Value.Year == year)
+            .GroupBy(u => new { Year = u.CreatedAt.Value.Year, Month = u.CreatedAt.Value.Month })
             .Select(g => new
             {
-                Day = g.Key.Day,
                 PackageCount = g.Count(),
                 Year = g.Key.Year,
                 Month = g.Key.Month
             })
-            .OrderBy(x => x.Day)
+            .OrderBy(x => x.Month)
             .ToListAsync(cancellationToken);
 
-        var result = daysInMonth.Select(day => new
+        var result = monthsInYear.Select(month => new
         {
-            Day = day,
-            PackageCount = number.FirstOrDefault(x => x.Day == day)?.PackageCount ?? 0,
+            PackageCount = number.FirstOrDefault(x => x.Month == month)?.PackageCount ?? 0,
             Year = year,
             Month = month
         }).ToList();
