@@ -11,7 +11,7 @@ public class Notification : BaseAuditableEntity<int>
     public string? Title { get; set; }
     public string? Content { get; set; }
 
-    [Column(TypeName = "nvarchar(24)")]
+    [Column(TypeName = "nvarchar(100)")]
     public NotificationType Type { get; set; }
 
     [Column(TypeName = "nvarchar(24)")]
