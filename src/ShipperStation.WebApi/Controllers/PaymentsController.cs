@@ -55,7 +55,7 @@ public class PaymentsController(ISender sender, IHttpContextAccessor _httpContex
     }
 
     [HttpGet]
-    [Authorize(Roles = Policies.Admin_Or_StationManager)]
+    [Authorize(Roles = Policies.StationManager_Or_Staff_Or_Admin)]
     public async Task<ActionResult<PaginatedResponse<PaymentResponse>>> GetPayment(
         [FromQuery] GetPaymentQuery query,
         CancellationToken cancellationToken)
@@ -64,7 +64,7 @@ public class PaymentsController(ISender sender, IHttpContextAccessor _httpContex
     }
 
     [HttpGet("{id}")]
-    [Authorize(Roles = Policies.Admin_Or_StationManager)]
+    [Authorize(Roles = Policies.StationManager_Or_Staff_Or_Admin)]
     public async Task<ActionResult<PaymentResponse>> GetPaymentById(int id, CancellationToken cancellationToken)
     {
         return await sender.Send(new GetPaymentByIdQuery(id), cancellationToken);
