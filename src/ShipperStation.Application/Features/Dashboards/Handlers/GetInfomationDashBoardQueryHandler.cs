@@ -17,12 +17,12 @@ internal sealed class GetInfomationDashBoardQueryHandler(IUnitOfWork unitOfWork)
         var result = new List<GetInfomationDashBoardModel>();
 
         var paymentToday = await _paymentRepository
-            .FindAsync(_ => _.CreatedAt.Value.Day == DateTimeOffset.UtcNow.Day && _.Status == PaymentStatus.Success);
+            .FindAsync(_ => (!request.StationId.HasValue || _.StationId == request.StationId) && _.CreatedAt.Value.Day == DateTimeOffset.UtcNow.Day && _.Status == PaymentStatus.Success);
 
         var totalSalesToday = paymentToday.Sum(x => x.ServiceFee);
 
         var paymentYesterday = await _paymentRepository.
-            FindAsync(_ => _.CreatedAt.Value.Day == DateTimeOffset.UtcNow.Day - 1 && _.Status == PaymentStatus.Success);
+            FindAsync(_ => (!request.StationId.HasValue || _.StationId == request.StationId) && _.CreatedAt.Value.Day == DateTimeOffset.UtcNow.Day - 1 && _.Status == PaymentStatus.Success);
 
         var totalSalesYesterday = paymentYesterday.Sum(x => x.ServiceFee);
 
@@ -124,12 +124,12 @@ internal sealed class GetInfomationDashBoardQueryHandler(IUnitOfWork unitOfWork)
         });
 
         var newOrdersToday = await _paymentRepository
-            .FindAsync(_ => _.CreatedAt.Value.Month == DateTimeOffset.UtcNow.Month);
+            .FindAsync(_ => (!request.StationId.HasValue || _.StationId == request.StationId) && _.CreatedAt.Value.Month == DateTimeOffset.UtcNow.Month);
 
         var totalNewOrdersToday = newOrdersToday.Sum(x => x.ServiceFee);
 
         var newOrdersYesterday = await _paymentRepository
-            .FindAsync(_ => _.CreatedAt.Value.Month == DateTimeOffset.UtcNow.Month - 1);
+            .FindAsync(_ => (!request.StationId.HasValue || _.StationId == request.StationId) && _.CreatedAt.Value.Month == DateTimeOffset.UtcNow.Month - 1);
 
         var totalNewOrdersYesterday = newOrdersYesterday.Sum(x => x.ServiceFee);
 
