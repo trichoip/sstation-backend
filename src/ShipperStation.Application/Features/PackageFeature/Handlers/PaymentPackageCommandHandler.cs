@@ -91,7 +91,8 @@ internal sealed class PaymentPackageCommandHandler(
             ServiceFee = serviceFee,
             Status = PaymentStatus.Success,
             TotalPrice = totalPrice,
-            StationId = package.Rack.Shelf.Zone.StationId
+            StationId = package.Rack.Shelf.Zone.StationId,
+            Type = request.IsCash ? PaymentType.Cash : PaymentType.Wallet
         });
 
         package.Rack.Shelf.Zone.Station.Balance += serviceFee;

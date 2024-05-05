@@ -8,9 +8,9 @@ public sealed record PaymentResponse : BaseAuditableEntityResponse<int>
 {
     public string? Description { get; set; }
     public double ServiceFee { get; set; }
-    public double PriceCod { get; set; }
     public double TotalPrice { get; set; }
     public PaymentStatus Status { get; set; }
+    public PaymentType Type { get; set; }
 
     public Guid PackageId { get; set; }
     public int StationId { get; set; }
