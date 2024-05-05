@@ -18,7 +18,7 @@ internal sealed class GetPackageByIdForUserQueryHandler(
 
         var package = await _packageRepository
             .FindByAsync<PackageResponse>(_ =>
-                _.Id == request.Id && (_.SenderId == userId || _.ReceiverId == userId),
+                _.Id == request.Id && _.ReceiverId == userId,
             cancellationToken);
 
         if (package is null)

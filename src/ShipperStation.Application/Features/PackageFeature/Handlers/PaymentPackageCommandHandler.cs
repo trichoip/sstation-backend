@@ -24,9 +24,8 @@ internal sealed class PaymentPackageCommandHandler(
     {
         var package = await _packageRepository
             .FindByAsync(_ => _.Id == request.Id,
-            _ => _.Include(_ => _.Slot.Rack.Shelf.Zone.Station.Pricings)
-                  .Include(_ => _.Receiver.Wallet)
-                  .Include(_ => _.Sender.Wallet),
+            _ => _.Include(_ => _.Rack.Shelf.Zone.Station.Pricings)
+                  .Include(_ => _.Receiver.Wallet),
             cancellationToken: cancellationToken);
 
         if (package == null)
@@ -42,16 +41,15 @@ internal sealed class PaymentPackageCommandHandler(
         var serviceFee = 1000.0;
 
         var pricingStation = package.Pricings
-            .Where(_ => _.StartTime <= package.TotalHours && _.EndTime >= package.TotalHours)
-            .FirstOrDefault();
+            .Where(_ => _.StartTime <= package.TotalDays && _.EndTime >= package.TotalDays)
+            .FirstOrDefault() ?? package.Pricings.FirstOrDefault();
 
         if (pricingStation != null)
         {
-            serviceFee = PackageExtensions.CalculateServiceFee(package.Volume, package.TotalHours, pricingStation.PricePerUnit, pricingStation.UnitDuration);
+            serviceFee = PackageExtensions.CalculateServiceFee(package.Volume, package.TotalDays, pricingStation.Price);
         }
 
-        var priceCod = package.PriceCod;
-        var totalPrice = priceCod + serviceFee;
+        var totalPrice = serviceFee;
 
         if (totalPrice != request.TotalPrice)
         {
@@ -80,27 +78,6 @@ internal sealed class PaymentPackageCommandHandler(
             Method = TransactionMethod.Wallet,
         });
 
-        if (package.IsCod)
-        {
-            package.Sender.Wallet.Balance += package.PriceCod;
-
-            package.Sender.Transactions.Add(new Transaction
-            {
-                Description = "Receive cod for package",
-                Amount = package.PriceCod,
-                Type = TransactionType.Receive,
-                Status = TransactionStatus.Completed,
-                Method = TransactionMethod.Wallet,
-            });
-
-            var notifyPaymentPackageEvent = new SendNotifyPaymentPackageEvent() with
-            {
-                UserId = package.SenderId,
-                PackageId = package.Id
-            };
-            BackgroundJob.Enqueue(() => publisher.Publish(notifyPaymentPackageEvent, cancellationToken));
-        }
-
         package.PackageStatusHistories.Add(new PackageStatusHistory
         {
             Status = package.Status,
@@ -112,10 +89,9 @@ internal sealed class PaymentPackageCommandHandler(
         {
             Description = $"Payment for package '{package.Name}' success",
             ServiceFee = serviceFee,
-            PriceCod = priceCod,
             Status = PaymentStatus.Success,
             TotalPrice = totalPrice,
-            StationId = package.Slot.Rack.Shelf.Zone.StationId
+            StationId = package.Rack.Shelf.Zone.StationId
         });
 
         package.Rack.Shelf.Zone.Station.Balance += serviceFee;

@@ -20,6 +20,11 @@ internal sealed class UpdateRackCommandHandler(IUnitOfWork unitOfWork) : IReques
             throw new NotFoundException(nameof(Rack), request.Id);
         }
 
+        if (await _rackRepository.ExistsByAsync(_ => _.Id != request.Id && _.ShelfId == rack.ShelfId && _.Name == request.Name, cancellationToken))
+        {
+            throw new ConflictException(nameof(Rack), request.Name);
+        }
+
         request.Adapt(rack);
         await unitOfWork.CommitAsync(cancellationToken);
 

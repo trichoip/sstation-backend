@@ -8,9 +8,7 @@ public sealed record UpdateLocationPackageCommand : IRequest<MessageResponse>
     [JsonIgnore]
     public Guid Id { get; set; }
 
-    public int CurrentSlotId { get; set; }
+    public int CurrentRackId { get; set; }
 
-    public int NewSlotId { get; set; }
-
-    public bool IsForce { get; set; }
+    public int NewRackId { get; set; }
 }

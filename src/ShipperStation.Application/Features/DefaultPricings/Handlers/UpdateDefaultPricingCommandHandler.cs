@@ -20,6 +20,17 @@ internal sealed class UpdateDefaultPricingCommandHandler(IUnitOfWork unitOfWork)
             throw new NotFoundException(nameof(DefaultPricing), request.Id);
         }
 
+        var exists = await _defaultPricingRepository
+            .ExistsByAsync(_ => _.Id != request.Id && (request.StartTime >= _.StartTime && request.StartTime <= _.EndTime ||
+                                request.EndTime >= _.StartTime && request.EndTime <= _.EndTime ||
+                                _.StartTime >= request.StartTime && _.StartTime <= request.EndTime ||
+                                _.EndTime >= request.StartTime && _.EndTime <= request.EndTime), cancellationToken);
+
+        if (exists)
+        {
+            throw new ConflictException($"Pricing existed during the {request.StartTime - request.EndTime} period");
+        }
+
         request.Adapt(defaultPricing);
         await unitOfWork.CommitAsync(cancellationToken);
 

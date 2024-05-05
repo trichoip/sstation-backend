@@ -12,8 +12,6 @@ public sealed record UpdatePackageCommand : IRequest<MessageResponse>
 
     public string? Name { get; set; }
     public string? Description { get; set; }
-    public double PriceCod { get; set; }
-    public bool IsCod { get; set; }
 
     public PackageStatus Status { get; set; }
     public double Weight { get; set; }

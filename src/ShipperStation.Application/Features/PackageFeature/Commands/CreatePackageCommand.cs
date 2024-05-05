@@ -7,8 +7,6 @@ public sealed record CreatePackageCommand : IRequest<PackageResponse>
 {
     public string? Name { get; set; }
     public string? Description { get; set; }
-    public double PriceCod { get; set; }
-    public bool IsCod { get; set; }
     public double Weight { get; set; }
     public double Height { get; set; }
     public double Width { get; set; }
@@ -24,11 +22,6 @@ public sealed record CreatePackageCommand : IRequest<PackageResponse>
 
     [DefaultValue("null")]
     public int? RackId { get; set; }
-
-    [DefaultValue("null")]
-    public int? SlotId { get; set; }
-
-    public Guid SenderId { get; set; }
     public Guid ReceiverId { get; set; }
 
     public ICollection<CreatePackageImageRequest> PackageImages { get; set; } = new HashSet<CreatePackageImageRequest>();

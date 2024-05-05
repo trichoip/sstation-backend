@@ -16,10 +16,7 @@ internal sealed class CreateShelfCommandHandler(
     private readonly IGenericRepository<Zone> _zoneRepository = unitOfWork.Repository<Zone>();
     public async Task<MessageResponse> Handle(CreateShelfCommand request, CancellationToken cancellationToken)
     {
-        if (!await _zoneRepository
-            .ExistsByAsync(_ =>
-                _.Id == request.ZoneId,
-            cancellationToken))
+        if (!await _zoneRepository.ExistsByAsync(_ => _.Id == request.ZoneId, cancellationToken))
         {
             throw new NotFoundException(nameof(Zone), request.ZoneId);
         }
@@ -36,6 +33,8 @@ internal sealed class CreateShelfCommandHandler(
 
         shelf.Racks = GenerateRacks(request);
         shelf.Index = lastIndex.Value + 1;
+        shelf.Name = shelf.Index.GenerateNameIndex("S");
+        shelf.Description = $"Shelf {shelf.Index.GenerateNameIndex("S")}";
 
         await _shelfRepository.CreateAsync(shelf, cancellationToken);
         await unitOfWork.CommitAsync(cancellationToken);
@@ -50,26 +49,8 @@ internal sealed class CreateShelfCommandHandler(
             {
                 Index = rackIndex,
                 Name = rackIndex.GenerateNameIndex("R"),
-                Description = $"Rack {rackIndex.GenerateNameIndex("R")}",
-                Slots = Enumerable.Range(1, request.NumberOfSlotsPerRack)
-                    .Select(slotIndex =>
-                        GenerateSlot(request.Slot, slotIndex, rackIndex, request.NumberOfSlotsPerRack))
-                    .ToList()
+                Description = $"Rack {rackIndex.GenerateNameIndex("R")}"
             })
             .ToList(); ;
-    }
-
-    private Slot GenerateSlot(
-        CreateSlotRequest request,
-        int slotIndex,
-        int rackIndex,
-        int numberOfSlotsPerRack)
-    {
-        var slot = request.Adapt<Slot>();
-        slot.Index = (rackIndex - 1) * numberOfSlotsPerRack + slotIndex;
-        slot.Name = slot.Index.GenerateNameIndex("S");
-        slot.Description = $"Slot {slot.Index.GenerateNameIndex("S")}";
-        slot.IsActive = true;
-        return slot;
     }
 }

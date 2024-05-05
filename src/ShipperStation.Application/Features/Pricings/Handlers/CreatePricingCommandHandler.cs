@@ -15,12 +15,20 @@ internal sealed class CreatePricingCommandHandler(
     private readonly IGenericRepository<Station> _stationRepository = unitOfWork.Repository<Station>();
     public async Task<MessageResponse> Handle(CreatePricingCommand request, CancellationToken cancellationToken)
     {
-        if (!await _stationRepository
-            .ExistsByAsync(_ =>
-                _.Id == request.StationId,
-            cancellationToken))
+        if (!await _stationRepository.ExistsByAsync(_ => _.Id == request.StationId, cancellationToken))
         {
             throw new NotFoundException(nameof(Station), request.StationId);
+        }
+
+        var exists = await _pricingRepository
+            .ExistsByAsync(_ => _.StationId == request.StationId && (request.StartTime >= _.StartTime && request.StartTime <= _.EndTime ||
+                                request.EndTime >= _.StartTime && request.EndTime <= _.EndTime ||
+                                _.StartTime >= request.StartTime && _.StartTime <= request.EndTime ||
+                                _.EndTime >= request.StartTime && _.EndTime <= request.EndTime), cancellationToken);
+
+        if (exists)
+        {
+            throw new ConflictException($"Pricing existed during the {request.StartTime - request.EndTime} period");
         }
 
         var pricing = request.Adapt<Pricing>();

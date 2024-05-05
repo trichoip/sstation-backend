@@ -7,8 +7,7 @@ public sealed record CreatePricingCommand : IRequest<MessageResponse>
 {
     public int StartTime { get; set; }
     public int EndTime { get; set; }
-    public double PricePerUnit { get; set; }
-    public double UnitDuration { get; set; }
+    public double Price { get; set; }
 
     [JsonIgnore]
     public int StationId { get; set; }

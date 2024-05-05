@@ -24,6 +24,11 @@ internal sealed class ConfirmPackageCommandHandler(
             throw new NotFoundException(nameof(Package), request.Id);
         }
 
+        if (package.Status == PackageStatus.Completed)
+        {
+            throw new BadRequestException("Package is already completed");
+        }
+
         if (package.Status != PackageStatus.Paid)
         {
             throw new BadRequestException("Package is not paid");
@@ -42,7 +47,6 @@ internal sealed class ConfirmPackageCommandHandler(
 
         var notifyConfirmPackageEvent = new SendNotifyConfirmPackageEvent() with
         {
-            SenderId = package.SenderId,
             ReceiverId = package.ReceiverId,
             PackageId = package.Id
         };

@@ -26,11 +26,7 @@ public class User : IdentityUser<Guid>, IAuditableEntity
     public virtual ICollection<Notification> Notifications { get; set; } = new HashSet<Notification>();
     public virtual ICollection<Transaction> Transactions { get; set; } = new HashSet<Transaction>();
 
-    [InverseProperty(nameof(Package.Receiver))]
-    public virtual ICollection<Package> ReceivePackages { get; set; } = new HashSet<Package>();
-
-    [InverseProperty(nameof(Package.Sender))]
-    public virtual ICollection<Package> SendPackages { get; set; } = new HashSet<Package>();
+    public virtual ICollection<Package> Packages { get; set; } = new HashSet<Package>();
 
     public virtual ICollection<Device> Devices { get; set; } = new HashSet<Device>();
 

@@ -22,8 +22,5 @@ internal sealed class SendNotifyReturnPackageEventHandler(INotifier notifier) : 
             })
         };
         await notifier.NotifyAsync(notificationMessage, true, cancellationToken);
-
-        notificationMessage = notificationMessage with { UserId = notification.SenderId, Id = 0 };
-        await notifier.NotifyAsync(notificationMessage, true, cancellationToken);
     }
 }

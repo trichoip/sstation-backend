@@ -7,7 +7,6 @@ public class Payment : BaseAuditableEntity<int>
 {
     public string? Description { get; set; }
     public double ServiceFee { get; set; }
-    public double PriceCod { get; set; }
     public double TotalPrice { get; set; }
 
     [Column(TypeName = "nvarchar(24)")]

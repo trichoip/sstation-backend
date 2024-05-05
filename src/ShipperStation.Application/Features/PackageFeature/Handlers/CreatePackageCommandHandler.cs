@@ -18,7 +18,9 @@ internal sealed class CreatePackageCommandHandler(
     private readonly IGenericRepository<Package> _packageRepository = unitOfWork.Repository<Package>();
     private readonly IGenericRepository<User> _userRepository = unitOfWork.Repository<User>();
     private readonly IGenericRepository<Station> _stationRepository = unitOfWork.Repository<Station>();
-    private readonly IGenericRepository<Slot> _slotRepository = unitOfWork.Repository<Slot>();
+    private readonly IGenericRepository<Pricing> _pricingRepository = unitOfWork.Repository<Pricing>();
+    private readonly IGenericRepository<Rack> _rackRepository = unitOfWork.Repository<Rack>();
+
     public async Task<PackageResponse> Handle(CreatePackageCommand request, CancellationToken cancellationToken)
     {
         if (!await _userRepository.ExistsByAsync(_ => _.Id == request.ReceiverId, cancellationToken))
@@ -26,37 +28,33 @@ internal sealed class CreatePackageCommandHandler(
             throw new NotFoundException(nameof(User), request.ReceiverId);
         }
 
-        if (!await _userRepository.ExistsByAsync(_ => _.Id == request.SenderId, cancellationToken))
-        {
-            throw new NotFoundException(nameof(User), request.SenderId);
-        }
-
-        if (!await _stationRepository.ExistsByAsync(_ => _.Id == request.StationId))
+        if (!await _stationRepository.ExistsByAsync(_ => _.Id == request.StationId, cancellationToken))
         {
             throw new NotFoundException(nameof(Station), request.StationId);
         }
 
-        var slot = await _slotRepository
+        if (!await _pricingRepository.ExistsByAsync(_ => _.StationId == request.StationId, cancellationToken))
+        {
+            throw new NotFoundException("This station not have pricing, pls configuration pricing before check in package");
+        }
+
+        var rack = await _rackRepository
             .FindOrderByAsync(_ =>
-                request.Volume <= _.Volume &&
-                _.Rack.Shelf.Zone.StationId == request.StationId &&
-                request.Volume <= (_.Volume - _.Packages.Where(_ => _.Status != PackageStatus.Completed && _.Status != PackageStatus.Returned).Sum(_ => _.Volume)) &&
-                _.Rack.Shelf.ZoneId == request.ZoneId &&
-                (!request.ShelfId.HasValue || _.Rack.Shelf.Id == request.ShelfId) &&
-                (!request.RackId.HasValue || _.Rack.Id == request.RackId) &&
-                (!request.SlotId.HasValue || _.Id == request.SlotId) &&
-                _.IsActive == true,
-            orderBy: _ => _.OrderBy(_ => _.Rack.Shelf.Index).ThenBy(_ => _.Rack.Index).ThenBy(_ => _.Index),
+                _.Shelf.Zone.StationId == request.StationId &&
+                _.Shelf.ZoneId == request.ZoneId &&
+                (!request.ShelfId.HasValue || _.Shelf.Id == request.ShelfId) &&
+                (!request.RackId.HasValue || _.Id == request.RackId),
+            orderBy: _ => _.OrderBy(_ => _.Shelf.Index).ThenBy(_ => _.Index),
             cancellationToken: cancellationToken);
 
-        if (slot == null)
+        if (rack == null)
         {
-            throw new NotFoundException(nameof(Slot), "slot are full");
+            throw new NotFoundException(nameof(Rack), "rack are full");
         }
 
         var package = request.Adapt<Package>();
         package.Status = PackageStatus.Initialized;
-        package.SlotId = slot.Id;
+        package.RackId = rack.Id;
 
         package.PackageStatusHistories.Add(new PackageStatusHistory
         {
@@ -70,7 +68,6 @@ internal sealed class CreatePackageCommandHandler(
 
         var notify = new SendNotifyCreatePackageEvent() with
         {
-            SenderId = package.SenderId,
             ReceiverId = package.ReceiverId,
             PackageId = package.Id,
         };
