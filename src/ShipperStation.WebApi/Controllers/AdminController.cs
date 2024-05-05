@@ -64,6 +64,15 @@ public class AdminController(ISender sender) : ControllerBase
         return await sender.Send(request with { Id = id }, cancellationToken);
     }
 
+    [HttpPatch("stations/{id}/browse")]
+    public async Task<ActionResult<MessageResponse>> BrowseStation(
+       int id,
+       BrowseStationCommand command,
+       CancellationToken cancellationToken)
+    {
+        return await sender.Send(command with { Id = id }, cancellationToken);
+    }
+
     #endregion
 
     #region Manager in stations
@@ -159,4 +168,24 @@ public class AdminController(ISender sender) : ControllerBase
     }
     #endregion
 
+    #region Get station of manager
+    [HttpGet("managers/{managerId}/stations")]
+    public async Task<ActionResult<PaginatedResponse<StationResponse>>> GetStationsOfManager(
+       Guid managerId,
+       [FromQuery] GetStationsOfManagerQuery request,
+       CancellationToken cancellationToken)
+    {
+        return await sender.Send(request with { ManagerId = managerId }, cancellationToken);
+    }
+
+    [HttpGet("managers/{managerId}/stations/{stationId}")]
+    public async Task<ActionResult<StationResponse>> GetStationOfManager(
+        int stationId,
+        Guid managerId,
+        CancellationToken cancellationToken)
+    {
+        return await sender.Send(new GetStationOfManagerQuery(stationId) with { ManagerId = managerId }, cancellationToken);
+    }
+
+    #endregion
 }

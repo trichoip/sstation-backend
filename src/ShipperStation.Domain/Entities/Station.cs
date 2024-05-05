@@ -13,6 +13,8 @@ public class Station : BaseAuditableEntity<int>
     public string? Latitude { get; set; }
     public string? Longitude { get; set; }
 
+    public bool IsActive { get; set; }
+
     public double Balance { get; set; }
 
     [Projectable]

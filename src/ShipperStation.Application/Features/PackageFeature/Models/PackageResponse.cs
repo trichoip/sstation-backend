@@ -1,5 +1,6 @@
 ﻿using ShipperStation.Application.Extensions;
 using ShipperStation.Application.Features.PackageStatusHistories.Models;
+using ShipperStation.Application.Features.Payments.Models;
 using ShipperStation.Application.Features.Pricings.Models;
 using ShipperStation.Application.Features.Racks.Models;
 using ShipperStation.Application.Features.Shelfs.Models;
@@ -56,5 +57,5 @@ public sealed record PackageResponse : BaseAuditableEntityResponse<Guid>
 
     public StationResponse Station { get; set; } = default!;
 
-    //public ICollection<PaymentResponse> Payments { get; set; } = new HashSet<PaymentResponse>();
+    public ICollection<PaymentInfoPackageResponse> Payments { get; set; } = new HashSet<PaymentInfoPackageResponse>();
 }

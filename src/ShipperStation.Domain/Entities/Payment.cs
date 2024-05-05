@@ -12,6 +12,9 @@ public class Payment : BaseAuditableEntity<int>
     [Column(TypeName = "nvarchar(24)")]
     public PaymentStatus Status { get; set; }
 
+    [Column(TypeName = "nvarchar(24)")]
+    public PaymentType Type { get; set; }
+
     public Guid PackageId { get; set; }
     public virtual Package Package { get; set; } = default!;
 
