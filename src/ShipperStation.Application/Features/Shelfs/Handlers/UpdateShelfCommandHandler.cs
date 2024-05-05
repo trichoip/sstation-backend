@@ -3,7 +3,6 @@ using MediatR;
 using ShipperStation.Application.Common.Exceptions;
 using ShipperStation.Application.Common.Resources;
 using ShipperStation.Application.Contracts.Repositories;
-using ShipperStation.Application.Contracts.Services;
 using ShipperStation.Application.Features.Shelfs.Commands;
 using ShipperStation.Application.Models;
 using ShipperStation.Domain.Entities;
@@ -17,22 +16,21 @@ internal sealed class UpdateShelfCommandHandler(
 
     public async Task<MessageResponse> Handle(UpdateShelfCommand request, CancellationToken cancellationToken)
     {
-        if (!await _zoneRepository
-            .ExistsByAsync(_ =>
-                _.Id == request.ZoneId,
-            cancellationToken))
+        if (!await _zoneRepository.ExistsByAsync(_ => _.Id == request.ZoneId, cancellationToken))
         {
             throw new NotFoundException(nameof(Zone), request.ZoneId);
         }
 
-        var shelf = await _shelfRepository
-            .FindByAsync(x =>
-                x.Id == request.Id,
-             cancellationToken: cancellationToken);
+        var shelf = await _shelfRepository.FindByAsync(x => x.Id == request.Id, cancellationToken: cancellationToken);
 
         if (shelf is null)
         {
             throw new NotFoundException(nameof(Shelf), request.Id);
+        }
+
+        if (await _shelfRepository.ExistsByAsync(_ => _.Id != request.Id && _.ZoneId == request.ZoneId && _.Name == request.Name, cancellationToken))
+        {
+            throw new ConflictException(nameof(Shelf), request.Name);
         }
 
         request.Adapt(shelf);

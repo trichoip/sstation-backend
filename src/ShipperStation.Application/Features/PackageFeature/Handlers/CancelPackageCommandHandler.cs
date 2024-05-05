@@ -46,7 +46,6 @@ internal sealed class CancelPackageCommandHandler(
 
         var notifyCancelPackageEvent = new SendNotifyCancelPackageEvent() with
         {
-            SenderId = package.SenderId,
             ReceiverId = package.ReceiverId,
             PackageId = package.Id
         };

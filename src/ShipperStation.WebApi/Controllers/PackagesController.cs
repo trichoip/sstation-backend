@@ -87,15 +87,6 @@ public class PackagesController(ISender sender) : ControllerBase
     }
 
     [Authorize(Roles = Policies.StationManager_Or_Staff_Or_Admin)]
-    [HttpPost("force")]
-    public async Task<ActionResult<PackageResponse>> ForceCreatePackage(
-        ForceCreatePackageCommand command,
-        CancellationToken cancellationToken)
-    {
-        return await sender.Send(command, cancellationToken);
-    }
-
-    [Authorize(Roles = Policies.StationManager_Or_Staff_Or_Admin)]
     [HttpGet("{id}/qr-payment")]
     public async Task<ActionResult<QrPaymentPackage>> GetQrPaymentPackagePackage(
        Guid id,

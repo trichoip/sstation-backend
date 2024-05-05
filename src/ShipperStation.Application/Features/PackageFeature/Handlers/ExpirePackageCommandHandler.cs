@@ -27,6 +27,11 @@ internal sealed class ExpirePackageCommandHandler(
                 throw new NotFoundException(nameof(Package), item);
             }
 
+            if (package.Status == PackageStatus.Expired)
+            {
+                throw new BadRequestException("Package is already expired");
+            }
+
             package.Status = PackageStatus.Expired;
 
             package.PackageStatusHistories.Add(new PackageStatusHistory
@@ -48,9 +53,6 @@ internal sealed class ExpirePackageCommandHandler(
                     Entity = nameof(Package)
                 })
             };
-            BackgroundJob.Enqueue(() => publisher.Publish(notify, cancellationToken));
-
-            notify = notify with { UserId = package.SenderId };
             BackgroundJob.Enqueue(() => publisher.Publish(notify, cancellationToken));
         }
 

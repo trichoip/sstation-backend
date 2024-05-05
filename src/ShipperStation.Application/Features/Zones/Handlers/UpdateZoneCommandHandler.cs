@@ -25,6 +25,11 @@ internal sealed class UpdateZoneCommandHandler(
             throw new NotFoundException(nameof(Zone), request.Id);
         }
 
+        if (await _zoneRepository.ExistsByAsync(_ => _.Id != request.Id && _.StationId == request.StationId && _.Name == request.Name, cancellationToken))
+        {
+            throw new ConflictException(nameof(Zone), request.Name);
+        }
+
         request.Adapt(zone);
         await unitOfWork.CommitAsync(cancellationToken);
 

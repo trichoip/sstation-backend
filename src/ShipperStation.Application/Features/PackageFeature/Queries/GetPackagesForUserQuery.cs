@@ -14,7 +14,6 @@ public sealed record GetPackagesForUserQuery : PaginationRequest<Package>, IRequ
 {
     public string? Name { get; set; }
     public PackageStatus? Status { get; set; }
-    public PackageType? Type { get; set; }
 
     /// <summary>
     /// Format for From is "yyyy-MM-dd" or "MM/dd/yyyy"
@@ -38,20 +37,7 @@ public sealed record GetPackagesForUserQuery : PaginationRequest<Package>, IRequ
         Expression = Expression.And(_ => !From.HasValue || _.CreatedAt >= From);
         Expression = Expression.And(_ => !To.HasValue || _.CreatedAt <= To.Value.AddDays(1));
 
-        if (Type == PackageType.Sender)
-        {
-            Expression = Expression.And(_ => _.SenderId == UserId);
-        }
-
-        if (Type == PackageType.Receiver)
-        {
-            Expression = Expression.And(_ => _.ReceiverId == UserId);
-        }
-
-        if (!Type.HasValue)
-        {
-            Expression = Expression.And(_ => _.SenderId == UserId || _.ReceiverId == UserId);
-        }
+        Expression = Expression.And(_ => _.ReceiverId == UserId);
 
         return Expression;
     }

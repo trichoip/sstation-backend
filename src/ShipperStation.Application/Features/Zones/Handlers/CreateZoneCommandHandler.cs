@@ -17,11 +17,14 @@ internal sealed class CreateZoneCommandHandler(
     public async Task<MessageResponse> Handle(CreateZoneCommand request, CancellationToken cancellationToken)
     {
 
-        if (!await _stationRepository
-            .ExistsByAsync(_ =>
-            _.Id == request.StationId, cancellationToken))
+        if (!await _stationRepository.ExistsByAsync(_ => _.Id == request.StationId, cancellationToken))
         {
             throw new NotFoundException(nameof(Station), request.StationId);
+        }
+
+        if (await _zoneRepository.ExistsByAsync(_ => _.StationId == request.StationId && _.Name == request.Name, cancellationToken))
+        {
+            throw new ConflictException(nameof(Zone), request.Name);
         }
 
         var zone = request.Adapt<Zone>();

@@ -10,10 +10,6 @@ public sealed record ShelfResponse
     public string? Description { get; set; }
     public int Index { get; set; }
 
-    public double Volume { get; set; }
-
-    public int Capacity { get; set; }
-
     public double VolumeUsed { get; set; }
 
     public int ZoneId { get; set; }

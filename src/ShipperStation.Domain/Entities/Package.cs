@@ -9,9 +9,6 @@ public class Package : BaseAuditableEntity<Guid>
 {
     public string? Name { get; set; }
     public string? Description { get; set; }
-    public double PriceCod { get; set; }
-    public bool IsCod { get; set; }
-    public string? Barcode { get; set; }
 
     [Column(TypeName = "nvarchar(24)")]
     public PackageStatus Status { get; set; }
@@ -25,35 +22,29 @@ public class Package : BaseAuditableEntity<Guid>
 
     public int NotificationCount { get; set; }
 
-    public int SlotId { get; set; }
-    public virtual Slot Slot { get; set; } = default!;
-
-    public Guid SenderId { get; set; }
-    public virtual User Sender { get; set; } = default!;
+    public int RackId { get; set; }
+    public virtual Rack Rack { get; set; } = default!;
 
     public Guid ReceiverId { get; set; }
     public virtual User Receiver { get; set; } = default!;
 
     [Projectable]// không cần NotMapped (test chỉ cần migration mà không có thêm field của Station là oke, còn nếu ra field thì NotMapped)
-    public Station Station => Slot.Rack.Shelf.Zone.Station;
+    public Station Station => Rack.Shelf.Zone.Station;
 
-    public double TotalHours => Math.Ceiling((DateTimeOffset.UtcNow - CreatedAt!.Value).TotalHours);
+    public double TotalDays => Math.Ceiling((DateTimeOffset.UtcNow - CreatedAt!.Value).TotalDays);
 
     [Projectable]
     [NotMapped]
     public IEnumerable<Pricing> Pricings => Station.Pricings;
 
     [Projectable]
-    public string Location => $"{Slot.Rack.Shelf.Name} - {Slot.Rack.Name} - {Slot.Name}";
+    public string Location => $"{Rack.Shelf.Zone.Name} - {Rack.Shelf.Name} - {Rack.Name}";
 
     [Projectable]
-    public Zone Zone => Slot.Rack.Shelf.Zone;
+    public Zone Zone => Rack.Shelf.Zone;
 
     [Projectable]
-    public Rack Rack => Slot.Rack;
-
-    [Projectable]
-    public Shelf Shelf => Slot.Rack.Shelf;
+    public Shelf Shelf => Rack.Shelf;
 
     public virtual ICollection<PackageImage> PackageImages { get; set; } = new HashSet<PackageImage>();
 

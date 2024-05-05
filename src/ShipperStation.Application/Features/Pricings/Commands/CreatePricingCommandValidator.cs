@@ -12,9 +12,6 @@ public sealed class CreatePricingCommandValidator : AbstractValidator<CreatePric
 
         RuleFor(x => x.EndTime).GreaterThan(0);
 
-        RuleFor(x => x.PricePerUnit).GreaterThanOrEqualTo(500);
-
-        RuleFor(x => x.UnitDuration).GreaterThan(0)
-            .LessThan(_ => _.EndTime - _.StartTime).WithMessage("UnitDuration must be less than the duration time");
+        RuleFor(x => x.Price).GreaterThanOrEqualTo(500);
     }
 }

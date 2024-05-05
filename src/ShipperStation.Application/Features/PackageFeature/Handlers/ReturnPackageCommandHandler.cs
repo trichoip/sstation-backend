@@ -42,7 +42,6 @@ internal sealed class ReturnPackageCommandHandler(
 
         var notifyReturnPackageEvent = new SendNotifyReturnPackageEvent() with
         {
-            SenderId = package.SenderId,
             ReceiverId = package.ReceiverId,
             PackageId = package.Id
         };

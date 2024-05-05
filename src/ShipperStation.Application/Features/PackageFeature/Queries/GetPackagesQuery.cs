@@ -34,17 +34,13 @@ public sealed record GetPackagesQuery : PaginationRequest<Package>, IRequest<Pag
     public int? ZoneId { get; set; }
     public int? ShelfId { get; set; }
     public int? RackId { get; set; }
-    public int? SlotId { get; set; }
-
-    public Guid? SenderId { get; set; }
 
     public Guid? ReceiverId { get; set; }
 
+    public Guid? ManagerId { get; set; }
+
     public double? CheckinFromDays { get; set; }
     public double? CheckinToDays { get; set; }
-
-    public double? CheckinFromHours { get; set; }
-    public double? CheckinToHours { get; set; }
 
     public override Expression<Func<Package, bool>> GetExpressions()
     {
@@ -53,13 +49,11 @@ public sealed record GetPackagesQuery : PaginationRequest<Package>, IRequest<Pag
         Expression = Expression.And(_ => !From.HasValue || _.CreatedAt >= From);
         Expression = Expression.And(_ => !To.HasValue || _.CreatedAt <= To.Value.AddDays(1));
 
-        Expression = Expression.And(_ => !StationId.HasValue || _.Slot.Rack.Shelf.Zone.StationId == StationId);
-        Expression = Expression.And(_ => !ZoneId.HasValue || _.Slot.Rack.Shelf.ZoneId == ZoneId);
-        Expression = Expression.And(_ => !ShelfId.HasValue || _.Slot.Rack.ShelfId == ShelfId);
-        Expression = Expression.And(_ => !RackId.HasValue || _.Slot.RackId == RackId);
-        Expression = Expression.And(_ => !SlotId.HasValue || _.SlotId == SlotId);
+        Expression = Expression.And(_ => !StationId.HasValue || _.Rack.Shelf.Zone.StationId == StationId);
+        Expression = Expression.And(_ => !ZoneId.HasValue || _.Rack.Shelf.ZoneId == ZoneId);
+        Expression = Expression.And(_ => !ShelfId.HasValue || _.Rack.ShelfId == ShelfId);
+        Expression = Expression.And(_ => !RackId.HasValue || _.RackId == RackId);
 
-        Expression = Expression.And(_ => !SenderId.HasValue || _.SenderId == SenderId);
         Expression = Expression.And(_ => !ReceiverId.HasValue || _.ReceiverId == ReceiverId);
 
         Expression = Expression.And(_ => !CheckinFromDays.HasValue || _.CreatedAt <= DateTimeOffset.UtcNow.AddDays(-CheckinFromDays.Value));
@@ -68,8 +62,7 @@ public sealed record GetPackagesQuery : PaginationRequest<Package>, IRequest<Pag
         Expression = Expression.And(_ => !Statuses.Any() || Statuses.Contains(_.Status));
         Expression = Expression.And(_ => !StationIds.Any() || StationIds.Contains(_.Station.Id));
 
-        Expression = Expression.And(_ => !CheckinFromHours.HasValue || _.CreatedAt <= DateTimeOffset.UtcNow.AddHours(-CheckinFromHours.Value));
-        Expression = Expression.And(_ => !CheckinToHours.HasValue || _.CreatedAt >= DateTimeOffset.UtcNow.AddHours(-CheckinToHours.Value));
+        Expression = Expression.And(_ => !ManagerId.HasValue || _.Station.UserStations.Any(_ => _.UserId == ManagerId));
 
         return Expression;
     }

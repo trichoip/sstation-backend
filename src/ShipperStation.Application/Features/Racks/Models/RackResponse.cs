@@ -1,7 +1,4 @@
-﻿using ShipperStation.Application.Features.Slots.Models;
-using System.Text.Json.Serialization;
-
-namespace ShipperStation.Application.Features.Racks.Models;
+﻿namespace ShipperStation.Application.Features.Racks.Models;
 public sealed record RackResponse
 {
     public int Id { get; set; }
@@ -10,7 +7,7 @@ public sealed record RackResponse
     public int Index { get; set; }
     public int ShelfId { get; set; }
 
-    [JsonIgnore]
-    public ICollection<SlotResponse> Slots { get; set; } = new HashSet<SlotResponse>();
-    public ICollection<SlotResponse> SlotSorts => Slots.OrderBy(x => x.Index).ToList();
+    public int NumberOfPackages { get; set; }
+
+    public double VolumeUsed { get; set; }
 }
