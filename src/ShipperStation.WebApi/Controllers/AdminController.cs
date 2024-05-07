@@ -24,7 +24,7 @@ public class AdminController(ISender sender) : ControllerBase
 {
     #region Stations
     [HttpPost("stations")]
-    public async Task<ActionResult<StationResponse>> CreateStation(
+    public async Task<ActionResult<MessageResponse>> CreateStation(
        CreateStationCommand command,
        CancellationToken cancellationToken)
     {
@@ -154,7 +154,7 @@ public class AdminController(ISender sender) : ControllerBase
 
     #region Transactions
     [HttpGet("transactions")]
-    public async Task<ActionResult<PaginatedResponse<TransactionResponse>>> GetTransactions(
+    public async Task<ActionResult<PaginatedResponse<TransactionResponseForAdmin>>> GetTransactions(
         [FromQuery] GetTransactionsForAdminQuery query,
         CancellationToken cancellationToken)
     {
@@ -162,7 +162,7 @@ public class AdminController(ISender sender) : ControllerBase
     }
 
     [HttpGet("transactions/{id}")]
-    public async Task<ActionResult<TransactionResponse>> GetTransactionById(Guid id, CancellationToken cancellationToken)
+    public async Task<ActionResult<TransactionResponseForAdmin>> GetTransactionById(Guid id, CancellationToken cancellationToken)
     {
         return await sender.Send(new GetTransactionByIdForAdminQuery(id), cancellationToken);
     }

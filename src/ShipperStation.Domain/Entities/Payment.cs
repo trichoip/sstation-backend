@@ -20,4 +20,7 @@ public class Payment : BaseAuditableEntity<int>
 
     public int StationId { get; set; }
     public virtual Station Station { get; set; } = default!;
+
+    public Guid? TransactionId { get; set; }
+    public virtual Transaction Transaction { get; set; } = default!;
 }

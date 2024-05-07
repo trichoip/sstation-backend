@@ -20,4 +20,6 @@ public class Transaction : BaseAuditableEntity<Guid>
 
     public Guid UserId { get; set; }
     public virtual User User { get; set; } = default!;
+
+    public virtual Payment Payment { get; set; } = default!;
 }

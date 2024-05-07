@@ -8,7 +8,7 @@ using ShipperStation.Shared.Pages;
 using System.Linq.Expressions;
 
 namespace ShipperStation.Application.Features.Transactions.Queries;
-public sealed record GetTransactionsForAdminQuery : PaginationRequest<Transaction>, IRequest<PaginatedResponse<TransactionResponse>>
+public sealed record GetTransactionsForAdminQuery : PaginationRequest<Transaction>, IRequest<PaginatedResponse<TransactionResponseForAdmin>>
 {
     public TransactionType? Type { get; set; }
 
