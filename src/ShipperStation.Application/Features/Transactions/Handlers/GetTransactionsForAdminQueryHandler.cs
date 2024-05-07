@@ -8,10 +8,10 @@ using ShipperStation.Shared.Pages;
 
 namespace ShipperStation.Application.Features.Transactions.Handlers;
 internal sealed class GetTransactionsForAdminQueryHandler(
-    IUnitOfWork unitOfWork) : IRequestHandler<GetTransactionsForAdminQuery, PaginatedResponse<TransactionResponse>>
+    IUnitOfWork unitOfWork) : IRequestHandler<GetTransactionsForAdminQuery, PaginatedResponse<TransactionResponseForAdmin>>
 {
     private readonly IGenericRepository<Transaction> _transactionRepository = unitOfWork.Repository<Transaction>();
-    public async Task<PaginatedResponse<TransactionResponse>> Handle(GetTransactionsForAdminQuery request, CancellationToken cancellationToken)
+    public async Task<PaginatedResponse<TransactionResponseForAdmin>> Handle(GetTransactionsForAdminQuery request, CancellationToken cancellationToken)
     {
         request = request with
         {
@@ -20,7 +20,7 @@ internal sealed class GetTransactionsForAdminQueryHandler(
         };
 
         var transactions = await _transactionRepository
-            .FindAsync<TransactionResponse>(
+            .FindAsync<TransactionResponseForAdmin>(
                 request.PageIndex,
                 request.PageSize,
                 request.GetExpressions(),

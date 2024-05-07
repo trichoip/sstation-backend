@@ -69,14 +69,16 @@ internal sealed class PaymentPackageCommandHandler(
 
         package.Status = PackageStatus.Paid;
 
-        package.Receiver.Transactions.Add(new Transaction
+        var transaction = new Transaction
         {
             Description = "Payment for package",
             Amount = totalPrice,
             Type = TransactionType.Pay,
             Status = TransactionStatus.Completed,
             Method = TransactionMethod.Wallet,
-        });
+        };
+
+        package.Receiver.Transactions.Add(transaction);
 
         package.PackageStatusHistories.Add(new PackageStatusHistory
         {
@@ -92,7 +94,8 @@ internal sealed class PaymentPackageCommandHandler(
             Status = PaymentStatus.Success,
             TotalPrice = totalPrice,
             StationId = package.Rack.Shelf.Zone.StationId,
-            Type = request.IsCash ? PaymentType.Cash : PaymentType.Wallet
+            Type = request.IsCash ? PaymentType.Cash : PaymentType.Wallet,
+            Transaction = transaction
         });
 
         package.Rack.Shelf.Zone.Station.Balance += serviceFee;

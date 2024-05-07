@@ -18,7 +18,6 @@ internal sealed class CreateStationByStoreManagerCommandHandler(
         var userId = await currentUserService.FindCurrentUserIdAsync();
 
         var station = request.Adapt<Station>();
-        station.IsActive = false;
         station.UserStations.Add(new UserStation
         {
             UserId = userId,

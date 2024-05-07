@@ -44,7 +44,7 @@ internal sealed class CreatePackageCommandHandler(
                 _.Shelf.ZoneId == request.ZoneId &&
                 (!request.ShelfId.HasValue || _.Shelf.Id == request.ShelfId) &&
                 (!request.RackId.HasValue || _.Id == request.RackId),
-            orderBy: _ => _.OrderBy(_ => _.Shelf.Index).ThenBy(_ => _.Index),
+            orderBy: _ => _.OrderBy(_ => _.Shelf.Index).ThenByDescending(_ => _.Index),
             cancellationToken: cancellationToken);
 
         if (rack == null)

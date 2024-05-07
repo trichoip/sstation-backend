@@ -15,8 +15,6 @@ public sealed record StationResponse : BaseAuditableEntityResponse<int>
     public string? Latitude { get; set; }
     public string? Longitude { get; set; }
 
-    public bool IsActive { get; set; }
-
     public double Balance { get; set; }
     public UserResponse? Manager => Users.FirstOrDefault(u => u.Roles.Any(_ => _.Name == RoleName.StationManager)) ?? null;
     public string FormatBalance => Balance.FormatMoney();
