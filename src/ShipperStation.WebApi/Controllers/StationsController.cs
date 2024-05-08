@@ -79,7 +79,7 @@ public class StationsController(ISender sender) : ControllerBase
 
     [Authorize]
     [HttpGet]
-    public async Task<ActionResult<PaginatedResponse<StationResponse>>> GetAllStations(
+    public async Task<ActionResult<PaginatedResponse<StationAllResponse>>> GetAllStations(
         [FromQuery] GetAllStationsQuery request,
         CancellationToken cancellationToken)
     {

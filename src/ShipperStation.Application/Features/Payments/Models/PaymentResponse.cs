@@ -17,7 +17,7 @@ public sealed record PaymentResponse : BaseAuditableEntityResponse<int>
     public int StationId { get; set; }
     public Guid? TransactionId { get; set; }
 
-    public StationResponseOfPayment Station { get; set; } = default!;
+    public StationResponse Station { get; set; } = default!;
 
     public PackageResponseOfStatusHistory Package { get; set; } = default!;
     public TransactionResponse Transaction { get; set; } = default!;
