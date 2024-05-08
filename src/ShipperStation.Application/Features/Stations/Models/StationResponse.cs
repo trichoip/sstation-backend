@@ -6,7 +6,7 @@ using ShipperStation.Shared.Extensions;
 using System.Text.Json.Serialization;
 
 namespace ShipperStation.Application.Features.Stations.Models;
-public sealed record StationResponse : BaseAuditableEntityResponse<int>
+public record StationResponse : BaseAuditableEntityResponse<int>
 {
     public string Name { get; set; } = default!;
     public string Description { get; set; } = default!;

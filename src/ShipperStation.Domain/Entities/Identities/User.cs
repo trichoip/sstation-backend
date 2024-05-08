@@ -36,4 +36,8 @@ public class User : IdentityUser<Guid>, IAuditableEntity
     [NotMapped]
     public IEnumerable<Role> Roles => UserRoles.Select(ur => ur.Role);
 
+    [Projectable]
+    [NotMapped]
+    public IEnumerable<Station> Stations => UserStations.Select(us => us.Station);
+
 }

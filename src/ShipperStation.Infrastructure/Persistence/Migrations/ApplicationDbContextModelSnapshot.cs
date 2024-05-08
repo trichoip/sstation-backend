@@ -36,7 +36,7 @@ namespace ShipperStation.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("DefaultPricings");
+                    b.ToTable("DefaultPricings", (string)null);
                 });
 
             modelBuilder.Entity("ShipperStation.Domain.Entities.Device", b =>
@@ -56,7 +56,7 @@ namespace ShipperStation.Infrastructure.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Devices");
+                    b.ToTable("Devices", (string)null);
                 });
 
             modelBuilder.Entity("ShipperStation.Domain.Entities.Identities.Role", b =>
@@ -329,7 +329,7 @@ namespace ShipperStation.Infrastructure.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Notifications");
+                    b.ToTable("Notifications", (string)null);
                 });
 
             modelBuilder.Entity("ShipperStation.Domain.Entities.Package", b =>
@@ -399,7 +399,7 @@ namespace ShipperStation.Infrastructure.Migrations
 
                     b.HasIndex("ReceiverId");
 
-                    b.ToTable("Packages");
+                    b.ToTable("Packages", (string)null);
                 });
 
             modelBuilder.Entity("ShipperStation.Domain.Entities.PackageImage", b =>
@@ -419,7 +419,7 @@ namespace ShipperStation.Infrastructure.Migrations
 
                     b.HasIndex("PackageId");
 
-                    b.ToTable("PackageImages");
+                    b.ToTable("PackageImages", (string)null);
                 });
 
             modelBuilder.Entity("ShipperStation.Domain.Entities.PackageStatusHistory", b =>
@@ -463,7 +463,7 @@ namespace ShipperStation.Infrastructure.Migrations
 
                     b.HasIndex("PackageId");
 
-                    b.ToTable("PackageStatusHistories");
+                    b.ToTable("PackageStatusHistories", (string)null);
                 });
 
             modelBuilder.Entity("ShipperStation.Domain.Entities.Payment", b =>
@@ -525,7 +525,7 @@ namespace ShipperStation.Infrastructure.Migrations
                     b.HasIndex("TransactionId")
                         .IsUnique();
 
-                    b.ToTable("Payments");
+                    b.ToTable("Payments", (string)null);
                 });
 
             modelBuilder.Entity("ShipperStation.Domain.Entities.Pricing", b =>
@@ -550,7 +550,7 @@ namespace ShipperStation.Infrastructure.Migrations
 
                     b.HasIndex("StationId");
 
-                    b.ToTable("Pricings");
+                    b.ToTable("Pricings", (string)null);
                 });
 
             modelBuilder.Entity("ShipperStation.Domain.Entities.Rack", b =>
@@ -575,7 +575,7 @@ namespace ShipperStation.Infrastructure.Migrations
 
                     b.HasIndex("ShelfId");
 
-                    b.ToTable("Racks");
+                    b.ToTable("Racks", (string)null);
                 });
 
             modelBuilder.Entity("ShipperStation.Domain.Entities.Shelf", b =>
@@ -600,7 +600,7 @@ namespace ShipperStation.Infrastructure.Migrations
 
                     b.HasIndex("ZoneId");
 
-                    b.ToTable("Shelves");
+                    b.ToTable("Shelves", (string)null);
                 });
 
             modelBuilder.Entity("ShipperStation.Domain.Entities.Station", b =>
@@ -653,7 +653,7 @@ namespace ShipperStation.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Stations");
+                    b.ToTable("Stations", (string)null);
                 });
 
             modelBuilder.Entity("ShipperStation.Domain.Entities.StationImage", b =>
@@ -673,7 +673,7 @@ namespace ShipperStation.Infrastructure.Migrations
 
                     b.HasIndex("StationId");
 
-                    b.ToTable("StationImages");
+                    b.ToTable("StationImages", (string)null);
                 });
 
             modelBuilder.Entity("ShipperStation.Domain.Entities.Transaction", b =>
@@ -725,7 +725,7 @@ namespace ShipperStation.Infrastructure.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Transactions");
+                    b.ToTable("Transactions", (string)null);
                 });
 
             modelBuilder.Entity("ShipperStation.Domain.Entities.UserStation", b =>
@@ -740,7 +740,7 @@ namespace ShipperStation.Infrastructure.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("UserStations");
+                    b.ToTable("UserStations", (string)null);
                 });
 
             modelBuilder.Entity("ShipperStation.Domain.Entities.Wallet", b =>
@@ -781,7 +781,7 @@ namespace ShipperStation.Infrastructure.Migrations
                     b.HasIndex("UserId")
                         .IsUnique();
 
-                    b.ToTable("Wallets");
+                    b.ToTable("Wallets", (string)null);
                 });
 
             modelBuilder.Entity("ShipperStation.Domain.Entities.Zone", b =>
@@ -804,7 +804,7 @@ namespace ShipperStation.Infrastructure.Migrations
 
                     b.HasIndex("StationId");
 
-                    b.ToTable("Zones");
+                    b.ToTable("Zones", (string)null);
                 });
 
             modelBuilder.Entity("ShipperStation.Domain.Entities.Device", b =>
