@@ -5,7 +5,7 @@ using ShipperStation.Application.Models;
 
 namespace ShipperStation.Application.Features.Users.Models;
 
-public sealed record UserResponse : BaseAuditableEntityResponse<Guid>
+public record UserResponse : BaseAuditableEntityResponse<Guid>
 {
     public string? UserName { get; set; }
     public string? AvatarUrl { get; set; }

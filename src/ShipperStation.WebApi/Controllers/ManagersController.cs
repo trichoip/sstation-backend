@@ -3,11 +3,11 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ShipperStation.Application.Common.Constants;
 using ShipperStation.Application.Features.Managers.Commands;
+using ShipperStation.Application.Features.Managers.Models;
 using ShipperStation.Application.Features.Managers.Queries;
 using ShipperStation.Application.Features.Stations.Commands;
 using ShipperStation.Application.Features.Stations.Models;
 using ShipperStation.Application.Features.Stations.Queries;
-using ShipperStation.Application.Features.Users.Models;
 using ShipperStation.Application.Models;
 using ShipperStation.Shared.Pages;
 
@@ -38,7 +38,7 @@ public class ManagersController(ISender sender) : ControllerBase
 
     [Authorize(Roles = Policies.Admin)]
     [HttpGet]
-    public async Task<ActionResult<PaginatedResponse<UserResponse>>> GetStoreManagers(
+    public async Task<ActionResult<PaginatedResponse<ManagerResponse>>> GetStoreManagers(
         [FromQuery] GetStoreManagersQuery request,
         CancellationToken cancellationToken)
     {
@@ -47,7 +47,7 @@ public class ManagersController(ISender sender) : ControllerBase
 
     [Authorize(Roles = Policies.Admin)]
     [HttpGet("{id}")]
-    public async Task<ActionResult<UserResponse>> GetStoreManagerById(
+    public async Task<ActionResult<ManagerResponse>> GetStoreManagerById(
         Guid id,
         CancellationToken cancellationToken)
     {
