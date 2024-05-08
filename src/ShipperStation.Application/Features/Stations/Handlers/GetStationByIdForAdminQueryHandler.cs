@@ -7,13 +7,13 @@ using ShipperStation.Domain.Entities;
 
 namespace ShipperStation.Application.Features.Stations.Handlers;
 internal sealed class GetStationByIdForAdminQueryHandler(
-    IUnitOfWork unitOfWork) : IRequestHandler<GetStationByIdForAdminQuery, StationResponse>
+    IUnitOfWork unitOfWork) : IRequestHandler<GetStationByIdForAdminQuery, StationAllResponse>
 {
     private readonly IGenericRepository<Station> _stationRepository = unitOfWork.Repository<Station>();
-    public async Task<StationResponse> Handle(GetStationByIdForAdminQuery request, CancellationToken cancellationToken)
+    public async Task<StationAllResponse> Handle(GetStationByIdForAdminQuery request, CancellationToken cancellationToken)
     {
         var station = await _stationRepository
-            .FindByAsync<StationResponse>(x => x.Id == request.Id, cancellationToken);
+            .FindByAsync<StationAllResponse>(x => x.Id == request.Id, cancellationToken);
 
         if (station == null)
         {

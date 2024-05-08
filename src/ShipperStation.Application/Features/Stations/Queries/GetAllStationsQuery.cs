@@ -8,7 +8,7 @@ using ShipperStation.Shared.Pages;
 using System.Linq.Expressions;
 
 namespace ShipperStation.Application.Features.Stations.Queries;
-public sealed record GetAllStationsQuery : PaginationRequest<Station>, IRequest<PaginatedResponse<StationResponse>>
+public sealed record GetAllStationsQuery : PaginationRequest<Station>, IRequest<PaginatedResponse<StationAllResponse>>
 {
     public string? Search { get; set; }
 

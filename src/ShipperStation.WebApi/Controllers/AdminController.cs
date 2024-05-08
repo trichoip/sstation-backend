@@ -32,7 +32,7 @@ public class AdminController(ISender sender) : ControllerBase
     }
 
     [HttpGet("stations")]
-    public async Task<ActionResult<PaginatedResponse<StationResponse>>> GetAllStations(
+    public async Task<ActionResult<PaginatedResponse<StationAllResponse>>> GetAllStations(
         [FromQuery] GetAllStationsQuery request,
         CancellationToken cancellationToken)
     {
@@ -40,7 +40,7 @@ public class AdminController(ISender sender) : ControllerBase
     }
 
     [HttpGet("stations/{id}")]
-    public async Task<ActionResult<StationResponse>> GetStationByIdForAdmin(
+    public async Task<ActionResult<StationAllResponse>> GetStationByIdForAdmin(
         int id,
         CancellationToken cancellationToken)
     {

@@ -6,13 +6,13 @@ using ShipperStation.Domain.Entities;
 using ShipperStation.Shared.Pages;
 
 namespace ShipperStation.Application.Features.Stations.Handlers;
-internal sealed class GetAllStationsQueryHandler(IUnitOfWork unitOfWork) : IRequestHandler<GetAllStationsQuery, PaginatedResponse<StationResponse>>
+internal sealed class GetAllStationsQueryHandler(IUnitOfWork unitOfWork) : IRequestHandler<GetAllStationsQuery, PaginatedResponse<StationAllResponse>>
 {
     private readonly IGenericRepository<Station> _stationRepository = unitOfWork.Repository<Station>();
-    public async Task<PaginatedResponse<StationResponse>> Handle(GetAllStationsQuery request, CancellationToken cancellationToken)
+    public async Task<PaginatedResponse<StationAllResponse>> Handle(GetAllStationsQuery request, CancellationToken cancellationToken)
     {
         var stations = await _stationRepository
-            .FindAsync<StationResponse>(
+            .FindAsync<StationAllResponse>(
                 request.PageIndex,
                 request.PageSize,
                 request.GetExpressions(),
