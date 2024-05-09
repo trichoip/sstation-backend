@@ -84,7 +84,7 @@ public class ManagersController(ISender sender) : ControllerBase
         return await sender.Send(request with { Id = id }, cancellationToken);
     }
 
-    [Authorize(Roles = Policies.StationManager)]
+    [Authorize(Roles = Policies.Admin_Or_StationManager)]
     [HttpGet("stations/{id}")]
     public async Task<ActionResult<StationResponse>> GetStationByIdForStoreManager(
         int id,

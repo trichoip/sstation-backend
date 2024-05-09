@@ -17,5 +17,5 @@ public sealed record ShelfResponse
 
     [JsonIgnore]
     public ICollection<RackResponse> Racks { get; set; } = new HashSet<RackResponse>();
-    public ICollection<RackResponse> RackSorts => Racks.OrderBy(x => x.Index).ToList();
+    public ICollection<RackResponse> RackSorts => Racks.OrderByDescending(x => x.Index).ToList();
 }

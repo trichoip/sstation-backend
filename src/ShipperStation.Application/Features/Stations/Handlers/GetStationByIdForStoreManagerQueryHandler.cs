@@ -14,12 +14,13 @@ internal sealed class GetStationByIdForStoreManagerQueryHandler(
     private readonly IGenericRepository<Station> _stationRepository = unitOfWork.Repository<Station>();
     public async Task<StationResponse> Handle(GetStationByIdForStoreManagerQuery request, CancellationToken cancellationToken)
     {
-        var userId = await currentUserService.FindCurrentUserIdAsync();
+        //var userId = await currentUserService.FindCurrentUserIdAsync();
 
         var station = await _stationRepository
             .FindByAsync<StationResponse>(x =>
-                x.Id == request.Id &&
-                x.UserStations.Any(_ => _.UserId == userId),
+                x.Id == request.Id,
+            //&&
+            //x.UserStations.Any(_ => _.UserId == userId),
             cancellationToken);
 
         if (station == null)

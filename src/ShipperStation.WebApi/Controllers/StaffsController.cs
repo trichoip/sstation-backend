@@ -22,21 +22,21 @@ public class StaffsController(ISender sender) : ControllerBase
         return await sender.Send(new GetStationByStaffQuery(), cancellationToken);
     }
 
-    [Authorize(Roles = Policies.StationManager_Or_Staff)]
+    [Authorize(Roles = Policies.StationManager_Or_Staff_Or_Admin)]
     [HttpGet("users")]
     public async Task<ActionResult<PaginatedResponse<UserResponse>>> GetUsers([FromQuery] GetUsersQuery query, CancellationToken cancellationToken)
     {
         return await sender.Send(query, cancellationToken);
     }
 
-    [Authorize(Roles = Policies.StationManager_Or_Staff)]
+    [Authorize(Roles = Policies.StationManager_Or_Staff_Or_Admin)]
     [HttpGet("users/phone/{number}")]
     public async Task<ActionResult<UserResponse>> GetUserByPhone(string number, CancellationToken cancellationToken)
     {
         return await sender.Send(new GetUserByPhoneQuery(number), cancellationToken);
     }
 
-    [Authorize(Roles = Policies.StationManager_Or_Staff)]
+    [Authorize(Roles = Policies.StationManager_Or_Staff_Or_Admin)]
     [HttpPost("users")]
     public async Task<ActionResult<MessageResponse>> CreateUser(CreateUserCommand command, CancellationToken cancellationToken)
     {
