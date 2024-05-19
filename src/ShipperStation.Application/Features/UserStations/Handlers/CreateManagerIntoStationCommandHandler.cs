@@ -37,6 +37,11 @@ internal sealed class CreateManagerIntoStationCommandHandler(IUnitOfWork unitOfW
             throw new ConflictException(nameof(UserStation), request);
         }
 
+        var managerPersents = await _userStationRepository
+            .FindAsync(_ => _.StationId == request.StationId && _.User.UserRoles.Any(_ => _.Role.Name == RoleName.StationManager), cancellationToken: cancellationToken);
+
+        await _userStationRepository.DeleteRangeAsync(managerPersents);
+
         var userStation = request.Adapt<UserStation>();
         await _userStationRepository.CreateAsync(userStation, cancellationToken);
         await unitOfWork.CommitAsync(cancellationToken);

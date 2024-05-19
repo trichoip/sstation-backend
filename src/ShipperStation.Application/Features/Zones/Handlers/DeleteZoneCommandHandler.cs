@@ -11,6 +11,7 @@ internal sealed class DeleteZoneCommandHandler(
     IUnitOfWork unitOfWork) : IRequestHandler<DeleteZoneCommand, MessageResponse>
 {
     private readonly IGenericRepository<Zone> _zoneRepository = unitOfWork.Repository<Zone>();
+    private readonly IGenericRepository<Package> _packageRepository = unitOfWork.Repository<Package>();
     public async Task<MessageResponse> Handle(DeleteZoneCommand request, CancellationToken cancellationToken)
     {
         var zone = await _zoneRepository.FindByAsync(
@@ -21,6 +22,11 @@ internal sealed class DeleteZoneCommandHandler(
         if (zone is null)
         {
             throw new NotFoundException(nameof(Zone), request.Id);
+        }
+
+        if (await _packageRepository.ExistsByAsync(_ => _.Zone.Id == zone.Id, cancellationToken))
+        {
+            throw new BadRequestException("Zone have package");
         }
 
         await _zoneRepository.DeleteAsync(zone);
