@@ -11,6 +11,7 @@ internal sealed class DeleteShelfCommandHandler(
     IUnitOfWork unitOfWork) : IRequestHandler<DeleteShelfCommand, MessageResponse>
 {
     private readonly IGenericRepository<Shelf> _shelfRepository = unitOfWork.Repository<Shelf>();
+    private readonly IGenericRepository<Package> _packageRepository = unitOfWork.Repository<Package>();
     public async Task<MessageResponse> Handle(DeleteShelfCommand request, CancellationToken cancellationToken)
     {
         var shelf = await _shelfRepository
@@ -21,6 +22,11 @@ internal sealed class DeleteShelfCommandHandler(
         if (shelf is null)
         {
             throw new NotFoundException(nameof(Shelf), request.Id);
+        }
+
+        if (await _packageRepository.ExistsByAsync(_ => _.Shelf.Id == shelf.Id, cancellationToken))
+        {
+            throw new BadRequestException("Shelf have package");
         }
 
         await _shelfRepository.DeleteAsync(shelf);

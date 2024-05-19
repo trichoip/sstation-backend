@@ -10,6 +10,7 @@ namespace ShipperStation.Application.Features.Racks.Handlers;
 internal sealed class DeleteRackCommandHandler(IUnitOfWork unitOfWork) : IRequestHandler<DeleteRackCommand, MessageResponse>
 {
     private readonly IGenericRepository<Rack> _rackRepository = unitOfWork.Repository<Rack>();
+    private readonly IGenericRepository<Package> _packageRepository = unitOfWork.Repository<Package>();
     public async Task<MessageResponse> Handle(DeleteRackCommand request, CancellationToken cancellationToken)
     {
         var rack = await _rackRepository.FindByAsync(x => x.Id == request.Id, cancellationToken: cancellationToken);
@@ -17,6 +18,11 @@ internal sealed class DeleteRackCommandHandler(IUnitOfWork unitOfWork) : IReques
         if (rack is null)
         {
             throw new NotFoundException(nameof(Rack), request.Id);
+        }
+
+        if (await _packageRepository.ExistsByAsync(_ => _.RackId == rack.Id, cancellationToken))
+        {
+            throw new BadRequestException("rack have package");
         }
 
         await _rackRepository.DeleteAsync(rack);
