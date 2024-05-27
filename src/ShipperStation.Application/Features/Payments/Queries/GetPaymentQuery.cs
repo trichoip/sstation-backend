@@ -28,6 +28,8 @@ public sealed record GetPaymentQuery : PaginationRequest<Payment>, IRequest<Pagi
 
     public List<int> StationIds { get; set; } = new List<int>();
 
+    public PaymentType? PaymentType { get; set; }
+
     public override Expression<Func<Payment, bool>> GetExpressions()
     {
         Expression = Expression.And(_ => !Status.HasValue || _.Status == Status);
@@ -38,6 +40,8 @@ public sealed record GetPaymentQuery : PaginationRequest<Payment>, IRequest<Pagi
         Expression = Expression.And(_ => !StationId.HasValue || _.StationId == StationId);
 
         Expression = Expression.And(_ => !StationIds.Any() || StationIds.Contains(_.StationId));
+
+        Expression = Expression.And(_ => !PaymentType.HasValue || _.Type == PaymentType);
 
         return Expression;
     }
