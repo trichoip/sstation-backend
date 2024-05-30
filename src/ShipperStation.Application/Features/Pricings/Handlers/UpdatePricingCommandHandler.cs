@@ -38,7 +38,7 @@ internal sealed class UpdatePricingCommandHandler(
 
         if (exists)
         {
-            throw new ConflictException($"Pricing existed during the {request.StartTime - request.EndTime} period");
+            throw new ConflictException($"Pricing existed during the {request.StartTime} - {request.EndTime} period");
         }
 
         request.Adapt(pricing);

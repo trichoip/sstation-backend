@@ -28,7 +28,7 @@ internal sealed class CreatePricingCommandHandler(
 
         if (exists)
         {
-            throw new ConflictException($"Pricing existed during the {request.StartTime - request.EndTime} period");
+            throw new ConflictException($"Pricing existed during the {request.StartTime} - {request.EndTime} period");
         }
 
         var pricing = request.Adapt<Pricing>();
