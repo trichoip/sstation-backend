@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using Hangfire;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
@@ -38,6 +39,7 @@ public static class DependencyInjection
     private static void AddServices(this IServiceCollection services)
     {
         services
+            .AddScoped<IPackageService, PackageService>()
             .AddSingleton<ICacheService, CacheService>()
             .AddScoped<ICurrentUserService, CurrentUserService>()
             .AddScoped<IStorageService, StorageService>()

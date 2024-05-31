@@ -3,6 +3,7 @@ using Mapster;
 using MediatR;
 using ShipperStation.Application.Common.Exceptions;
 using ShipperStation.Application.Contracts.Repositories;
+using ShipperStation.Application.Contracts.Services;
 using ShipperStation.Application.Features.PackageFeature.Commands;
 using ShipperStation.Application.Features.PackageFeature.Events;
 using ShipperStation.Application.Features.PackageFeature.Models;
@@ -72,6 +73,8 @@ internal sealed class CreatePackageCommandHandler(
             PackageId = package.Id,
         };
         BackgroundJob.Enqueue(() => publisher.Publish(notify, cancellationToken));
+
+        BackgroundJob.Schedule<IPackageService>(job => job.ExpirePackage(package.Id, cancellationToken), DateTimeOffset.UtcNow.AddDays(90));
 
         return await _packageRepository
             .FindByAsync<PackageResponse>(_ =>

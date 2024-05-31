@@ -25,6 +25,11 @@ internal sealed class LoginRequestHandler(
             throw new UnauthorizedAccessException(Resource.Unauthorized);
         }
 
+        if (!user.IsActive)
+        {
+            throw new UnauthorizedAccessException(Resource.Unauthorized);
+        }
+
         return await jwtService.GenerateTokenAsync(user);
     }
 }
