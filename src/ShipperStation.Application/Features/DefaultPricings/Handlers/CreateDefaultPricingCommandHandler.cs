@@ -21,7 +21,7 @@ internal sealed class CreateDefaultPricingCommandHandler(IUnitOfWork unitOfWork)
 
         if (exists)
         {
-            throw new ConflictException($"Pricing existed during the {request.StartTime - request.EndTime} period");
+            throw new ConflictException($"Pricing existed during the {request.StartTime} - {request.EndTime} period");
         }
 
         var defaultPricing = request.Adapt<DefaultPricing>();

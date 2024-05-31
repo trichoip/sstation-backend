@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using LinqKit;
+using MediatR;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using ShipperStation.Application.Features.Stations.Models;
 using ShipperStation.Application.Models.Pages;
@@ -13,6 +14,8 @@ public sealed record GetStationsOfManagerQuery : PaginationRequest<Station>, IRe
     public Guid ManagerId { get; set; }
     public override Expression<Func<Station, bool>> GetExpressions()
     {
+        Expression = Expression.And(x => x.UserStations.Any(_ => _.UserId == ManagerId));
+
         return Expression;
     }
 }
