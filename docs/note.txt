@@ -17,3 +17,22 @@ Ngân hàng: NCB
 Số thẻ: 9704195798459170488
 Tên chủ thẻ:NGUYEN VAN A
 Ngày phát hành:07/15
+
+
+mysql:
+
+https://webmysql.monsterasp.net/login
+
+Server=db4605.databaseasp.net;Database=db4605;Uid=db4605;Pwd=8d+SP%4fqL@6
+
+
+key:
+
+Authentication__Schemes__Bearer__TokenExpire=86400,
+Authentication__Schemes__Bearer__RefreshTokenExpire=1728000,
+DOCKER_USERNAME=dockerracdockerrac,
+DOCKER_PASSWORD=dockerracdockerrac,
+FTP_SERVER=site4048.siteasp.net,
+FTP_USERNAME=site4048,
+FTP_PASSWORD=F!k2o8-G3#Az,
+SERVER_DIR=wwwroot
